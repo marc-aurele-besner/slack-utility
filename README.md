@@ -49,7 +49,9 @@ slack-utility/
 └─── src/
    │   index.ts
    │   README.md
-   └─── slackActions/
+   │   types.ts
+   └─── actions/
    └─── slackBuilder/
+   └─── slackUtils/
 ```
 
