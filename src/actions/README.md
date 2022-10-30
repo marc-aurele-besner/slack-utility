@@ -2,7 +2,7 @@
 [![license](https://img.shields.io/github/license/jamesisaac/react-native-background-task.svg)](https://opensource.org/licenses/MIT)
 
 
-# slack-utility / src
+# slack-utility / src / actions
 
 ```
 
@@ -14,18 +14,24 @@
     `8888Y' Y88888P YP   YP  `Y88P' YP   YD        ~Y8888P'    YP    Y888888P Y88888P Y888888P    YP       YP    
 ```
 
-## Directories
- - [actions/](./actions/) - [slackBuilder/](./slackBuilder/) - [slackUtils/](./slackUtils/)
 
- - [index.ts](./index.ts) - [README.md](./README.md) - [types.ts](./types.ts)
+ - [buildFromAbi.ts](./buildFromAbi.ts) - [delete_msg.ts](./delete_msg.ts) - [error.ts](./error.ts) - [index.ts](./index.ts) - [query_contract_calls.ts](./query_contract_calls.ts) - [query_contract_for_env.ts](./query_contract_for_env.ts) - [README.md](./README.md) - [settings.ts](./settings.ts) - [settings_apiKeys.ts](./settings_apiKeys.ts) - [settings_contracts.ts](./settings_contracts.ts) - [settings_networks.ts](./settings_networks.ts) - [settings_save.ts](./settings_save.ts) - [settings_signers.ts](./settings_signers.ts) - [update_msg.ts](./update_msg.ts)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
-src/
+actions/
+   │   buildFromAbi.ts
+   │   delete_msg.ts
+   │   error.ts
    │   index.ts
+   │   query_contract_calls.ts
+   │   query_contract_for_env.ts
    │   README.md
-   │   types.ts
-   └─── actions/
-   └─── slackBuilder/
-   └─── slackUtils/
+   │   settings.ts
+   │   settings_apiKeys.ts
+   │   settings_contracts.ts
+   │   settings_networks.ts
+   │   settings_save.ts
+   │   settings_signers.ts
+   │   update_msg.ts
 ```

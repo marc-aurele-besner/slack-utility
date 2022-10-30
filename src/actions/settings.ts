@@ -1,6 +1,13 @@
-import { slackBuilder } from '../slackBuilder'
+import slackBuilder from '../slackBuilder'
+import { TBlockElements, TBlocks, TReturnValue } from '../types'
 
-const action = async (actionObject: any, parsedBody: any, messageBlocks: any[], buttons: any[], returnValue: any) => {
+const action = async (
+    actionObject: any,
+    parsedBody: any,
+    messageBlocks: TBlocks,
+    buttons: TBlockElements,
+    returnValue: TReturnValue
+) => {
     const { contracts, networks } = actionObject
     console.log('settings', actionObject)
 

@@ -1,8 +1,13 @@
-import { utils } from 'ethers'
+import slackBuilder from '../slackBuilder'
+import { TBlockElements, TBlocks, TReturnValue } from '../types'
 
-import { slackBuilder } from '../slackBuilder'
-
-const action = async (actionObject: any, parsedBody: any, messageBlocks: any[], buttons: any[], returnValue: any) => {
+const action = async (
+    actionObject: any,
+    parsedBody: any,
+    messageBlocks: TBlocks,
+    buttons: TBlockElements,
+    returnValue: TReturnValue
+) => {
     console.log('query_contract_for_env', actionObject.selectedContract)
     let contractInstance
     try {

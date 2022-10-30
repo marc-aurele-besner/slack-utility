@@ -1,4 +1,6 @@
-const buildSimpleSectionMsg = (title: string, value: string) => {
+import { TBlock } from '../types'
+
+const buildSimpleSectionMsg = (title = '' as string, value = '' as string): TBlock => {
     return {
         type: 'section',
         text: {

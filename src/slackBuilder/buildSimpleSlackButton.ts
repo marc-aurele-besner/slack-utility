@@ -1,9 +1,11 @@
+import { TBlockElement, TSlackButtonStyle } from '../types'
+
 const buildSimpleSlackButton = (
     text: string,
-    value: any,
+    value: string,
     actionId: string,
-    style = undefined as string | undefined
-) => {
+    style = undefined as TSlackButtonStyle
+): TBlockElement => {
     return {
         type: 'button',
         text: {

@@ -1,7 +1,13 @@
-// import { formatBalanceState } from '../../../Fixed-Term-Interest-Account/utils/formatBalanceResult'
-import { slackBuilder } from '../slackBuilder'
+import slackBuilder from '../slackBuilder'
+import { TBlockElements, TBlocks, TReturnValue } from '../types'
 
-const action = async (actionObject: any, parsedBody: any, messageBlocks: any[], buttons: any[], returnValue: any) => {
+const action = async (
+    actionObject: any,
+    parsedBody: any,
+    messageBlocks: TBlocks,
+    buttons: TBlockElements,
+    returnValue: TReturnValue
+) => {
     console.log('query_contract_calls')
     const allFunctions = Object.keys(actionObject.contractInstance.callStatic).slice(
         0,
