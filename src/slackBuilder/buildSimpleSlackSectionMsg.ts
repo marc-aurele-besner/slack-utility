@@ -1,4 +1,4 @@
-const buildSimpleSectionMsg = (title: string, value: string) => {
+const buildSimpleSectionMsg = (title: string = '', value: string = '') => {
     return {
         type: 'section',
         text: {
