@@ -1,4 +1,6 @@
-const buildSlackDateTimePicker = (actionId = 'date_time_input' as string) => {
+import { TBlockElement } from '../types'
+
+const buildSlackDateTimePicker = (actionId = 'date_time_input' as string): TBlockElement => {
     return {
         type: 'datetimepicker',
         action_id: actionId,

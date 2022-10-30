@@ -1,15 +1,16 @@
+import { TBlockElement, TNetwork, TNetworks } from '../types'
+
 import { buildSimpleSlackOption } from './buildSimpleSlackOptions'
 
-const buildSlackNetworkSelection = (networks: any[]) => {
+const buildSlackNetworkSelection = (networks: TNetworks): TBlockElement => {
     const options = networks
-        .filter((network: any) => network.active === true)
-        .map((network: any) => {
+        .filter((network: TNetwork) => network.active === true)
+        .map((network: TNetwork) => {
             return buildSimpleSlackOption({
-                text: network.chainEmoji + ' ' + network.name,
+                text: network.emoji + ' ' + network.name,
                 value: network.value
             })
         })
-
     return {
         type: 'static_select',
         placeholder: {

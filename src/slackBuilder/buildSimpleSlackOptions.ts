@@ -1,11 +1,6 @@
-export type TSlackOption = {
-    text: string
-    value: string
-}
+import { TBlockElementOption, TBlockElementOptions, TSlackOption, TSlackOptions } from '../types'
 
-export type TSlackOptions = TSlackOption[]
-
-export const buildSimpleSlackOption = (option: TSlackOption) => {
+export const buildSimpleSlackOption = (option: TSlackOption): TBlockElementOption => {
     return {
         text: {
             type: 'plain_text',
@@ -15,8 +10,8 @@ export const buildSimpleSlackOption = (option: TSlackOption) => {
     }
 }
 
-const buildSimpleSlackOptions = (options: TSlackOptions) => {
-    return options.map((option) => {
+const buildSimpleSlackOptions = (options: TSlackOptions): TBlockElementOptions => {
+    return options.map((option: TSlackOption) => {
         return buildSimpleSlackOption(option)
     })
 }

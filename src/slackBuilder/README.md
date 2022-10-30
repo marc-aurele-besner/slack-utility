@@ -15,11 +15,14 @@
 ```
 
 
- - [buildLinkSlackButton.ts](./buildLinkSlackButton.ts) - [buildSimpleSlackButton.ts](./buildSimpleSlackButton.ts) - [buildSimpleSlackHeaderMsg.ts](./buildSimpleSlackHeaderMsg.ts) - [buildSimpleSlackOptions.ts](./buildSimpleSlackOptions.ts) - [buildSimpleSlackSectionMsg.ts](./buildSimpleSlackSectionMsg.ts) - [buildSlackActionMsg.ts](./buildSlackActionMsg.ts) - [buildSlackContractSelection.ts](./buildSlackContractSelection.ts) - [buildSlackDateTimePicker.ts](./buildSlackDateTimePicker.ts) - [buildSlackInput.ts](./buildSlackInput.ts) - [buildSlackMultilineInput.ts](./buildSlackMultilineInput.ts) - [buildSlackNetworkSelection.ts](./buildSlackNetworkSelection.ts) - [buildSlackNumberInput.ts](./buildSlackNumberInput.ts) - [buildSlackPlainTextInput.ts](./buildSlackPlainTextInput.ts) - [index.ts](./index.ts) - [README.md](./README.md)
+ - [addDeleteButton.ts](./addDeleteButton.ts) - [addRefreshButton.ts](./addRefreshButton.ts) - [addSettingButton.ts](./addSettingButton.ts) - [buildLinkSlackButton.ts](./buildLinkSlackButton.ts) - [buildSimpleSlackButton.ts](./buildSimpleSlackButton.ts) - [buildSimpleSlackHeaderMsg.ts](./buildSimpleSlackHeaderMsg.ts) - [buildSimpleSlackOptions.ts](./buildSimpleSlackOptions.ts) - [buildSimpleSlackSectionMsg.ts](./buildSimpleSlackSectionMsg.ts) - [buildSlackActionMsg.ts](./buildSlackActionMsg.ts) - [buildSlackContractSelection.ts](./buildSlackContractSelection.ts) - [buildSlackDateTimePicker.ts](./buildSlackDateTimePicker.ts) - [buildSlackInput.ts](./buildSlackInput.ts) - [buildSlackMultilineInput.ts](./buildSlackMultilineInput.ts) - [buildSlackNetworkSelection.ts](./buildSlackNetworkSelection.ts) - [buildSlackNumberInput.ts](./buildSlackNumberInput.ts) - [buildSlackPlainTextInput.ts](./buildSlackPlainTextInput.ts) - [index.ts](./index.ts) - [README.md](./README.md)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
 slackBuilder/
+   │   addDeleteButton.ts
+   │   addRefreshButton.ts
+   │   addSettingButton.ts
    │   buildLinkSlackButton.ts
    │   buildSimpleSlackButton.ts
    │   buildSimpleSlackHeaderMsg.ts

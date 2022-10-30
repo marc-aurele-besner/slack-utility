@@ -1,4 +1,12 @@
-const buildLinkSlackButton = (text: string, value: any, actionId: string, style?: string, url?: string) => {
+import { TBlockElement, TSlackButtonStyle } from '../types'
+
+const buildLinkSlackButton = (
+    text: string,
+    value: string,
+    actionId: string,
+    style?: TSlackButtonStyle,
+    url?: string
+): TBlockElement => {
     return {
         type: 'button',
         text: {
@@ -12,7 +20,7 @@ const buildLinkSlackButton = (text: string, value: any, actionId: string, style?
     }
 }
 
-export const buildEtherscanLinkSlackButton = (chainName: string, contractAddress: string) => {
+export const buildEtherscanLinkSlackButton = (chainName: string, contractAddress: string): TBlockElement => {
     return buildLinkSlackButton(
         '-> Etherscan',
         `${chainName} ${contractAddress}`,

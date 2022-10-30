@@ -1,4 +1,6 @@
-const buildSimpleSlackHeaderMsg = (text: string) => {
+import { TBlock } from '../types'
+
+const buildSimpleSlackHeaderMsg = (text: string): TBlock => {
     return {
         type: 'header',
         text: {

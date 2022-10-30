@@ -1,3 +1,6 @@
+import addDeleteButton from './addDeleteButton'
+import addRefreshButton from './addRefreshButton'
+import addSettingButton from './addSettingButton'
 import buildLinkSlackButton, { buildEtherscanLinkSlackButton } from './buildLinkSlackButton'
 import buildSimpleSlackButton from './buildSimpleSlackButton'
 import buildSimpleSlackHeaderMsg from './buildSimpleSlackHeaderMsg'
@@ -13,6 +16,9 @@ import buildSlackNumberInput from './buildSlackNumberInput'
 import buildSlackPlainTextInput from './buildSlackPlainTextInput'
 
 const slackBuilder = {
+    addDeleteButton,
+    addRefreshButton,
+    addSettingButton,
     buildLinkSlackButton,
     buildEtherscanLinkSlackButton,
     buildSimpleSlackButton,
@@ -30,4 +36,4 @@ const slackBuilder = {
     buildSlackMultilineInput
 }
 
-export { slackBuilder }
+export default slackBuilder
