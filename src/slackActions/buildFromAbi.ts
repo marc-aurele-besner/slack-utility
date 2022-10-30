@@ -1,0 +1,36 @@
+import { slackBuilder } from '../slackBuilder'
+
+const action = async (actionObject: any, parsedBody: any, messageBlocks: any[], buttons: any[], returnValue: any) => {
+    messageBlocks.push(
+        slackBuilder.buildSlackInput(
+            'Enter account address',
+            'inputAddress',
+            slackBuilder.buildSlackPlainTextInput(actionObject.owner.address, 'address')
+        ),
+        slackBuilder.buildSlackInput(
+            'Enter spender address',
+            'inputSpender',
+            slackBuilder.buildSlackPlainTextInput('spender', 'spender')
+        )
+    )
+    messageBlocks.push(
+        slackBuilder.buildSlackActionMsg(actionObject.env, undefined, [
+            slackBuilder.buildLinkSlackButton(
+                'allowance',
+                JSON.stringify({
+                    selectedEnvironment: actionObject.value.selectedEnvironment,
+                    selectedContract: actionObject.value.selectedContract,
+                    chainId: actionObject.chainId,
+                    chainName: actionObject.chainName,
+                    contractAddress: actionObject.contractAddress,
+                    contractName: actionObject.value.selectedContract
+                }),
+                'get_erc20_allowance'
+            ),
+            slackBuilder.buildEtherscanLinkSlackButton(actionObject.chainName, actionObject.contractAddress)
+        ])
+    )
+    return [action, returnValue, messageBlocks, buttons]
+}
+
+export default action

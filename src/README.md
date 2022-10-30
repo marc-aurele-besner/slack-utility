@@ -2,7 +2,7 @@
 [![license](https://img.shields.io/github/license/jamesisaac/react-native-background-task.svg)](https://opensource.org/licenses/MIT)
 
 
-# slack-utility
+# slack-utility / src
 
 ```
 
@@ -15,41 +15,15 @@
 ```
 
 ## Directories
- - [src/](./src/)
+ - [slackActions/](./slackActions/) - [slackBuilder/](./slackBuilder/)
 
- - [.eslintrc.js](./.eslintrc.js)
- - [.npmignore](./.npmignore)
- - [.prettierignore](./.prettierignore)
- - [.prettierrc](./.prettierrc)
- - [awesome-readme.config.js](./awesome-readme.config.js)
- - [CONTRIBUTING.md](./CONTRIBUTING.md)
- - [LICENSE](./LICENSE)
- - [package-lock.json](./package-lock.json)
- - [package.json](./package.json)
- - [README.md](./README.md)
- - [tsconfig.json](./tsconfig.json)
- - [tslint.json](./tslint.json)
-
-
+ - [index.ts](./index.ts) - [README.md](./README.md)
 ## Directory Tree
+[<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
-slack-utility/
-│   .eslintrc.js
-│   .npmignore
-│   .prettierignore
-│   .prettierrc
-│   awesome-readme.config.js
-│   CONTRIBUTING.md
-│   LICENSE
-│   package-lock.json
-│   package.json
-│   README.md
-│   tsconfig.json
-│   tslint.json
-└─── src/
+src/
    │   index.ts
    │   README.md
    └─── slackActions/
    └─── slackBuilder/
 ```
-
