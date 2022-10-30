@@ -4,6 +4,7 @@
   "description": "Set of slack helper functions",
   "main": "index.js",
   "scripts": {
+    "build": "npx awesome-readme",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
