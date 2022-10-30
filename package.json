@@ -1,0 +1,28 @@
+{
+  "name": "slack-utility",
+  "version": "0.0.1",
+  "description": "Set of slack helper functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marc-aurele-besner/slack-utility.git"
+  },
+  "keywords": [
+    "slack",
+    "slack-api",
+    "helper",
+    "utility"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marc-aurele-besner/slack-utility/issues"
+  },
+  "homepage": "https://github.com/marc-aurele-besner/slack-utility#readme",
+  "devDependencies": {
+    "ethers": "^5.7.2"
+  }
+}
