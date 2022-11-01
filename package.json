@@ -1,6 +1,6 @@
 {
   "name": "slack-utility",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Set of slack helper functions",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,10 @@
     "lint": "tslint --config tslint.json --project tsconfig.json",
     "watch": "tsc -w"
   },
+  "files": [
+    "/dist/**/*.{js,ts,map}",
+    "/src/**/*.{js,ts}"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/marc-aurele-besner/slack-utility.git"
