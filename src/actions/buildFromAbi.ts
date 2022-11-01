@@ -33,8 +33,8 @@ const action = async (
                     contractName: actionObject.value.selectedContract
                 }),
                 'get_erc20_allowance'
-            ),
-            slackBuilder.buildEtherscanLinkSlackButton(actionObject.chainName, actionObject.contractAddress)
+            )
+            // slackBuilder.buildEtherscanLinkSlackButton(actionObject.chainName, actionObject.contractAddress)
         ])
     )
     return [action, returnValue, messageBlocks, buttons]

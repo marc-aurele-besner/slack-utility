@@ -23,8 +23,10 @@ const slackPostMessage = async (
         })
         console.log('\x1b[34m%s\x1b[0m', 'Message sent: ', result.ts, addDeleteBtn, addSettings)
 
-        const actionBlock = blocks.filter((block: TBlock) => block.type === 'actions')
-        const actionBlockElements = actionBlock[0].elements
+        let actionBlock = blocks.filter((block: TBlock) => block.type === 'actions')
+        let actionBlockElements = actionBlock[0].elements
+        if (actionBlock.length === 0) actionBlock = []
+        if (actionBlockElements === undefined || actionBlockElements.length === 0) actionBlockElements = []
 
         if (actionBlock !== undefined && actionBlockElements !== undefined && result.ts !== undefined) {
             if (addDeleteBtn) actionBlockElements.push(slackBuilder.addDeleteButton(actionBlockElements, result.ts)[0])
