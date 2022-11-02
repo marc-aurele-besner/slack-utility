@@ -8,25 +8,27 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    const { contracts, networks } = actionObject
     console.log('settings', actionObject)
+    messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Settings:`))
+    if (actionObject.env) {
+        const { contracts, networks } = actionObject.env
 
-    let contractList = ''
-    let networkList = ''
-    contracts
-        .filter((contract: any) => contract.active)
-        .map((contract: any) => (contractList += `- ${contract.name}\n`))
-    networks
-        .filter((network: any) => network.active)
-        .map((network: any) => (networkList += `• \`${network.value}\` - ${network.name}\n`))
+        let contractList = ''
+        let networkList = ''
+        contracts
+            .filter((contract: any) => contract.active)
+            .map((contract: any) => (contractList += `- ${contract.name}\n`))
+        networks
+            .filter((network: any) => network.active)
+            .map((network: any) => (networkList += `• \`${network.value}\` - ${network.name}\n`))
 
-    messageBlocks.push(
-        slackBuilder.buildSimpleSlackHeaderMsg(`Settings:`),
-        slackBuilder.buildSimpleSectionMsg(
-            '',
-            `*API Keys:*\n\`\`\`- Etherscan \n\`\`\`\n*Networks:*\n\`\`\`\n${networkList}\`\`\`\n*Contracts:*\n\`\`\`\n${contractList}\`\`\`\n*Wallets:*\n\`\`\`\n- Dummy Wallet\n\`\`\``
+        messageBlocks.push(
+            slackBuilder.buildSimpleSectionMsg(
+                '',
+                `*API Keys:*\n\`\`\`- Etherscan \n\`\`\`\n*Networks:*\n\`\`\`\n${networkList}\`\`\`\n*Contracts:*\n\`\`\`\n${contractList}\`\`\`\n*Wallets:*\n\`\`\`\n- Dummy Wallet\n\`\`\``
+            )
         )
-    )
+    }
     buttons.push(
         slackBuilder.buildSimpleSlackButton(
             'Edit API Keys :pencil:',

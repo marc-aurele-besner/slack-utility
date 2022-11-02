@@ -6,6 +6,7 @@ import buildSimpleSlackButton from './buildSimpleSlackButton'
 import buildSimpleSlackHeaderMsg from './buildSimpleSlackHeaderMsg'
 import buildSimpleSlackOptions, { buildSimpleSlackOption } from './buildSimpleSlackOptions'
 import buildSimpleSectionMsg from './buildSimpleSlackSectionMsg'
+import buildSimpleSlackSelection from './buildSimpleSlackSelection'
 import buildSlackActionMsg from './buildSlackActionMsg'
 import buildSlackContractSelection from './buildSlackContractSelection'
 import buildSlackDateTimePicker from './buildSlackDateTimePicker'
@@ -26,6 +27,7 @@ const slackBuilder = {
     buildSimpleSlackOptions,
     buildSimpleSlackOption,
     buildSimpleSectionMsg,
+    buildSimpleSlackSelection,
     buildSlackActionMsg,
     buildSlackContractSelection,
     buildSlackNetworkSelection,
