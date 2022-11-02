@@ -1,5 +1,7 @@
+import fauna from 'faunadb-utility/src'
+
 import slackBuilder from '../slackBuilder'
-import { TBlockElements, TBlocks, TReturnValue } from '../types'
+import { TBlockElements, TBlocks, TReturnValue, TSettings } from '../types'
 
 const action = async (
     actionObject: any,
@@ -10,13 +12,8 @@ const action = async (
 ) => {
     console.log('settings_contracts')
 
-    if (parsedBody.state.values.settings_save_input) {
-        const settings: {
-            apiKeys: string
-            contracts: string
-            networks: string
-            signers: string
-        } = {
+    if (actionObject.faunaToken && parsedBody.state.values.settings_save_input) {
+        const settings: TSettings = {
             apiKeys: '',
             contracts: '',
             networks: '',
@@ -31,8 +28,34 @@ const action = async (
         if (parsedBody.state.values.settings_save_input.signers_input)
             settings.signers = parsedBody.state.values.settings_save_input.signers_input.value || ''
         console.log('newSettings', settings)
-    }
 
+        // Check if user has settings in DB
+        const getDbUserSettings = await fauna.queryTermByFaunaIndexes(
+            actionObject.faunaToken,
+            'settings_by_slackUserId',
+            parsedBody.user.id
+        )
+        console.log(
+            'getDbUserSettings',
+            getDbUserSettings,
+            getDbUserSettings.body,
+            JSON.parse(getDbUserSettings.body).length
+        )
+        if (JSON.parse(getDbUserSettings.body).length === 0) {
+            console.log('create new settings')
+            await fauna.createFaunaDocument(actionObject.faunaToken, 'settings', {
+                slackUserId: parsedBody.user.id,
+                settings
+            })
+        } else {
+            // if yes update settings
+            console.log('update settings', getDbUserSettings.body[0])
+            // await fauna.updateFaunaDocument(actionObject.faunaToken, 'settings', getDbUserSettings.body[0].ref.id, {
+            //     slackUserId: parsedBody.user.id,
+            //     settings
+            // })
+        }
+    }
     messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Settings saved!`))
 
     return [actionObject, returnValue, messageBlocks, buttons]
