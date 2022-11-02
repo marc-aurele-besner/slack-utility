@@ -73,3 +73,10 @@ export type TNetwork = {
     active: boolean
 }
 export type TNetworks = TNetwork[]
+
+export type TSettings = {
+    apiKeys: string
+    contracts: string
+    networks: string
+    signers: string
+}

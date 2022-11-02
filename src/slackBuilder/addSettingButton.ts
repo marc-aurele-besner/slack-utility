@@ -1,10 +1,11 @@
-import { TBlockElements } from '../types'
+import { TBlockElement, TBlockElements } from '../types'
 
 import buildSimpleSlackButton from './buildSimpleSlackButton'
 
 const addSettingButton = (elements: TBlockElements, ts: string): TBlockElements => {
-    const settingIsPresent = elements.find((element: any) => element.action_id === 'settings')
-    if (!settingIsPresent)
+    if (elements === undefined) elements = []
+    const settingIsPresent = elements.find((element: TBlockElement) => element.action_id === 'settings')
+    if (!settingIsPresent || settingIsPresent === undefined)
         elements.push(
             buildSimpleSlackButton(':gear:', JSON.stringify({ action: 'settings', ts }), 'settings', 'primary')
         )

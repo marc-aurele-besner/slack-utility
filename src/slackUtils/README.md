@@ -15,11 +15,12 @@
 ```
 
 
- - [index.ts](./index.ts) - [README.md](./README.md) - [slackDeleteMessage.ts](./slackDeleteMessage.ts) - [slackPostMessage.ts](./slackPostMessage.ts) - [slackUpdateMessage.ts](./slackUpdateMessage.ts)
+ - [callerSettings.ts](./callerSettings.ts) - [index.ts](./index.ts) - [README.md](./README.md) - [slackDeleteMessage.ts](./slackDeleteMessage.ts) - [slackPostMessage.ts](./slackPostMessage.ts) - [slackUpdateMessage.ts](./slackUpdateMessage.ts)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
 slackUtils/
+   │   callerSettings.ts
    │   index.ts
    │   README.md
    │   slackDeleteMessage.ts
