@@ -9,7 +9,7 @@ const callerSettings = async (
     defaultSigners = [] as any[]
 ) => {
     const getDbUserSettings = await fauna.queryTermByFaunaIndexes(
-        settings.faunaToken,
+        settings.faunaDbToken,
         'settings_by_slackUserId',
         user.id
     )
