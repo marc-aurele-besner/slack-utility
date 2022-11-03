@@ -2,6 +2,7 @@ import callerSettings from './callerSettings'
 import slackDeleteMessage from './slackDeleteMessage'
 import slackPostMessage from './slackPostMessage'
 import slackPostWaitMessage from './slackPostWaitMessage'
+import slackPublishView from './slackPublishView'
 import slackUpdateMessage from './slackUpdateMessage'
 
 const slackUtils = {
@@ -9,6 +10,7 @@ const slackUtils = {
     slackDeleteMessage,
     slackPostMessage,
     slackPostWaitMessage,
+    slackPublishView,
     slackUpdateMessage
 }
 
