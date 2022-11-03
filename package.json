@@ -1,6 +1,6 @@
 {
   "name": "slack-utility",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Set of slack helper functions",
   "main": "index.js",
   "scripts": {
