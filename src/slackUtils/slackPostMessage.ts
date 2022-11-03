@@ -1,7 +1,7 @@
 import { WebClient } from '@slack/web-api'
 
 import slackBuilder from '../slackBuilder'
-import { TBlock, TBlockElements, TBlocks } from '../types'
+import { TBlock, TBlockElements, TBlocks, TSlackPostMessageResponse } from '../types'
 
 import slackUpdateMessage from './slackUpdateMessage'
 
@@ -13,15 +13,25 @@ const slackPostMessage = async (
     addDeleteBtn = true as boolean,
     addSettings = true as boolean,
     addRefresh = true as boolean
-) => {
+): Promise<TSlackPostMessageResponse> => {
+    const result: TSlackPostMessageResponse = {
+        resultPostMessage: {
+            ok: false,
+            ts: ''
+        },
+        resultUpdateMessage: {
+            ok: false,
+            ts: ''
+        }
+    }
     const web = new WebClient(token)
     try {
-        const resultPostMessage = await web.chat.postMessage({
+        result.resultPostMessage = await web.chat.postMessage({
             channel,
             text,
             blocks
         })
-        console.log('\x1b[34m%s\x1b[0m', 'Message sent: ', resultPostMessage.ts, addDeleteBtn, addSettings)
+        console.log('\x1b[34m%s\x1b[0m', 'Message sent: ', result.resultPostMessage.ts, addDeleteBtn, addSettings)
 
         const defaultActionBlock = {
             type: 'actions',
@@ -44,14 +54,17 @@ const slackPostMessage = async (
             actionBlockElements = []
         }
 
-        let resultUpdateMessage: any
-        if (actionBlock !== undefined && actionBlockElements !== undefined && resultPostMessage.ts !== undefined) {
+        if (
+            actionBlock !== undefined &&
+            actionBlockElements !== undefined &&
+            result.resultPostMessage.ts !== undefined
+        ) {
             if (addDeleteBtn)
-                actionBlockElements = slackBuilder.addDeleteButton(actionBlockElements, resultPostMessage.ts)
+                actionBlockElements = slackBuilder.addDeleteButton(actionBlockElements, result.resultPostMessage.ts)
             if (addSettings)
-                actionBlockElements = slackBuilder.addSettingButton(actionBlockElements, resultPostMessage.ts)
+                actionBlockElements = slackBuilder.addSettingButton(actionBlockElements, result.resultPostMessage.ts)
             if (addRefresh)
-                actionBlockElements = slackBuilder.addRefreshButton(actionBlockElements, resultPostMessage.ts)
+                actionBlockElements = slackBuilder.addRefreshButton(actionBlockElements, result.resultPostMessage.ts)
             if (addDeleteBtn || addSettings || addRefresh) {
                 blocks = [
                     ...blocks.filter((block: TBlock) => block.type !== 'actions'),
@@ -61,17 +74,19 @@ const slackPostMessage = async (
                         elements: actionBlockElements
                     }
                 ]
-                resultUpdateMessage = await slackUpdateMessage(token, channel, text, resultPostMessage.ts, blocks)
+                result.resultUpdateMessage = await slackUpdateMessage(
+                    token,
+                    channel,
+                    text,
+                    result.resultPostMessage.ts,
+                    blocks
+                )
             }
         }
-        const result = {
-            resultPostMessage,
-            resultUpdateMessage
-        }
-        return result
     } catch (error) {
-        return error
+        console.log('\x1b[31m%s\x1b[0m', 'Error: ', error)
     }
+    return result
 }
 
 export default slackPostMessage
