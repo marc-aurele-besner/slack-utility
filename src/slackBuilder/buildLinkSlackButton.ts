@@ -20,13 +20,22 @@ const buildLinkSlackButton = (
     }
 }
 
-export const buildEtherscanLinkSlackButton = (chainName: string, contractAddress: string): TBlockElement => {
+export const buildEtherscanLinkSlackButton = (
+    chainName = 'mainnet' as string,
+    label = 'Etherscan' as string,
+    actionId = 'buttonGoEtherscan' as string,
+    domain = 'etherscan.io' as string,
+    contractAddress?: string,
+    txHash?: string,
+    blockNumber?: string,
+    style?: TSlackButtonStyle,
+): TBlockElement => {
     return buildLinkSlackButton(
-        '-> Etherscan',
+        '-> ' + label,
         `${chainName} ${contractAddress}`,
-        'buttonGoEtherscan',
+        actionId,
         'primary',
-        `https://${chainName === 'mainnet' ? '' : chainName + '.'}etherscan.io/address/${contractAddress}`
+        `https://${chainName === 'mainnet' ? '' : chainName + '.'}${domain}/${contractAddress !== '' ? 'address/' + contractAddress : ''}${txHash !== '' ? 'tx/' + txHash : ''}${blockNumber !== '' ? 'block/' + blockNumber : ''}`
     )
 }
 
