@@ -1,6 +1,7 @@
 export type TBlockLabel = {
     type: string
     text: string
+    emoji?: boolean
 }
 
 export type TPlaceholder = {
@@ -90,4 +91,31 @@ export type TSlackMessageResponse = {
 export type TSlackPostMessageResponse = {
     resultPostMessage: TSlackMessageResponse
     resultUpdateMessage: TSlackMessageResponse
+}
+
+export type TSlackView = {
+    id?: string
+    team_id?: string
+    app_id?: string
+    app_installed_team_id?: string
+    bot_id?: string
+    type?: string
+    blocks?: TBlocks
+    state?: any
+    hash?: string
+    private_metadata?: string
+    callback_id?: string
+    root_view_id?: string
+    external_id?: string
+    title?: TBlockLabel
+    close?: null
+    submit?: null
+    previous_view_id?: null
+    clear_on_close?: boolean
+    notify_on_close?: boolean
+}
+
+export type TSlackViewResponse = {
+    ok: boolean
+    view?: TSlackView | undefined
 }

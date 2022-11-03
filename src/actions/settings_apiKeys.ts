@@ -11,8 +11,7 @@ const action = async (
     console.log('settings_apiKeys')
     messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`API integration settings:`))
     if (actionObject.env) {
-        // const { contracts } = actionObject.env
-
+        const { contracts } = actionObject.env
         messageBlocks.push(
             slackBuilder.buildSimpleSectionMsg(
                 ``,
@@ -40,11 +39,9 @@ const action = async (
                 JSON.stringify(
                     {
                         action: 'settings_save',
-                        section: 'apiKeys',
-                        settings: actionObject.env || {}
-                    },
-                    null,
-                    2
+                        // section: 'apiKeys',
+                        // settings: actionObject.env || {}
+                    }
                 ),
                 'settings_save'
             ),

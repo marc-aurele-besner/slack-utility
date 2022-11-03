@@ -24,5 +24,7 @@ export type {
     TNetworks,
     TSettings,
     TSlackMessageResponse,
-    TSlackPostMessageResponse
+    TSlackPostMessageResponse,
+    TSlackView,
+    TSlackViewResponse
 } from './types'
