@@ -36,6 +36,8 @@ export type TBlockElement = {
     style?: string | undefined
     initial_value?: string
     initial_date_time?: Date | string
+    initial_date?: Date | string
+    initial_time?: Date | string
     is_decimal_allowed?: boolean
     multiline?: boolean
 }
