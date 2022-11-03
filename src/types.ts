@@ -80,3 +80,14 @@ export type TSettings = {
     networks: string
     signers: string
 }
+
+export type TSlackMessageResponse = {
+    ok: boolean
+    ts?: string | undefined
+    channel?: string | undefined
+}
+
+export type TSlackPostMessageResponse = {
+    resultPostMessage: TSlackMessageResponse
+    resultUpdateMessage: TSlackMessageResponse
+}
