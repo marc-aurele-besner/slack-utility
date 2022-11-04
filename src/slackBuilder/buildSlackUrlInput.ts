@@ -3,7 +3,7 @@ import { TBlockElement } from '../types'
 const buildSlackUrlInput = (
     tip = 'Enter the url' as string,
     actionId = 'url_input' as string,
-    initialValue = '' as string,
+    initialValue = '' as string
 ): TBlockElement => {
     return {
         type: 'url_text_input',
