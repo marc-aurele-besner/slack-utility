@@ -9,12 +9,15 @@ import buildSimpleSectionMsg from './buildSimpleSlackSectionMsg'
 import buildSimpleSlackSelection from './buildSimpleSlackSelection'
 import buildSlackActionMsg from './buildSlackActionMsg'
 import buildSlackContractSelection from './buildSlackContractSelection'
+import buildSlackDatePicker from './buildSlackDatePicker'
 import buildSlackDateTimePicker from './buildSlackDateTimePicker'
 import buildSlackInput from './buildSlackInput'
 import buildSlackMultilineInput from './buildSlackMultilineInput'
 import buildSlackNetworkSelection from './buildSlackNetworkSelection'
 import buildSlackNumberInput from './buildSlackNumberInput'
 import buildSlackPlainTextInput from './buildSlackPlainTextInput'
+import buildSlackTimePicker from './buildSlackTimePicker'
+import buildSlackUrlInput from './buildSlackUrlInput'
 
 const slackBuilder = {
     addDeleteButton,
@@ -33,9 +36,12 @@ const slackBuilder = {
     buildSlackNetworkSelection,
     buildSlackNumberInput,
     buildSlackPlainTextInput,
+    buildSlackDatePicker,
     buildSlackDateTimePicker,
     buildSlackInput,
-    buildSlackMultilineInput
+    buildSlackMultilineInput,
+    buildSlackTimePicker,
+    buildSlackUrlInput
 }
 
 export default slackBuilder

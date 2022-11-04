@@ -17,6 +17,10 @@ export type TBlock = {
     elements?: TBlockElements
     label?: TBlockLabel
 }
+export type TBlockAttachment = {
+    blocks: TBlock[]
+}
+
 export type TBlocks = TBlock[]
 
 export type TBlockAction = {
@@ -27,7 +31,7 @@ export type TBlockAction = {
 
 export type TBlockElement = {
     type: string
-    action_id: string
+    action_id?: string
     placeholder?: TPlaceholder
     options?: any
     text?: TBlockLabel
@@ -36,6 +40,8 @@ export type TBlockElement = {
     style?: string | undefined
     initial_value?: string
     initial_date_time?: Date | string
+    initial_date?: Date | string
+    initial_time?: Date | string
     is_decimal_allowed?: boolean
     multiline?: boolean
 }
