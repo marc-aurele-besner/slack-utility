@@ -17,6 +17,7 @@ import buildSlackNetworkSelection from './buildSlackNetworkSelection'
 import buildSlackNumberInput from './buildSlackNumberInput'
 import buildSlackPlainTextInput from './buildSlackPlainTextInput'
 import buildSlackTimePicker from './buildSlackTimePicker'
+import buildSlackUrlInput from './buildSlackUrlInput'
 
 const slackBuilder = {
     addDeleteButton,
@@ -39,7 +40,8 @@ const slackBuilder = {
     buildSlackDateTimePicker,
     buildSlackInput,
     buildSlackMultilineInput,
-    buildSlackTimePicker
+    buildSlackTimePicker,
+    buildSlackUrlInput
 }
 
 export default slackBuilder

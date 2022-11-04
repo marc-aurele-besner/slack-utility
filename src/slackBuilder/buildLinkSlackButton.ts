@@ -2,8 +2,8 @@ import { TBlockElement, TSlackButtonStyle } from '../types'
 
 const buildLinkSlackButton = (
     text: string,
-    value: string,
-    actionId: string,
+    value: string | undefined,
+    actionId?: string,
     style?: TSlackButtonStyle,
     url?: string
 ): TBlockElement => {
@@ -21,22 +21,24 @@ const buildLinkSlackButton = (
 }
 
 export const buildEtherscanLinkSlackButton = (
-    chainName = 'mainnet' as string,
     label = 'Etherscan' as string,
     actionId = 'buttonGoEtherscan' as string,
     domain = 'etherscan.io' as string,
     contractAddress?: string,
     txHash?: string,
     blockNumber?: string,
-    style?: TSlackButtonStyle,
+    style?: TSlackButtonStyle
 ): TBlockElement => {
-    return buildLinkSlackButton(
-        '-> ' + label,
-        `${chainName} ${contractAddress}`,
-        actionId,
-        'primary',
-        `https://${chainName === 'mainnet' ? '' : chainName + '.'}${domain}/${contractAddress !== '' ? 'address/' + contractAddress : ''}${txHash !== '' ? 'tx/' + txHash : ''}${blockNumber !== '' ? 'block/' + blockNumber : ''}`
-    )
+    return {
+        type: 'button',
+        text: {
+            type: 'plain_text',
+            text: '-> ' + label
+        },
+        action_id: actionId,
+        // url: 'https://google.ca'
+        url: `https://${domain}/${contractAddress !== '' ? 'address/' + contractAddress : ''}${txHash !== '' ? 'tx/' + txHash : ''}${blockNumber !== '' ? 'block/' + blockNumber : ''}`
+    }
 }
 
 export default buildLinkSlackButton
