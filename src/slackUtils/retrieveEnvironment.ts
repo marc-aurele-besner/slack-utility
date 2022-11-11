@@ -34,9 +34,20 @@ const retrieveEnvironment = async (
         ) {
             selectedEnvironment = body.actions[0].selectedEnvironment
             selectedContract = body.actions[0].selectedContract
+            environmentFound = true
         }
     } catch (error) {}
-    return { selectedEnvironment, selectedContract }
+    try {
+        if (!environmentFound && body.actions[0].value) {
+            try {
+                const parsedValue = JSON.parse(body.actions[0].value)
+                selectedEnvironment = parsedValue.selectedEnvironment
+                selectedContract = parsedValue.selectedContract
+                environmentFound = true
+            } catch (error) {}
+        }
+    } catch (error) {}
+    return { environmentFound, selectedEnvironment, selectedContract }
 }
 
 export default retrieveEnvironment
