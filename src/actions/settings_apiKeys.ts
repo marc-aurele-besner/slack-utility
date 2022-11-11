@@ -45,9 +45,7 @@ const action = async (
             ),
             slackBuilder.buildSimpleSlackButton(
                 'Cancel :x:',
-                JSON.stringify({
-                    action: 'settings'
-                }),
+                { action: 'settings' },
                 'settings'
             )
         )

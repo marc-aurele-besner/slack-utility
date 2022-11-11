@@ -32,33 +32,25 @@ const action = async (
     buttons.push(
         slackBuilder.buildSimpleSlackButton(
             'Edit API Keys :pencil:',
-            JSON.stringify({
-                action: 'settings_apiKeys'
-            }),
+            { action: 'settings_apiKeys' },
             'settings_apiKeys',
             undefined
         ),
         slackBuilder.buildSimpleSlackButton(
             'Edit Contracts :pencil:',
-            JSON.stringify({
-                action: 'settings_contracts'
-            }),
+            { action: 'settings_contracts' },
             'settings_contracts',
             undefined
         ),
         slackBuilder.buildSimpleSlackButton(
             'Edit Networks :pencil:',
-            JSON.stringify({
-                action: 'settings_networks'
-            }),
+            { action: 'settings_networks' },
             'settings_networks',
             'primary'
         ),
         slackBuilder.buildSimpleSlackButton(
             'Edit Wallets :pencil:',
-            JSON.stringify({
-                action: 'settings_signers'
-            }),
+            { action: 'settings_signers' },
             'settings_signers',
             undefined
         )
