@@ -66,20 +66,42 @@ export type TSlackOptions = TSlackOption[]
 
 export type TSlackButtonStyle = 'primary' | 'danger' | undefined
 
+export type TSigningWeb3 = 'web3'
+export type TSigningAppKeys = 'appKeys'
+
+export type TSigningType = TSigningWeb3 | TSigningAppKeys
+
+export type TAddressPerNetwork = {
+    network: string
+    address: string
+    abiName: string
+}
+export type TAddressesPerNetwork = TAddressPerNetwork[]
+
+export type TNetwork = {
+    name: string
+    value: string
+    defaultRpc: string
+    chainId: number | string
+    emoji: string
+    active: boolean
+    signingType: TSigningType
+}
+export type TNetworks = TNetwork[]
+
 export type TContract = {
     name: string
     emoji: string
     active: boolean
+    addressPerNetwork: TAddressesPerNetwork
 }
 export type TContracts = TContract[]
 
-export type TNetwork = {
-    name: string
-    emoji: string
-    value: string
-    active: boolean
+export type TEnv = {
+    networks: TNetwork[] | undefined
+    contracts: TContract[] | undefined
+    signerPrivateKey?: string | undefined
 }
-export type TNetworks = TNetwork[]
 
 export type TSettings = {
     apiKeys: string
