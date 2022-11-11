@@ -38,20 +38,14 @@ const action = async (
         buttons.push(
             slackBuilder.buildSimpleSlackButton(
                 'Save :floppy_disk:',
-                JSON.stringify({
+                {
                     action: 'settings_save',
                     section: 'signers',
                     settings: actionObject.env || {}
-                }),
+                },
                 'settings_save'
             ),
-            slackBuilder.buildSimpleSlackButton(
-                'Cancel :x:',
-                JSON.stringify({
-                    action: 'settings'
-                }),
-                'settings'
-            )
+            slackBuilder.buildSimpleSlackButton('Cancel :x:', { action: 'settings' }, 'settings')
         )
     }
 

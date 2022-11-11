@@ -43,12 +43,12 @@ const action = async (
     buttons.push(
         slackBuilder.buildSimpleSlackButton(
             'All calls',
-            JSON.stringify({
+            {
                 selectedEnvironment: actionObject.value.selectedEnvironment,
                 selectedContract: actionObject.value.selectedContract,
                 chainId: actionObject.chainId,
                 chainName: actionObject.chainName
-            }),
+            },
             'query_contract_calls',
             'primary'
         )

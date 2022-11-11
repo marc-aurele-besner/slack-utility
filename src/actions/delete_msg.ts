@@ -8,9 +8,7 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    returnValue.body = JSON.stringify({
-        message: 'Message deleted ' + actionObject.value
-    })
+    returnValue.body = JSON.stringify({ message: 'Message deleted ' + actionObject.value })
     await slackDeleteMessage(actionObject.slackToken, parsedBody.container.channel_id, actionObject.value)
 
     return [actionObject, returnValue, messageBlocks, buttons]

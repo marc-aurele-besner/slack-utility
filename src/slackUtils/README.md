@@ -15,17 +15,24 @@
 ```
 
 
- - [callerSettings.ts](./callerSettings.ts) - [index.ts](./index.ts) - [README.md](./README.md) - [slackDeleteMessage.ts](./slackDeleteMessage.ts) - [slackPostMessage.ts](./slackPostMessage.ts) - [slackPostWaitMessage.ts](./slackPostWaitMessage.ts) - [slackPublishView.ts](./slackPublishView.ts) - [slackUpdateMessage.ts](./slackUpdateMessage.ts)
+ - [actionsLoop.ts](./actionsLoop.ts) - [callerSettings.ts](./callerSettings.ts) - [index.ts](./index.ts) - [README.md](./README.md) - [retrieveEnvironment.ts](./retrieveEnvironment.ts) - [retrieveSettings.ts](./retrieveSettings.ts) - [setupContractAndNetwork.ts](./setupContractAndNetwork.ts) - [setupContractNetworkAndSigner.ts](./setupContractNetworkAndSigner.ts) - [setupNetwork.ts](./setupNetwork.ts) - [slackDeleteMessage.ts](./slackDeleteMessage.ts) - [slackPostMessage.ts](./slackPostMessage.ts) - [slackPostWaitMessage.ts](./slackPostWaitMessage.ts) - [slackPublishView.ts](./slackPublishView.ts) - [slackUpdateMessage.ts](./slackUpdateMessage.ts) - [slashCommandsLoop.ts](./slashCommandsLoop.ts)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
 slackUtils/
+   │   actionsLoop.ts
    │   callerSettings.ts
    │   index.ts
    │   README.md
+   │   retrieveEnvironment.ts
+   │   retrieveSettings.ts
+   │   setupContractAndNetwork.ts
+   │   setupContractNetworkAndSigner.ts
+   │   setupNetwork.ts
    │   slackDeleteMessage.ts
    │   slackPostMessage.ts
    │   slackPostWaitMessage.ts
    │   slackPublishView.ts
    │   slackUpdateMessage.ts
+   │   slashCommandsLoop.ts
 ```

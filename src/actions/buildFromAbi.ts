@@ -22,16 +22,16 @@ const action = async (
     )
     messageBlocks.push(
         slackBuilder.buildSlackActionMsg(actionObject.env, undefined, [
-            slackBuilder.buildLinkSlackButton(
+            slackBuilder.buildSimpleSlackButton(
                 'allowance',
-                JSON.stringify({
+                {
                     selectedEnvironment: actionObject.value.selectedEnvironment,
                     selectedContract: actionObject.value.selectedContract,
                     chainId: actionObject.chainId,
                     chainName: actionObject.chainName,
                     contractAddress: actionObject.contractAddress,
                     contractName: actionObject.value.selectedContract
-                }),
+                },
                 'get_erc20_allowance'
             )
             // slackBuilder.buildEtherscanLinkSlackButton(actionObject.chainName, actionObject.contractAddress)

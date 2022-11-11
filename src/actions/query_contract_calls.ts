@@ -22,9 +22,9 @@ const action = async (
     const functionEnd = functionsPadding > 0 ? functionsPadding + 16 : 16
     for (let i = functionStart; i < functionEnd; i++) {
         buttons.push(
-            slackBuilder.buildLinkSlackButton(
+            slackBuilder.buildSimpleSlackButton(
                 allFunctions[i],
-                JSON.stringify({
+                {
                     selectedEnvironment: actionObject.value.selectedEnvironment,
                     selectedContract: actionObject.value.selectedContract,
                     chainId: actionObject.chainId,
@@ -32,7 +32,7 @@ const action = async (
                     contractAddress: actionObject.contractAddress,
                     contractName: actionObject.value.selectedContract,
                     functionSignature: allFunctions[i]
-                }),
+                },
                 'buildFromAbi-' + allFunctions[i]
             )
         )
@@ -40,9 +40,9 @@ const action = async (
 
     if (allFunctions.length > functionEnd)
         buttons.push(
-            slackBuilder.buildLinkSlackButton(
+            slackBuilder.buildSimpleSlackButton(
                 'Show more',
-                JSON.stringify({
+                {
                     selectedEnvironment: actionObject.value.selectedEnvironment,
                     selectedContract: actionObject.value.selectedContract,
                     chainId: actionObject.chainId,
@@ -50,7 +50,7 @@ const action = async (
                     contractAddress: actionObject.contractAddress,
                     contractName: actionObject.value.selectedContract,
                     functionsPadding: (functionsPadding || 0) + 15
-                }),
+                },
                 'query_contract_for_env-more'
             )
         )
