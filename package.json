@@ -32,12 +32,12 @@
   },
   "homepage": "https://github.com/marc-aurele-besner/slack-utility#readme",
   "dependencies": {
-    "@slack/web-api": "^6.7.2",
+    "@slack/web-api": "^6.8.0",
     "ethers": "^5.7.2",
     "faunadb-utility": "^0.0.2"
   },
   "devDependencies": {
-    "@types/node": "^18.11.7",
+    "@types/node": "^18.11.9",
     "awesome-readme": "^0.0.8",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
