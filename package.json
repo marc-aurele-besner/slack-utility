@@ -1,8 +1,10 @@
 {
   "name": "slack-utility",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Set of slack helper functions",
-  "main": "index.js",
+  "main": "dist/index",
+  "typings": "dist/index",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "npx awesome-readme && npm run lint:fix && tsc --project tsconfig.json",
     "lint:fix": "prettier --write src/**/*.{js,ts} && tslint --fix --config tslint.json --project tsconfig.json",
