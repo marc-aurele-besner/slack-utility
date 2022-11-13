@@ -6,7 +6,7 @@ import slackUpdateMessage from './slackUpdateMessage'
 
 const actionsLoop = async (
     token: string,
-    actionsList: any[],
+    actionsList: any,
     action: any,
     parsedBody: any,
     messageBlocks: TBlocks,
