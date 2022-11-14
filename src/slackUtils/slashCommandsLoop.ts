@@ -1,57 +1,22 @@
-const slashCommandsLoop = async (parsedBody: any) => {
-    if (parsedBody.command !== undefined) {
-        // Associate a slash command with an action
-        switch (parsedBody.command) {
-            case '/hello':
-                parsedBody.actions = [{ action_id: 'commandsList' }]
-                break
-            case '/ctc-recap':
+import { TCommand, TContract, TEnv, TNetwork } from '../types'
+
+const defaultValues: TEnv = {
+    networks: undefined as TNetwork[] | undefined,
+    contracts: undefined as TContract[] | undefined,
+    commands: undefined as TCommand[] | undefined
+}
+
+const slashCommandsLoop = async (env = defaultValues as TEnv | undefined, parsedBody: any) => {
+    if (parsedBody.command !== undefined && env !== undefined && env.commands !== undefined) {
+        env?.commands.forEach((command) => {
+            if (command.command === parsedBody.command)
                 parsedBody.actions = [
                     {
-                        action_id: 'query_contract_for_env',
-                        selectedEnvironment: 'ethereum-prod',
-                        selectedContract: 'CTC'
+                        action_id: command.actionId,
+                        ...command.actionValue
                     }
                 ]
-                break
-            case '/gtd-recap':
-                parsedBody.actions = [
-                    {
-                        action_id: 'query_contract_for_env',
-                        selectedEnvironment: 'ethereum-prod',
-                        selectedContract: 'GTD'
-                    }
-                ]
-                break
-            case '/gate-recap':
-                parsedBody.actions = [
-                    {
-                        action_id: 'query_contract_for_env',
-                        selectedEnvironment: 'ethereum-prod',
-                        selectedContract: 'GATE'
-                    }
-                ]
-                break
-            case '/investordao-recap':
-                parsedBody.actions = [
-                    {
-                        action_id: 'query_contract_for_env',
-                        selectedEnvironment: 'goerli',
-                        selectedContract: 'InvestorDAO'
-                    }
-                ]
-                break
-            case '/invest-recap':
-                parsedBody.actions = [
-                    { action_id: 'query_contract_for_env', selectedEnvironment: 'goerli', selectedContract: 'INVEST' }
-                ]
-                break
-            case '/settings':
-                parsedBody.actions = [{ action_id: 'settings' }]
-                break
-            default:
-                break
-        }
+        })
     }
     return parsedBody
 }
