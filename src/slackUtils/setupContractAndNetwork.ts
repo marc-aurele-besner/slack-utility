@@ -1,10 +1,11 @@
-import { TAddressPerNetwork, TContract, TEnv, TNetwork } from '../types'
+import { TAddressPerNetwork, TCommand, TContract, TEnv, TNetwork } from '../types'
 
 import setupNetwork from './setupNetwork'
 
-const defaultValues = {
+const defaultValues: TEnv = {
     networks: undefined as TNetwork[] | undefined,
-    contracts: undefined as TContract[] | undefined
+    contracts: undefined as TContract[] | undefined,
+    commands: undefined as TCommand[] | undefined
 }
 
 const setupContractAndNetwork = async (

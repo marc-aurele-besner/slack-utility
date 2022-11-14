@@ -102,13 +102,14 @@ export type TCommand = {
     description: string
     active: boolean
     actionId?: string
-    actionValue?: Object
+    actionValue?: any
 }
 export type TCommands = TCommand[]
 
 export type TEnv = {
     networks: TNetwork[] | undefined
     contracts: TContract[] | undefined
+    commands: TCommand[] | undefined
     signerPrivateKey?: string | undefined
 }
 

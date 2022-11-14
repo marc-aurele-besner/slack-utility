@@ -1,10 +1,11 @@
 import { providers } from 'ethers'
 
-import { TContract, TEnv, TNetwork, TSigningType } from '../types'
+import { TCommand, TContract, TEnv, TNetwork, TSigningType } from '../types'
 
-const defaultValues = {
+const defaultValues: TEnv = {
     networks: undefined as TNetwork[] | undefined,
-    contracts: undefined as TContract[] | undefined
+    contracts: undefined as TContract[] | undefined,
+    commands: undefined as TCommand[] | undefined
 }
 
 const setupNetwork = async (env = defaultValues as TEnv | undefined, network: string) => {

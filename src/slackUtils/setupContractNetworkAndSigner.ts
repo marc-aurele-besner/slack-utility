@@ -1,12 +1,13 @@
 import { Contract, Wallet } from 'ethers'
 
-import { TContract, TEnv, TNetwork } from '../types'
+import { TCommand, TContract, TEnv, TNetwork } from '../types'
 
 import setupContractAndNetwork from './setupContractAndNetwork'
 
-const defaultValues = {
+const defaultValues: TEnv = {
     networks: undefined as TNetwork[] | undefined,
-    contracts: undefined as TContract[] | undefined
+    contracts: undefined as TContract[] | undefined,
+    commands: undefined as TCommand[] | undefined
 }
 
 const setupContractNetworkAndSigner = async (
