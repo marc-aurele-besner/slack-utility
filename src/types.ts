@@ -97,6 +97,15 @@ export type TContract = {
 }
 export type TContracts = TContract[]
 
+export type TCommand = {
+    command: string
+    description: string
+    active: boolean
+    actionId?: string
+    actionValue?: Object
+}
+export type TCommands = TCommand[]
+
 export type TEnv = {
     networks: TNetwork[] | undefined
     contracts: TContract[] | undefined
