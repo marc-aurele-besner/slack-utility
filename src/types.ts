@@ -71,6 +71,8 @@ export type TSigningAppKeys = 'appKeys'
 
 export type TSigningType = TSigningWeb3 | TSigningAppKeys
 
+export type TNetworkClient = 'ethers' | 'web3' | 'tronWeb'
+
 export type TAddressPerNetwork = {
     network: string
     address: string
@@ -86,6 +88,7 @@ export type TNetwork = {
     emoji: string
     active: boolean
     signingType: TSigningType
+    networkClient?: TNetworkClient
 }
 export type TNetworks = TNetwork[]
 
