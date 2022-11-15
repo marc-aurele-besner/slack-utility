@@ -6,7 +6,9 @@ import query_contract_for_env from './query_contract_for_env'
 import settings from './settings'
 import settings_apiKeys from './settings_apiKeys'
 import settings_contracts from './settings_contracts'
+import settings_contracts_add from './settings_contracts_add'
 import settings_networks from './settings_networks'
+import settings_networks_add from './settings_networks_add'
 import settings_save from './settings_save'
 import settings_signers from './settings_signers'
 import update_msg from './update_msg'
@@ -19,7 +21,9 @@ const actions = {
     query_contract_for_env,
     settings_apiKeys,
     settings_contracts,
+    settings_contracts_add,
     settings_networks,
+    settings_networks_add,
     settings_save,
     settings_signers,
     settings,
