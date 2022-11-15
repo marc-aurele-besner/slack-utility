@@ -15,7 +15,8 @@ const slackOpenView = async (
     if (triggerId || interactivityPointer) {
         const web = new WebClient(token)
         try {
-            const viewResult = triggerId !== undefined ? await web.views.open({ view, trigger_id: triggerId }) : { ok: false }
+            const viewResult =
+                triggerId !== undefined ? await web.views.open({ view, trigger_id: triggerId }) : { ok: false }
             console.log('\x1b[34m%s\x1b[0m', 'View Open: ', viewResult, viewResult.ok)
             result.ok = viewResult.ok
             // if (viewResult.ok && viewResult.view !== undefined) result.view = viewResult.view

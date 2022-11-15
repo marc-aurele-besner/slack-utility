@@ -6,7 +6,6 @@ import retrieveSettings from './retrieveSettings'
 import setupContractAndNetwork from './setupContractAndNetwork'
 import setupContractNetworkAndSigner from './setupContractNetworkAndSigner'
 import setupNetwork from './setupNetwork'
-
 import slackDeleteMessage from './slackDeleteMessage'
 import slackOpenView from './slackOpenView'
 import slackPostEphemeralMessage from './slackPostEphemeralMessage'

@@ -33,7 +33,13 @@ const slackPostEphemeralMessage = async (
             user,
             blocks
         })
-        console.log('\x1b[34m%s\x1b[0m', 'Ephemeral Message sent: ', result.resultPostMessage.ts, addDeleteBtn, addSettings)
+        console.log(
+            '\x1b[34m%s\x1b[0m',
+            'Ephemeral Message sent: ',
+            result.resultPostMessage.ts,
+            addDeleteBtn,
+            addSettings
+        )
 
         const defaultActionBlock = {
             type: 'actions',
