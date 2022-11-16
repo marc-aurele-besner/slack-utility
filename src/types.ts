@@ -34,7 +34,7 @@ export type TBlockElement = {
     action_id?: string
     placeholder?: TPlaceholder
     options?: any
-    text?: TBlockLabel
+    text?: TBlockLabel | string
     value?: string
     url?: string
     style?: string | undefined

@@ -8,26 +8,36 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_contracts')
-    messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Contracts settings:`))
-    if (actionObject.env) {
-        const { networks } = actionObject.env
-        messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', 'Add a new contract in the slack app.'))
-        buttons.push(
-            slackBuilder.buildSimpleSlackSelection(
-                networks.map((network: TNetwork) => {
-                    return {
-                        name: network.name,
-                        value: network.name
-                    }
-                }),
-                'select_setting_network',
-                'Select network to remove or edit'
-            ),
-            slackBuilder.buildSimpleSlackButton('Save :floppy_disk:', { action: 'settings_save' }, 'settings_save'),
-            slackBuilder.buildSimpleSlackButton('Cancel :x:', { action: 'settings_contracts' }, 'settings_contracts')
-        )
+    console.log('settings_contracts_add')
+    try {
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Contracts settings:`))
+        if (actionObject.env) {
+            const { networks } = actionObject.env
+            messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', 'Add a new contract in the slack app.'))
+            buttons.push(
+                slackBuilder.buildSimpleSlackSelection(
+                    networks.map((network: TNetwork) => {
+                        return {
+                            name: network.name,
+                            value: network.name
+                        }
+                    }),
+                    'select_setting_network',
+                    'Select network to remove or edit'
+                ),
+                slackBuilder.buildSimpleSlackButton('Save :floppy_disk:', { action: 'settings_save' }, 'settings_save'),
+                slackBuilder.buildSimpleSlackButton(
+                    'Cancel :x:',
+                    { action: 'settings_contracts' },
+                    'settings_contracts'
+                )
+            )
+        }
+    } catch (error) {
+        console.log('error', error)
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))
     }
+
     return [actionObject, returnValue, messageBlocks, buttons]
 }
 

@@ -12,6 +12,7 @@ import buildSlackContractSelection from './buildSlackContractSelection'
 import buildSlackDatePicker from './buildSlackDatePicker'
 import buildSlackDateTimePicker from './buildSlackDateTimePicker'
 import buildSlackInput from './buildSlackInput'
+import buildSlackModal from './buildSlackModal'
 import buildSlackMultilineInput from './buildSlackMultilineInput'
 import buildSlackNetworkSelection from './buildSlackNetworkSelection'
 import buildSlackNumberInput from './buildSlackNumberInput'
@@ -39,6 +40,7 @@ const slackBuilder = {
     buildSlackDatePicker,
     buildSlackDateTimePicker,
     buildSlackInput,
+    buildSlackModal,
     buildSlackMultilineInput,
     buildSlackTimePicker,
     buildSlackUrlInput

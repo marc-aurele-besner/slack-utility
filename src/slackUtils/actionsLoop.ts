@@ -47,7 +47,8 @@ const actionsLoop = async (
         )
         if (action.waitMessageTs)
             await slackUpdateMessage(token, replyTo, returnValue.body, action.waitMessageTs, messageBlocks)
-        else await slackPostMessage(token, replyTo, returnValue.body, messageBlocks, true, false, false)
+        else if (!action.closeView)
+            await slackPostMessage(token, replyTo, returnValue.body, messageBlocks, true, false, false)
     }
 
     return [action, returnValue, messageBlocks, buttons]

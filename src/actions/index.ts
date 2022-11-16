@@ -1,3 +1,4 @@
+import app_home_opened from './app_home_opened'
 import buildFromAbi from './buildFromAbi'
 import delete_msg from './delete_msg'
 import error from './error'
@@ -14,6 +15,7 @@ import settings_signers from './settings_signers'
 import update_msg from './update_msg'
 
 const actions = {
+    app_home_opened,
     buildFromAbi,
     delete_msg,
     error,

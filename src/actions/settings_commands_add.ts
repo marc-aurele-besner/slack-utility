@@ -25,11 +25,6 @@ const action = async (
                         type: 'divider'
                     },
                     slackBuilder.buildSimpleSlackHeaderMsg(`New network`),
-                    // {
-                    //     type: 'image',
-                    //     image_url: 'https://media.giphy.com/media/SVZGEcYt7brkFUyU90/giphy.gif',
-                    //     alt_text: 'Yay! The modal was updated'
-                    // },
                     slackBuilder.buildSlackInput(
                         'Network name',
                         'network_name',

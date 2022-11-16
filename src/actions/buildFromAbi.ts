@@ -8,35 +8,42 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    messageBlocks.push(
-        slackBuilder.buildSlackInput(
-            'Enter account address',
-            'inputAddress',
-            slackBuilder.buildSlackPlainTextInput(actionObject.owner.address, 'address')
-        ),
-        slackBuilder.buildSlackInput(
-            'Enter spender address',
-            'inputSpender',
-            slackBuilder.buildSlackPlainTextInput('spender', 'spender')
-        )
-    )
-    messageBlocks.push(
-        slackBuilder.buildSlackActionMsg(actionObject.env, undefined, [
-            slackBuilder.buildSimpleSlackButton(
-                'allowance',
-                {
-                    selectedEnvironment: actionObject.value.selectedEnvironment,
-                    selectedContract: actionObject.value.selectedContract,
-                    chainId: actionObject.chainId,
-                    chainName: actionObject.chainName,
-                    contractAddress: actionObject.contractAddress,
-                    contractName: actionObject.value.selectedContract
-                },
-                'get_erc20_allowance'
+    console.log('buildFromAbi')
+    try {
+        messageBlocks.push(
+            slackBuilder.buildSlackInput(
+                'Enter account address',
+                'inputAddress',
+                slackBuilder.buildSlackPlainTextInput(actionObject.owner.address, 'address')
+            ),
+            slackBuilder.buildSlackInput(
+                'Enter spender address',
+                'inputSpender',
+                slackBuilder.buildSlackPlainTextInput('spender', 'spender')
             )
-            // slackBuilder.buildEtherscanLinkSlackButton(actionObject.chainName, actionObject.contractAddress)
-        ])
-    )
+        )
+        messageBlocks.push(
+            slackBuilder.buildSlackActionMsg(actionObject.env, undefined, [
+                slackBuilder.buildSimpleSlackButton(
+                    'allowance',
+                    {
+                        selectedEnvironment: actionObject.value.selectedEnvironment,
+                        selectedContract: actionObject.value.selectedContract,
+                        chainId: actionObject.chainId,
+                        chainName: actionObject.chainName,
+                        contractAddress: actionObject.contractAddress,
+                        contractName: actionObject.value.selectedContract
+                    },
+                    'get_erc20_allowance'
+                )
+                // slackBuilder.buildEtherscanLinkSlackButton(actionObject.chainName, actionObject.contractAddress)
+            ])
+        )
+    } catch (error) {
+        console.log('error', error)
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))
+    }
+
     return [action, returnValue, messageBlocks, buttons]
 }
 
