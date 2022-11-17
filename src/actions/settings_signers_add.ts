@@ -15,7 +15,7 @@ const action = async (
             actionObject.slackToken,
             slackBuilder.buildSlackModal(
                 'Add network',
-                'settings_save',
+                'settings_validate',
                 [
                     slackBuilder.buildSimpleSectionMsg(
                         '',
@@ -76,7 +76,7 @@ const action = async (
                         ]
                     }
                 ],
-                'Submit',
+                'Validate',
                 'Close'
             ),
             parsedBody.trigger_id

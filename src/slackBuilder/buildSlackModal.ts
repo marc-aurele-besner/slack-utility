@@ -5,8 +5,13 @@ const buildSlackModal = (
     callbackId = 'modal-callBack1' as string,
     blocks: any,
     submit = 'Submit' as string,
-    close = 'Close' as string
+    close = 'Close' as string,
+    privateMetaData = '' as string | number | { [key: string]: any }
 ) => {
+    let privateMetaDataFormatted: string
+    if (typeof privateMetaData === 'number') privateMetaDataFormatted = privateMetaData.toString()
+    else if (typeof privateMetaData === 'string') privateMetaDataFormatted = privateMetaData
+    else privateMetaDataFormatted = JSON.stringify(privateMetaData)
     return {
         type: 'modal',
         title: {
@@ -22,7 +27,8 @@ const buildSlackModal = (
             type: 'plain_text',
             text: submit
         },
-        callback_id: callbackId
+        callback_id: callbackId,
+        private_metadata: privateMetaDataFormatted
     }
 }
 

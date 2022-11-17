@@ -32,12 +32,6 @@ const action = async (
         }
         buttons.push(
             slackBuilder.buildSimpleSlackButton(
-                'Edit API Keys :pencil:',
-                { action: 'settings_apiKeys' },
-                'settings_apiKeys',
-                undefined
-            ),
-            slackBuilder.buildSimpleSlackButton(
                 'Edit Contracts :pencil:',
                 { action: 'settings_contracts' },
                 'settings_contracts',
@@ -50,9 +44,21 @@ const action = async (
                 'primary'
             ),
             slackBuilder.buildSimpleSlackButton(
+                'Edit API Keys :pencil:',
+                { action: 'settings_apiKeys' },
+                'settings_apiKeys',
+                undefined
+            ),
+            slackBuilder.buildSimpleSlackButton(
                 'Edit Wallets :pencil:',
                 { action: 'settings_signers' },
                 'settings_signers',
+                undefined
+            ),
+            slackBuilder.buildSimpleSlackButton(
+                'More app settings :gear:',
+                { action: 'settings_app' },
+                'settings_app',
                 undefined
             )
         )

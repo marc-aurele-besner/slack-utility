@@ -15,7 +15,7 @@ const action = async (
             actionObject.slackToken,
             slackBuilder.buildSlackModal(
                 'Add network',
-                'settings_save',
+                'settings_validate',
                 [
                     slackBuilder.buildSimpleSectionMsg(
                         '',
@@ -38,7 +38,7 @@ const action = async (
                     slackBuilder.buildSlackInput(
                         'Network chain Id',
                         'network_chainId',
-                        slackBuilder.buildSlackNumberInput('network_chnetworkChainIdainId')
+                        slackBuilder.buildSlackNumberInput('networkChainId')
                     ),
                     slackBuilder.buildSlackInput(
                         'Network RPC URL',
@@ -47,7 +47,7 @@ const action = async (
                     ),
                     {
                         type: 'actions',
-                        block_id: 'actions1',
+                        block_id: 'network_type',
                         elements: [
                             {
                                 type: 'static_select',
@@ -55,7 +55,7 @@ const action = async (
                                     type: 'plain_text',
                                     text: 'Which client/provider should we use?'
                                 },
-                                action_id: 'select_',
+                                action_id: 'networkType',
                                 options: [
                                     {
                                         text: {

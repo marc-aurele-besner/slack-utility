@@ -12,6 +12,7 @@ import settings_networks from './settings_networks'
 import settings_networks_add from './settings_networks_add'
 import settings_save from './settings_save'
 import settings_signers from './settings_signers'
+import settings_validate from './settings_validate'
 import update_msg from './update_msg'
 
 const actions = {
@@ -28,6 +29,7 @@ const actions = {
     settings_networks_add,
     settings_save,
     settings_signers,
+    settings_validate,
     settings,
     update_msg
 }
