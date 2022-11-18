@@ -1,6 +1,6 @@
 import slackBuilder from '../slackBuilder'
-import retrieveUserSettings from '../slackUtils/retrieveUserSettings'
-import { TBlockElements, TBlocks, TReturnValue, TSigner } from '../types'
+import retrieveTeamSettings from '../slackUtils/retrieveTeamSettings'
+import { TBlockElements, TBlocks, TCommand, TReturnValue } from '../types'
 
 const action = async (
     actionObject: any,
@@ -9,31 +9,31 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_signers')
+    console.log('settings_commands')
     try {
-        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active signers:`))
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active commands:`))
 
-        const userSettings = await retrieveUserSettings(actionObject.faunaDbToken, parsedBody.user.id)
-        let signerList = ''
-        if (userSettings && userSettings.signers) {
-            const { signers } = userSettings
-            if (signers.length > 0)
-                signers
-                    .filter((signer: TSigner) => signer.active)
-                    .map((signer: TSigner) => (signerList += `- ${signer.name}\n`))
+        const teamSettings = await retrieveTeamSettings(actionObject.faunaDbToken, parsedBody.team.id)
+        let commandList = ''
+        if (teamSettings && teamSettings.commands) {
+            const { commands } = teamSettings
+            if (commands.length > 0)
+                commands
+                    .filter((command: TCommand) => command.active)
+                    .map((command: TCommand) => (commandList += `- ${command.command}\n`))
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', signerList),
+            slackBuilder.buildSimpleSectionMsg('', commandList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
-                'You can change the signers settings to add, remove, or modify signers from the list.\nThis will be save as your personal settings.'
+                'You can change the commands settings to add, remove, or modify commands from the list.\nThis will be save as your personal settings.'
             )
         )
         buttons.push(
             slackBuilder.buildSimpleSlackButton(
-                'Add signer :heavy_plus_sign:',
+                'Add command :heavy_plus_sign:',
                 {
-                    action: 'settings_signers_add',
+                    action: 'settings_commands_add',
                     team_settings:
                         actionObject.value === undefined
                             ? false
@@ -41,23 +41,23 @@ const action = async (
                             ? JSON.parse(actionObject.value).team_settings
                             : false
                 },
-                'settings_signers_add',
+                'settings_commands_add',
                 'primary'
             )
         )
-        if (userSettings && userSettings.signers) {
-            const { signers } = userSettings
-            if (signers.length > 1)
+        if (teamSettings && teamSettings.commands) {
+            const { commands } = teamSettings
+            if (commands.length > 1)
                 buttons.push(
                     slackBuilder.buildSimpleSlackSelection(
-                        signers.map((signer: TSigner) => {
+                        commands.map((command: TCommand) => {
                             return {
-                                name: signer.name,
-                                value: signer.name
+                                name: command.command,
+                                value: command.command
                             }
                         }),
-                        'select_setting_signer',
-                        'Select signer to remove'
+                        'select_setting_command',
+                        'Select command to remove'
                     ),
                     slackBuilder.buildSimpleSlackButton(
                         'Remove :x:',

@@ -1,4 +1,5 @@
 import slackBuilder from '../slackBuilder'
+import retrieveUserSettings from '../slackUtils/retrieveUserSettings'
 import { TBlockElements, TBlocks, TContract, TReturnValue } from '../types'
 
 const action = async (
@@ -11,40 +12,67 @@ const action = async (
     console.log('settings_contracts')
     try {
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active contracts:`))
-        if (actionObject.env) {
-            const { contracts } = actionObject.env
-            let contractsList = ''
-            contracts
-                .filter((contract: any) => contract.active)
-                .map((contract: any) => (contractsList += `- ${contract.name} (default)\n`))
-            console.log('contractsList', JSON.stringify(contracts))
-            messageBlocks.push(
-                slackBuilder.buildSimpleSectionMsg('', contractsList),
-                slackBuilder.buildSimpleSectionMsg(
-                    '',
-                    'You can change the contracts settings to add, remove, or modify from the list.\nThis will be save as your personal settings.'
+
+        const userSettings = await retrieveUserSettings(actionObject.faunaDbToken, parsedBody.user.id)
+        let contractList = ''
+        if (userSettings && userSettings.contracts) {
+            const { contracts } = userSettings
+            if (contracts.length > 0)
+                contracts
+                    .filter((contract: TContract) => contract.active)
+                    .map((contract: TContract) => (contractList += `- ${contract.name}\n`))
+        }
+        messageBlocks.push(
+            slackBuilder.buildSimpleSectionMsg('', contractList),
+            slackBuilder.buildSimpleSectionMsg(
+                '',
+                'You can change the contracts settings to add, remove, or modify contracts from the list.\nThis will be save as your personal settings.'
+            )
+        )
+        buttons.push(
+            slackBuilder.buildSimpleSlackButton(
+                'Add contract :heavy_plus_sign:',
+                {
+                    action: 'settings_contracts_add',
+                    team_settings:
+                        actionObject.value === undefined
+                            ? false
+                            : JSON.parse(actionObject.value).team_settings !== undefined
+                            ? JSON.parse(actionObject.value).team_settings
+                            : false
+                },
+                'settings_contracts_add',
+                'primary'
+            )
+        )
+        if (userSettings && userSettings.contracts) {
+            const { contracts } = userSettings
+            if (contracts.length > 1)
+                buttons.push(
+                    slackBuilder.buildSimpleSlackSelection(
+                        contracts.map((contract: TContract) => {
+                            return {
+                                name: contract.name,
+                                value: contract.name
+                            }
+                        }),
+                        'select_setting_contract',
+                        'Select contract to remove'
+                    ),
+                    slackBuilder.buildSimpleSlackButton(
+                        'Remove :x:',
+                        {
+                            action: 'settings_validate',
+                            team_settings:
+                                actionObject.value === undefined
+                                    ? false
+                                    : JSON.parse(actionObject.value).team_settings !== undefined
+                                    ? JSON.parse(actionObject.value).team_settings
+                                    : false
+                        },
+                        'settings_validate'
+                    )
                 )
-            )
-            buttons.push(
-                slackBuilder.buildSimpleSlackButton(
-                    'Add contract :heavy_plus_sign:',
-                    { action: 'settings_contracts_add' },
-                    'settings_contracts_add'
-                ),
-                // To-Do: Change the data for user networks
-                slackBuilder.buildSimpleSlackSelection(
-                    contracts.map((contract: TContract) => {
-                        return {
-                            name: contract.name,
-                            value: contract.name
-                        }
-                    }),
-                    'select_setting_contract',
-                    'Select contract to remove or edit'
-                ),
-                slackBuilder.buildSimpleSlackButton('Modify :gear:', { action: 'settings_modify' }, 'settings_modify'),
-                slackBuilder.buildSimpleSlackButton('Remove :x:', { action: 'settings_confirm' }, 'settings_confirm')
-            )
         }
     } catch (error) {
         console.log('error', error)

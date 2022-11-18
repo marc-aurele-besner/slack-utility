@@ -9,53 +9,37 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_networks_add')
+    console.log('settings_abiss_add')
     try {
         await slackUtils.slackOpenView(
             actionObject.slackToken,
             slackBuilder.buildSlackModal(
-                'Add network',
+                'Add abis',
                 'settings_validate',
                 [
                     slackBuilder.buildSimpleSectionMsg(
                         '',
-                        'Add a new network in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
+                        'Add a new abis in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
                     ),
                     {
                         type: 'divider'
                     },
-                    slackBuilder.buildSimpleSlackHeaderMsg(`New network`),
+                    slackBuilder.buildSimpleSlackHeaderMsg(`New abis`),
                     slackBuilder.buildSlackInput(
-                        'Network name',
-                        'network_name',
-                        slackBuilder.buildSlackPlainTextInput('Enter network name', 'networkName')
+                        'Abis name',
+                        'abis_name',
+                        slackBuilder.buildSlackPlainTextInput('Enter abis name', 'abisName')
                     ),
                     slackBuilder.buildSlackInput(
-                        'Network chain Id',
-                        'network_chainId',
-                        slackBuilder.buildSlackNumberInput('networkChainId')
+                        'Abis ABI',
+                        'abis_abi',
+                        slackBuilder.buildSlackMultilineInput('Enter abis ABI', 'abisABI')
                     ),
                     slackBuilder.buildSlackInput(
-                        'Network RPC URL',
-                        'network_rpcUrl',
-                        slackBuilder.buildSlackPlainTextInput('Enter network RPC URL', 'networkRpcUrl')
-                    ),
-                    slackBuilder.buildSlackActionMsg({}, 'actions1', [
-                        slackBuilder.buildSimpleSlackSelection(
-                            [
-                                {
-                                    name: 'EVM - Ethers.js',
-                                    value: 'ethers'
-                                }
-                                // {
-                                //     name: 'Tron - TronWeb',
-                                //     value: 'tronweb'
-                                // }
-                            ],
-                            'select_',
-                            'Which client/provider should we use?'
-                        )
-                    ])
+                        'Abis byteCode',
+                        'abis_byteCode',
+                        slackBuilder.buildSlackMultilineInput('Enter abis Byte Code', 'abisByteCode')
+                    )
                 ],
                 'Submit',
                 'Close',

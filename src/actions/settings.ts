@@ -1,5 +1,6 @@
 import slackBuilder from '../slackBuilder'
-import { TBlockElements, TBlocks, TReturnValue } from '../types'
+import retrieveUserSettings from '../slackUtils/retrieveUserSettings'
+import { TAbi, TApiKey, TBlockElements, TBlocks, TContract, TNetwork, TReturnValue, TSigner } from '../types'
 
 const action = async (
     actionObject: any,
@@ -10,27 +11,64 @@ const action = async (
 ) => {
     console.log('settings', actionObject)
     try {
-        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Settings:`))
-        if (actionObject.env) {
-            const { contracts, networks } = actionObject.env
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`User Settings:`))
+        const userSettings = await retrieveUserSettings(actionObject.faunaDbToken, parsedBody.user.id)
+        let contractList = ''
+        let networkList = ''
+        let abiList = ''
+        let apiKeyList = ''
+        let signerList = ''
+        if (userSettings !== null) {
+            console.log('userSettings', userSettings)
+            const { contracts, networks, abis, apiKeys, signers } = userSettings
 
-            let contractList = ''
-            let networkList = ''
-            contracts
-                .filter((contract: any) => contract.active)
-                .map((contract: any) => (contractList += `- ${contract.name}\n`))
-            networks
-                .filter((network: any) => network.active)
-                .map((network: any) => (networkList += `• \`${network.value}\` - ${network.name}\n`))
-
-            messageBlocks.push(
-                slackBuilder.buildSimpleSectionMsg(
-                    '',
-                    `*API Keys:*\n\`\`\`- Etherscan \n\`\`\`\n*Networks:*\n\`\`\`\n${networkList}\`\`\`\n*Contracts:*\n\`\`\`\n${contractList}\`\`\`\n*Wallets:*\n\`\`\`\n- Dummy Wallet\n\`\`\``
-                )
-            )
+            if (networks !== undefined && networks.length > 0)
+                networks
+                    .filter((network: TNetwork) => network.active)
+                    .map((network: TNetwork) => (networkList += `• \`${network.value}\` - ${network.name}\n`))
+            else networkList = 'No user networks added yet'
+            if (contracts !== undefined && contracts.length > 0)
+                contracts
+                    .filter((contract: TContract) => contract.active)
+                    .map((contract: TContract) => (contractList += `- ${contract.name}\n`))
+            else contractList = 'No user contracts added yet'
+            if (abis !== undefined && abis.length > 0)
+                abis.filter((abi: TAbi) => abi.active).map((abi: TAbi) => (abiList += `• \`${abi.name}\`\n`))
+            else abiList = 'No user abis added yet'
+            if (apiKeys !== undefined && apiKeys.length > 0)
+                apiKeys
+                    .filter((apiKey: TApiKey) => apiKey.active)
+                    .map((apiKey: TApiKey) => (apiKeyList += `• \`${apiKey.name}\`\n`))
+            else apiKeyList = 'No user apiKeys added yet'
+            if (signers !== undefined && signers.length > 0)
+                signers
+                    .filter((signer: TSigner) => signer.active)
+                    .map((signer: TSigner) => (signerList += `• \`${signer.address}\` - ${signer.name}\n`))
+            else signerList = 'No user signers added yet'
+        } else {
+            networkList = 'No user networks added yet'
+            contractList = 'No user contracts added yet'
+            abiList = 'No user abis added yet'
+            apiKeyList = 'No user apiKeys added yet'
+            signerList = 'No user signers added yet'
         }
+        messageBlocks.push(
+            slackBuilder.buildSimpleSectionMsg(
+                '',
+                'Here are listed any settings (networks, contracts, abis, apiKeys, signers, ...) that you set for your slack account.'
+            ),
+            slackBuilder.buildSimpleSectionMsg(
+                '',
+                `*Networks:*\n\`\`\`\n${networkList}\`\`\`\n*Contracts:*\n\`\`\`\n${contractList}\`\`\`\n*Abis:*\n\`\`\`\n${abiList}\`\`\`\n*ApiKeys:*\n\`\`\`\n${apiKeyList}\`\`\`\n*Signers:*\n\`\`\`\n${signerList}\n\`\`\``
+            )
+        )
         buttons.push(
+            slackBuilder.buildSimpleSlackButton(
+                'Edit Networks :pencil:',
+                { action: 'settings_networks' },
+                'settings_networks',
+                'primary'
+            ),
             slackBuilder.buildSimpleSlackButton(
                 'Edit Contracts :pencil:',
                 { action: 'settings_contracts' },
@@ -38,10 +76,10 @@ const action = async (
                 undefined
             ),
             slackBuilder.buildSimpleSlackButton(
-                'Edit Networks :pencil:',
-                { action: 'settings_networks' },
-                'settings_networks',
-                'primary'
+                'Edit ABIs :pencil:',
+                { action: 'settings_abis' },
+                'settings_abis',
+                undefined
             ),
             slackBuilder.buildSimpleSlackButton(
                 'Edit API Keys :pencil:',

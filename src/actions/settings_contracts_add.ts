@@ -1,4 +1,5 @@
 import slackBuilder from '../slackBuilder'
+import slackUtils from '../slackUtils'
 import { TBlockElements, TBlocks, TNetwork, TReturnValue } from '../types'
 
 const action = async (
@@ -10,29 +11,39 @@ const action = async (
 ) => {
     console.log('settings_contracts_add')
     try {
-        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Contracts settings:`))
-        if (actionObject.env) {
-            const { networks } = actionObject.env
-            messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', 'Add a new contract in the slack app.'))
-            buttons.push(
-                slackBuilder.buildSimpleSlackSelection(
-                    networks.map((network: TNetwork) => {
-                        return {
-                            name: network.name,
-                            value: network.name
-                        }
-                    }),
-                    'select_setting_network',
-                    'Select network to remove or edit'
-                ),
-                slackBuilder.buildSimpleSlackButton('Save :floppy_disk:', { action: 'settings_save' }, 'settings_save'),
-                slackBuilder.buildSimpleSlackButton(
-                    'Cancel :x:',
-                    { action: 'settings_contracts' },
-                    'settings_contracts'
-                )
-            )
-        }
+        await slackUtils.slackOpenView(
+            actionObject.slackToken,
+            slackBuilder.buildSlackModal(
+                'Add contract',
+                'settings_validate',
+                [
+                    slackBuilder.buildSimpleSectionMsg(
+                        '',
+                        'Add a new contract in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
+                    ),
+                    {
+                        type: 'divider'
+                    },
+                    slackBuilder.buildSimpleSlackHeaderMsg(`New contract`),
+                    slackBuilder.buildSlackInput(
+                        'Contract name',
+                        'contract_name',
+                        slackBuilder.buildSlackPlainTextInput('Enter network name', 'contractName')
+                    )
+                ],
+                'Submit',
+                'Close',
+                {
+                    team_settings:
+                        actionObject.value === undefined
+                            ? false
+                            : JSON.parse(actionObject.value).team_settings !== undefined
+                            ? JSON.parse(actionObject.value).team_settings
+                            : false
+                }
+            ),
+            parsedBody.trigger_id
+        )
     } catch (error) {
         console.log('error', error)
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))

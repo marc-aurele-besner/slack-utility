@@ -9,70 +9,43 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_networks_add')
+    console.log('settings_apiKeys_add')
     try {
         await slackUtils.slackOpenView(
             actionObject.slackToken,
             slackBuilder.buildSlackModal(
-                'Add network',
-                'settings_save',
+                'Add apiKey',
+                'settings_validate',
                 [
                     slackBuilder.buildSimpleSectionMsg(
                         '',
-                        'Add a new network in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
+                        'Add a new apiKey in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
                     ),
                     {
                         type: 'divider'
                     },
-                    slackBuilder.buildSimpleSlackHeaderMsg(`New network`),
+                    slackBuilder.buildSimpleSlackHeaderMsg(`New apiKey`),
                     slackBuilder.buildSlackInput(
-                        'Network name',
-                        'network_name',
-                        slackBuilder.buildSlackPlainTextInput('Enter network name', 'networkName')
+                        'ApiKey name',
+                        'apiKey_name',
+                        slackBuilder.buildSlackPlainTextInput('Enter apiKey name', 'apiKeyName')
                     ),
                     slackBuilder.buildSlackInput(
-                        'Network chain Id',
-                        'network_chainId',
-                        slackBuilder.buildSlackNumberInput('network_chnetworkChainIdainId')
-                    ),
-                    slackBuilder.buildSlackInput(
-                        'Network RPC URL',
-                        'network_rpcUrl',
-                        slackBuilder.buildSlackPlainTextInput('Enter network RPC URL', 'networkRpcUrl')
-                    ),
-                    {
-                        type: 'actions',
-                        block_id: 'actions1',
-                        elements: [
-                            {
-                                type: 'static_select',
-                                placeholder: {
-                                    type: 'plain_text',
-                                    text: 'Which client/provider should we use?'
-                                },
-                                action_id: 'select_',
-                                options: [
-                                    {
-                                        text: {
-                                            type: 'plain_text',
-                                            text: 'EVM - Ethers.js'
-                                        },
-                                        value: 'ethers'
-                                    },
-                                    {
-                                        text: {
-                                            type: 'plain_text',
-                                            text: 'Tron - TronWeb'
-                                        },
-                                        value: 'tronweb'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                        'ApiKey value',
+                        'apiKey_value',
+                        slackBuilder.buildSlackPlainTextInput('Enter apiKey value', 'apiKeyValue')
+                    )
                 ],
                 'Submit',
-                'Close'
+                'Close',
+                {
+                    team_settings:
+                        actionObject.value === undefined
+                            ? false
+                            : JSON.parse(actionObject.value).team_settings !== undefined
+                            ? JSON.parse(actionObject.value).team_settings
+                            : false
+                }
             ),
             parsedBody.trigger_id
         )

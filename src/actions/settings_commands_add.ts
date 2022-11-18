@@ -9,70 +9,38 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_networks_add')
+    console.log('settings_commands_add')
     try {
         await slackUtils.slackOpenView(
             actionObject.slackToken,
             slackBuilder.buildSlackModal(
-                'Add network',
+                'Add command',
                 'settings_validate',
                 [
                     slackBuilder.buildSimpleSectionMsg(
                         '',
-                        'Add a new network in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
+                        'Add a new command in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
                     ),
                     {
                         type: 'divider'
                     },
-                    slackBuilder.buildSimpleSlackHeaderMsg(`New network`),
+                    slackBuilder.buildSimpleSlackHeaderMsg(`New command`),
                     slackBuilder.buildSlackInput(
                         'Network name',
-                        'network_name',
-                        slackBuilder.buildSlackPlainTextInput('Enter network name', 'networkName')
-                    ),
-                    slackBuilder.buildSlackInput(
-                        'Network chain Id',
-                        'network_chainId',
-                        slackBuilder.buildSlackNumberInput('network_chnetworkChainIdainId')
-                    ),
-                    slackBuilder.buildSlackInput(
-                        'Network RPC URL',
-                        'network_rpcUrl',
-                        slackBuilder.buildSlackPlainTextInput('Enter network RPC URL', 'networkRpcUrl')
-                    ),
-                    {
-                        type: 'actions',
-                        block_id: 'actions1',
-                        elements: [
-                            {
-                                type: 'static_select',
-                                placeholder: {
-                                    type: 'plain_text',
-                                    text: 'Which client/provider should we use?'
-                                },
-                                action_id: 'select_',
-                                options: [
-                                    {
-                                        text: {
-                                            type: 'plain_text',
-                                            text: 'EVM - Ethers.js'
-                                        },
-                                        value: 'ethers'
-                                    },
-                                    {
-                                        text: {
-                                            type: 'plain_text',
-                                            text: 'Tron - TronWeb'
-                                        },
-                                        value: 'tronweb'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                        'command_name',
+                        slackBuilder.buildSlackPlainTextInput('Enter command name', 'commandName')
+                    )
                 ],
                 'Submit',
-                'Close'
+                'Close',
+                {
+                    team_settings:
+                        actionObject.value === undefined
+                            ? false
+                            : JSON.parse(actionObject.value).team_settings !== undefined
+                            ? JSON.parse(actionObject.value).team_settings
+                            : false
+                }
             ),
             parsedBody.trigger_id
         )

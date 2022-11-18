@@ -1,6 +1,6 @@
 import slackBuilder from '../slackBuilder'
 import retrieveUserSettings from '../slackUtils/retrieveUserSettings'
-import { TBlockElements, TBlocks, TReturnValue, TSigner } from '../types'
+import { TAbi, TBlockElements, TBlocks, TReturnValue } from '../types'
 
 const action = async (
     actionObject: any,
@@ -9,31 +9,29 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_signers')
+    console.log('settings_abis')
     try {
-        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active signers:`))
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active abis:`))
 
         const userSettings = await retrieveUserSettings(actionObject.faunaDbToken, parsedBody.user.id)
-        let signerList = ''
-        if (userSettings && userSettings.signers) {
-            const { signers } = userSettings
-            if (signers.length > 0)
-                signers
-                    .filter((signer: TSigner) => signer.active)
-                    .map((signer: TSigner) => (signerList += `- ${signer.name}\n`))
+        let abiList = ''
+        if (userSettings && userSettings.abis) {
+            const { abis } = userSettings
+            if (abis.length > 0)
+                abis.filter((abi: TAbi) => abi.active).map((abi: TAbi) => (abiList += `- ${abi.name}\n`))
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', signerList),
+            slackBuilder.buildSimpleSectionMsg('', abiList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
-                'You can change the signers settings to add, remove, or modify signers from the list.\nThis will be save as your personal settings.'
+                'You can change the abis settings to add, remove, or modify abis from the list.\nThis will be save as your personal settings.'
             )
         )
         buttons.push(
             slackBuilder.buildSimpleSlackButton(
-                'Add signer :heavy_plus_sign:',
+                'Add abi :heavy_plus_sign:',
                 {
-                    action: 'settings_signers_add',
+                    action: 'settings_abis_add',
                     team_settings:
                         actionObject.value === undefined
                             ? false
@@ -41,23 +39,23 @@ const action = async (
                             ? JSON.parse(actionObject.value).team_settings
                             : false
                 },
-                'settings_signers_add',
+                'settings_abis_add',
                 'primary'
             )
         )
-        if (userSettings && userSettings.signers) {
-            const { signers } = userSettings
-            if (signers.length > 1)
+        if (userSettings && userSettings.abis) {
+            const { abis } = userSettings
+            if (abis.length > 1)
                 buttons.push(
                     slackBuilder.buildSimpleSlackSelection(
-                        signers.map((signer: TSigner) => {
+                        abis.map((abi: TAbi) => {
                             return {
-                                name: signer.name,
-                                value: signer.name
+                                name: abi.name,
+                                value: abi.name
                             }
                         }),
-                        'select_setting_signer',
-                        'Select signer to remove'
+                        'select_setting_abi',
+                        'Select abi to remove'
                     ),
                     slackBuilder.buildSimpleSlackButton(
                         'Remove :x:',

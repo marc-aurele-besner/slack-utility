@@ -9,75 +9,59 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_networks_add')
+    console.log('settings_signers_add')
     try {
         await slackUtils.slackOpenView(
             actionObject.slackToken,
             slackBuilder.buildSlackModal(
-                'Add network',
+                'Add signer',
                 'settings_validate',
                 [
                     slackBuilder.buildSimpleSectionMsg(
                         '',
-                        'Add a new network in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
+                        'Add a new signer in your slack app that only you, <@' + parsedBody.user.name + '> will see.'
                     ),
                     {
                         type: 'divider'
                     },
-                    slackBuilder.buildSimpleSlackHeaderMsg(`New network`),
-                    // {
-                    //     type: 'image',
-                    //     image_url: 'https://media.giphy.com/media/SVZGEcYt7brkFUyU90/giphy.gif',
-                    //     alt_text: 'Yay! The modal was updated'
-                    // },
+                    slackBuilder.buildSimpleSlackHeaderMsg(`New signer`),
                     slackBuilder.buildSlackInput(
-                        'Network name',
-                        'network_name',
-                        slackBuilder.buildSlackPlainTextInput('Enter network name', 'networkName')
+                        'Signer name',
+                        'signer_name',
+                        slackBuilder.buildSlackPlainTextInput('Enter signer name', 'signerName')
                     ),
                     slackBuilder.buildSlackInput(
-                        'Network chain Id',
-                        'network_chainId',
-                        slackBuilder.buildSlackNumberInput('network_chnetworkChainIdainId')
+                        'Signer pk',
+                        'signer_pk',
+                        slackBuilder.buildSlackPlainTextInput('Enter signer pk', 'signerPk')
                     ),
-                    slackBuilder.buildSlackInput(
-                        'Network RPC URL',
-                        'network_rpcUrl',
-                        slackBuilder.buildSlackPlainTextInput('Enter network RPC URL', 'networkRpcUrl')
-                    ),
-                    {
-                        type: 'actions',
-                        block_id: 'actions1',
-                        elements: [
-                            {
-                                type: 'static_select',
-                                placeholder: {
-                                    type: 'plain_text',
-                                    text: 'Which client/provider should we use?'
-                                },
-                                action_id: 'select_',
-                                options: [
-                                    {
-                                        text: {
-                                            type: 'plain_text',
-                                            text: 'EVM - Ethers.js'
-                                        },
-                                        value: 'ethers'
-                                    },
-                                    {
-                                        text: {
-                                            type: 'plain_text',
-                                            text: 'Tron - TronWeb'
-                                        },
-                                        value: 'tronweb'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                    slackBuilder.buildSlackActionMsg({}, 'actions1', [
+                        slackBuilder.buildSimpleSlackSelection(
+                            [
+                                {
+                                    name: 'EVM - Ethers.js',
+                                    value: 'ethers'
+                                }
+                                // {
+                                //     name: 'Tron - TronWeb',
+                                //     value: 'tronweb'
+                                // }
+                            ],
+                            'select_',
+                            'Which client/provider should we use?'
+                        )
+                    ])
                 ],
                 'Validate',
-                'Close'
+                'Close',
+                {
+                    team_settings:
+                        actionObject.value === undefined
+                            ? false
+                            : JSON.parse(actionObject.value).team_settings !== undefined
+                            ? JSON.parse(actionObject.value).team_settings
+                            : false
+                }
             ),
             parsedBody.trigger_id
         )
