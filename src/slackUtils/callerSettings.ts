@@ -1,5 +1,3 @@
-import fauna from 'faunadb-utility/src'
-
 import { TTeamSettings, TUserSettings } from '../types'
 
 import retrieveTeamSettings from './retrieveTeamSettings'
@@ -13,17 +11,18 @@ const callerSettings = async (
     defaultApiKeys = {} as any,
     defaultSigners = [] as any[]
 ) => {
-    const userSettings = await retrieveUserSettings(user.faunaDbToken, user.id)
-    const teamSettings = await retrieveTeamSettings(user.faunaDbToken, user.teamId)
+    const userSettings: TUserSettings | null = await retrieveUserSettings(user.faunaDbToken, user.id, user.teamId)
+    const teamSettings: TTeamSettings | null = await retrieveTeamSettings(user.faunaDbToken, user.teamId)
     const dbUserSettingFound = userSettings !== null ? true : false
-    const dbTeamSettingFound = userSettings !== null ? true : false
+    const dbTeamSettingFound = teamSettings !== null ? true : false
 
     return {
         contracts: defaultContracts,
         networks: defaultNetworks,
         apiKeys: defaultApiKeys,
         signers: defaultSigners,
-        dbUserSettingFound
+        dbUserSettingFound,
+        dbTeamSettingFound
     }
 }
 

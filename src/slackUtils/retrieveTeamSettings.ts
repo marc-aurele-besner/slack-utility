@@ -10,8 +10,8 @@ const retrieveTeamSettings = async (
         try {
             const getDbTeamSettings = await fauna.queryTermByFaunaIndexes(
                 faunaDbToken,
-                'settings_by_slackTeamId',
-                slackTeamId
+                'settings_by_slackTeamUserId',
+                slackTeamId + '_all'
             )
             if (JSON.parse(getDbTeamSettings.body).length > 0)
                 return JSON.parse(getDbTeamSettings.body)[0].data.settings
