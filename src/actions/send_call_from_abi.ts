@@ -1,3 +1,5 @@
+import { utils } from 'ethers'
+import fauna from 'faunadb-utility/src'
 import { nanoid } from 'nanoid'
 
 import slackBuilder from '../slackBuilder'
@@ -59,60 +61,117 @@ const action = async (
                 actionObject = wait.action
                 messageBlocks = wait.blocks
             }
-            // let tx: any
-            if (signingType === 'web3') {
-                const txId = nanoid()
-                // tx = await fauna.createFaunaDocument(action.faunaDbToken, 'transactions', {
-                //   txId,
-                //   txStatus: 'pending-signing',
-                //   slackUserId: parsedBody.user.id,
-                //   slackChannelId: parsedBody.channel.id,
-                //   slackTeamId: parsedBody.team.id,
-                //   selectedEnvironment: selectedEnvironment,
-                //   selectedContract: selectedContract,
-                //   chainId: chainId.toString(),
-                //   chainIdAndTxId: `${chainId}_${txId}`,
-                //   chainName: chainName,
-                //   contractName: contractName,
-                //   contractAddress: contractAddress,
-                //   method: 'createPool',
-                //   params: [
-                //     valueParsed.poolInfo.interestRate.toString(),
-                //     valueParsed.poolInfo.tenor.toString(),
-                //     valueParsed.poolInfo.openingDate.toString(),
-                //     valueParsed.poolInfo.closingDate.toString(),
-                //     valueParsed.poolInfo.startingDate.toString(),
-                //     valueParsed.poolInfo.minimumRaise.toString(),
-                //     valueParsed.poolInfo.maximumRaise.toString()
-                //   ],
-                //   value: "0x00",
-                //   gasLimit: utils.hexlify(5000000)
-                // })
-                // if (tx !== undefined) {
-                //   messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:fox_face: Sign the transaction with your wallet at http://smc344.netlify.app/tx/${chainId}_${txId}`))
-                //   buttons.push(slackBuilder.buildLinkSlackButton('Sign transaction', undefined, 'sign_web3_tx', 'primary', `http://smc344.netlify.app/tx/${chainId}_${txId}`))
-                // }
+            const abiFunctions = JSON.parse(parsedBody.view.private_metadata).abiFunctions
+            if (abiFunctions !== undefined && abiFunctions.length === 1) {
+                const abiFunctionsStateMutability = abiFunctions[0].stateMutability
+                console.log('abiFunctionsStateMutability', abiFunctionsStateMutability)
+                if (abiFunctionsStateMutability === 'view' || abiFunctionsStateMutability === 'pure') {
+                    const callValue = await contractInstance
+                        [abiFunctions[0].name]
+                        // pass arguments here
+                        ()
+                    console.log('callValue', callValue)
+                    messageBlocks.push(
+                        slackBuilder.buildSimpleSectionMsg(
+                            JSON.parse(parsedBody.view.private_metadata).functionName,
+                            `:white_check_mark: Success:`
+                        )
+                    )
+                    buttons.push(
+                        slackBuilder.buildSimpleSlackButton(
+                            'Get all ABI functions',
+                            { action: 'query_contract_calls' },
+                            'query_contract_calls',
+                            'primary'
+                        )
+                    )
+                } else {
+                    let tx: any
+                    if (signingType === 'web3') {
+                        const txId = nanoid()
+                        tx = await fauna.createFaunaDocument(actionObject.faunaDbToken, 'transactions', {
+                            txId,
+                            txStatus: 'pending-signing',
+                            slackUserId: parsedBody.user.id,
+                            slackChannelId: parsedBody.channel.id,
+                            slackTeamId: parsedBody.team.id,
+                            selectedEnvironment,
+                            selectedContract,
+                            chainId: chainId.toString(),
+                            chainIdAndTxId: `${chainId}_${txId}`,
+                            chainName,
+                            contractName,
+                            contractAddress,
+                            method: JSON.parse(parsedBody.view.private_metadata).functionSignature,
+                            params: [
+                                // pass arguments here
+                                //     valueParsed.poolInfo.interestRate.toString(),
+                                //     valueParsed.poolInfo.tenor.toString(),
+                                //     valueParsed.poolInfo.openingDate.toString(),
+                                //     valueParsed.poolInfo.closingDate.toString(),
+                                //     valueParsed.poolInfo.startingDate.toString(),
+                                //     valueParsed.poolInfo.minimumRaise.toString(),
+                                //     valueParsed.poolInfo.maximumRaise.toString()
+                            ],
+                            value: '0x00',
+                            gasLimit: utils.hexlify(5000000)
+                        })
+                        if (tx !== undefined) {
+                            messageBlocks.push(
+                                slackBuilder.buildSimpleSlackHeaderMsg(
+                                    `:fox_face: Sign the transaction with your wallet at ${actionObject.dappUrl}/tx/${chainId}_${txId}`
+                                )
+                            )
+                            buttons.push(
+                                slackBuilder.buildLinkSlackButton(
+                                    'Sign transaction',
+                                    undefined,
+                                    'sign_web3_tx',
+                                    'primary',
+                                    `${actionObject.dappUrl}/tx/${chainId}_${txId}`
+                                )
+                            )
+                        }
+                    } else {
+                        tx = await contractInstance[JSON.parse(parsedBody.view.private_metadata).functionSignature](
+                            //   valueParsed.poolInfo.openingDate,
+                            //   valueParsed.poolInfo.closingDate,
+                            //   valueParsed.poolInfo.startingDate,
+                            //   valueParsed.poolInfo.interestRate,
+                            //   valueParsed.poolInfo.tenor,
+                            //   valueParsed.poolInfo.minimumRaise,
+                            //   valueParsed.poolInfo.maximumRaise,
+                            {
+                                gasLimit: 5000000
+                            }
+                        )
+                        if (tx !== undefined) {
+                            messageBlocks.push(
+                                slackBuilder.buildSimpleSlackHeaderMsg(
+                                    `:white_check_mark: Transaction Hash: ${tx.hash}`
+                                )
+                            )
+                            buttons.push(
+                                slackBuilder.buildEtherscanLinkSlackButton(
+                                    chainName,
+                                    'Transaction on Etherscan',
+                                    undefined,
+                                    undefined,
+                                    undefined,
+                                    tx.hash
+                                )
+                            )
+                        }
+                    }
+                }
             } else {
-                // tx = await contractInstance.createPool(
-                //   valueParsed.poolInfo.openingDate,
-                //   valueParsed.poolInfo.closingDate,
-                //   valueParsed.poolInfo.startingDate,
-                //   valueParsed.poolInfo.interestRate,
-                //   valueParsed.poolInfo.tenor,
-                //   valueParsed.poolInfo.minimumRaise,
-                //   valueParsed.poolInfo.maximumRaise,
-                //   {
-                //     gasLimit: 5000000
-                //   }
-                // )
-                // if (tx !== undefined) {
-                //   messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:white_check_mark: Transaction Hash: ${tx.hash}`))
-                //   buttons.push(
-                //     slackBuilder.buildEtherscanLinkSlackButton(chainName, 'Transaction on Etherscan', undefined, undefined, undefined, tx.hash)
-                //   )
-                // }
+                messageBlocks.push(
+                    slackBuilder.buildSimpleSectionMsg(
+                        '',
+                        `:x: Error: ABI function not found in ABI file or overloaded`
+                    )
+                )
             }
-
             // const inputArguments = [{ type: 'divider' }]
             // const { chainId, chainName, contractAddress, contractInstance, contractAbi } =
             //     await setupContractNetworkAndSigner(

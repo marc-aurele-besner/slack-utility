@@ -102,10 +102,7 @@ const action = async (
                             events.push(txn.args)
                             eventsOption.push({
                                 name: txn.blockHash,
-                                value: JSON.stringify({
-                                    blockHash: txn.blockHash,
-                                    args: txn.args
-                                })
+                                value: txn.blockHash
                             })
                         }
                     }
