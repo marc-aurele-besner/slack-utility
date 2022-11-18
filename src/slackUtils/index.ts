@@ -2,7 +2,8 @@ import actionsLoop from './actionsLoop'
 import callerSettings from './callerSettings'
 import commandsLoop from './commandsLoop'
 import retrieveEnvironment from './retrieveEnvironment'
-import retrieveSettings from './retrieveSettings'
+import retrieveTeamSettings from './retrieveTeamSettings'
+import retrieveUserSettings from './retrieveUserSettings'
 import setupContractAndNetwork from './setupContractAndNetwork'
 import setupContractNetworkAndSigner from './setupContractNetworkAndSigner'
 import setupNetwork from './setupNetwork'
@@ -21,7 +22,8 @@ const slackUtils = {
     callerSettings,
     commandsLoop,
     retrieveEnvironment,
-    retrieveSettings,
+    retrieveTeamSettings,
+    retrieveUserSettings,
     setupContractAndNetwork,
     setupContractNetworkAndSigner,
     setupNetwork,

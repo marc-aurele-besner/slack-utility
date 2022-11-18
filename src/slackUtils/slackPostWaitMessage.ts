@@ -25,9 +25,19 @@ const slackPostWaitMessage = async (
 
     blocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:pray: ${text} :clock2:`))
     try {
+        let replyTo = action.slackDefaultConversationId as string
+        if (parsedBody && parsedBody.container && parsedBody.container.channel_id) {
+            replyTo = parsedBody.container.channel_id
+        } else if (parsedBody && parsedBody.channel_id) {
+            replyTo = parsedBody.channel_id
+        } else if (parsedBody && parsedBody.channel && parsedBody.channel.id) {
+            replyTo = parsedBody.channel.id
+        } else if (parsedBody && parsedBody.user && parsedBody.user.id) {
+            replyTo = parsedBody.user.id
+        }
         const waitMessage: TSlackPostMessageResponse = await slackPostMessage(
             action.slackToken,
-            parsedBody.container.channel_id,
+            replyTo,
             returnValue.body,
             blocks,
             addDeleteBtn,
@@ -37,7 +47,8 @@ const slackPostWaitMessage = async (
         if (waitMessage.resultPostMessage.ok)
             action = {
                 ...action,
-                waitMessageTs: waitMessage.resultPostMessage.ts
+                waitMessageTs: waitMessage.resultPostMessage.ts,
+                waitMessageChannelId: replyTo
             }
         blocks.pop()
     } catch (error) {

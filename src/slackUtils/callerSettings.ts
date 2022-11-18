@@ -1,5 +1,10 @@
 import fauna from 'faunadb-utility/src'
 
+import { TTeamSettings, TUserSettings } from '../types'
+
+import retrieveTeamSettings from './retrieveTeamSettings'
+import retrieveUserSettings from './retrieveUserSettings'
+
 const callerSettings = async (
     user: any,
     settings: any,
@@ -8,13 +13,10 @@ const callerSettings = async (
     defaultApiKeys = {} as any,
     defaultSigners = [] as any[]
 ) => {
-    const getDbUserSettings = await fauna.queryTermByFaunaIndexes(
-        settings.faunaDbToken,
-        'settings_by_slackUserId',
-        user.id
-    )
-    console.log('getDbUserSettings', getDbUserSettings)
-    const dbUserSettingFound = getDbUserSettings.body.length > 0 ? true : false
+    const userSettings = await retrieveUserSettings(user.faunaDbToken, user.id)
+    const teamSettings = await retrieveTeamSettings(user.faunaDbToken, user.teamId)
+    const dbUserSettingFound = userSettings !== null ? true : false
+    const dbTeamSettingFound = userSettings !== null ? true : false
 
     return {
         contracts: defaultContracts,

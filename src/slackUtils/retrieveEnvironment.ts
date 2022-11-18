@@ -47,6 +47,17 @@ const retrieveEnvironment = async (
             } catch (error) {}
         }
     } catch (error) {}
+    try {
+        if (!environmentFound && body.view.private_metadata) {
+            try {
+                const parsedValue = JSON.parse(body.view.private_metadata)
+                console.log('parsedValue', parsedValue)
+                selectedEnvironment = parsedValue.selectedEnvironment
+                selectedContract = parsedValue.selectedContract
+                environmentFound = true
+            } catch (error) {}
+        }
+    } catch (error) {}
     return { environmentFound, selectedEnvironment, selectedContract }
 }
 

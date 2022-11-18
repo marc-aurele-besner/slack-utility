@@ -13,6 +13,7 @@ const slackUpdateMessage = async (
     addSettings = true as boolean,
     addRefresh = true as boolean
 ): Promise<TSlackMessageResponse> => {
+    console.log('slackUpdateMessage', channel, ts)
     let result: TSlackMessageResponse = {
         ok: false,
         ts: ''
