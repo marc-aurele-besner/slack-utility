@@ -8,7 +8,7 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('query_contract_for_env', actionObject.selectedContract)
+    console.log('query_contract_for_env')
     let contractInstance
     try {
         contractInstance = actionObject.contractInstance
@@ -51,6 +51,16 @@ const action = async (
             },
             'query_contract_calls',
             'primary'
+        ),
+        slackBuilder.buildSimpleSlackButton(
+            'All events',
+            {
+                selectedEnvironment: actionObject.value.selectedEnvironment,
+                selectedContract: actionObject.value.selectedContract,
+                chainId: actionObject.chainId,
+                chainName: actionObject.chainName
+            },
+            'query_contract_events'
         )
     )
 

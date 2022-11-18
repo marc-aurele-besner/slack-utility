@@ -1,4 +1,6 @@
 import slackBuilder from '../slackBuilder'
+import retrieveEnvironment from '../slackUtils/retrieveEnvironment'
+import setupContractNetworkAndSigner from '../slackUtils/setupContractNetworkAndSigner'
 import { TBlockElements, TBlocks, TReturnValue } from '../types'
 
 const action = async (
@@ -9,52 +11,66 @@ const action = async (
     returnValue: TReturnValue
 ) => {
     console.log('query_contract_calls')
-    const allFunctions = Object.keys(actionObject.contractInstance.callStatic).slice(
-        0,
-        Object.keys(actionObject.contractInstance.callStatic).length / 2
-    )
-    console.log('allFunctions', allFunctions)
-    console.log('actionObject.value.', actionObject.value)
-    const { functionsPadding } = JSON.parse(actionObject.value)
-    console.log('functionsPadding', actionObject)
-
-    const functionStart = functionsPadding > 0 ? functionsPadding : 0
-    const functionEnd = functionsPadding > 0 ? functionsPadding + 16 : 16
-    for (let i = functionStart; i < functionEnd; i++) {
-        buttons.push(
-            slackBuilder.buildSimpleSlackButton(
-                allFunctions[i],
-                {
-                    selectedEnvironment: actionObject.value.selectedEnvironment,
-                    selectedContract: actionObject.value.selectedContract,
-                    chainId: actionObject.chainId,
-                    chainName: actionObject.chainName,
-                    contractAddress: actionObject.contractAddress,
-                    contractName: actionObject.value.selectedContract,
-                    functionSignature: allFunctions[i]
-                },
-                'buildFromAbi-' + allFunctions[i]
+    try {
+        const { environmentFound, selectedEnvironment, selectedContract } = await retrieveEnvironment(parsedBody)
+        if (environmentFound) {
+            const { chainId, chainName, contractAddress, contractInstance } = await setupContractNetworkAndSigner(
+                actionObject.env,
+                actionObject.abis,
+                selectedEnvironment,
+                selectedContract
             )
-        )
+            if (contractInstance !== undefined) {
+                const allFunctions = Object.keys(contractInstance.callStatic).slice(
+                    0,
+                    Object.keys(contractInstance.callStatic).length / 2
+                )
+                const { functionsPadding } = JSON.parse(actionObject.value)
+
+                const functionStart = functionsPadding > 0 ? functionsPadding : 0
+                const functionEnd = functionsPadding > 0 ? functionsPadding + 16 : 16
+                for (let i = functionStart; i < functionEnd; i++) {
+                    buttons.push(
+                        slackBuilder.buildSimpleSlackButton(
+                            allFunctions[i],
+                            {
+                                selectedEnvironment,
+                                selectedContract,
+                                chainId,
+                                chainName,
+                                contractAddress,
+                                contractName: selectedContract,
+                                functionSignature: allFunctions[i],
+                                functionCount: i
+                            },
+                            'build_call_from_abi:' + allFunctions[i]
+                        )
+                    )
+                }
+
+                if (allFunctions.length > functionEnd)
+                    buttons.push(
+                        slackBuilder.buildSimpleSlackButton(
+                            'Show more',
+                            {
+                                selectedEnvironment,
+                                selectedContract,
+                                chainId,
+                                chainName,
+                                contractAddress,
+                                contractName: selectedContract,
+                                functionsPadding: (functionsPadding || 0) + 15
+                            },
+                            'query_contract_calls:more'
+                        )
+                    )
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('Select a function to call', ''))
+            } else messageBlocks.push(slackBuilder.buildSimpleSectionMsg('No contract found', ''))
+        } else messageBlocks.push(slackBuilder.buildSimpleSectionMsg('No environment found', ''))
+    } catch (error) {
+        console.log('error', error)
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))
     }
-
-    if (allFunctions.length > functionEnd)
-        buttons.push(
-            slackBuilder.buildSimpleSlackButton(
-                'Show more',
-                {
-                    selectedEnvironment: actionObject.value.selectedEnvironment,
-                    selectedContract: actionObject.value.selectedContract,
-                    chainId: actionObject.chainId,
-                    chainName: actionObject.chainName,
-                    contractAddress: actionObject.contractAddress,
-                    contractName: actionObject.value.selectedContract,
-                    functionsPadding: (functionsPadding || 0) + 15
-                },
-                'query_contract_for_env-more'
-            )
-        )
-    messageBlocks.push(slackBuilder.buildSimpleSectionMsg('Select a function to call', ''))
     return [actionObject, returnValue, messageBlocks, buttons]
 }
 

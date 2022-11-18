@@ -89,6 +89,7 @@ export type TNetwork = {
     active: boolean
     signingType: TSigningType
     networkClient?: TNetworkClient
+    blockTimeInSec?: number
 }
 export type TNetworks = TNetwork[]
 
@@ -99,6 +100,35 @@ export type TContract = {
     addressPerNetwork: TAddressesPerNetwork
 }
 export type TContracts = TContract[]
+
+export type TAbi = {
+    name: string
+    active: boolean
+    abi: any
+    byteCode: string
+}
+export type TAbis = TAbi[]
+
+export type TApiKey = {
+    name: string
+    active: boolean
+    value: string
+}
+export type TApiKeys = TApiKey[]
+
+export type TSigner = {
+    name: string
+    active: boolean
+    type?: TSigningType
+    providerType?: TNetworkClient
+    address?: string
+    privateKey?: string
+    mnemonic?: string
+    derivationPath?: string
+    rpcUrl?: string
+    chainId?: number | string
+}
+export type TSigners = TSigner[]
 
 export type TCommand = {
     command: string
@@ -121,6 +151,28 @@ export type TSettings = {
     contracts: string
     networks: string
     signers: string
+}
+
+export type TUserSettings = {
+    slackAppId: string
+    slackUserId: string
+    slackTeamId: string
+    networks: TNetwork[]
+    contracts: TContract[]
+    abis: TAbi[]
+    apiKeys: TApiKey[]
+    signers: TSigner[]
+}
+
+export type TTeamSettings = {
+    slackAppId: string
+    slackTeamId: string
+    networks: TNetwork[]
+    contracts: TContract[]
+    abis: any[]
+    apiKeys: any[]
+    signers: any[]
+    commands: TCommand[]
 }
 
 export type TSlackMessageResponse = {
