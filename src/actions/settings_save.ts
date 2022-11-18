@@ -37,7 +37,6 @@ const action = async (
                 apiKeys: [],
                 signers: []
             }
-            console.log('values', values)
             if (
                 values.network_name !== undefined &&
                 values.network_chainId !== undefined &&
@@ -54,7 +53,6 @@ const action = async (
                     signingType: 'web3',
                     networkClient: values.network_type.networkType.selected_option.value
                 }
-                console.log('newNetwork', newNetwork)
                 settings.networks.push(newNetwork)
             }
             if (values.contract_name !== undefined) {
@@ -64,7 +62,6 @@ const action = async (
                     active: true,
                     addressPerNetwork: []
                 }
-                console.log('newContract', newContract)
                 settings.contracts.push(newContract)
             }
             if (values.abis_name !== undefined) {
@@ -74,7 +71,6 @@ const action = async (
                     abi: values.abis_abi.abisABI.value,
                     byteCode: values.abis_byteCode.abisByteCode.value
                 }
-                console.log('newAbi', newAbi)
                 settings.abis.push(newAbi)
             }
             if (values.apiKey_name !== undefined) {
@@ -83,7 +79,6 @@ const action = async (
                     active: true,
                     value: values.apiKey_value.apiKeyValue.value
                 }
-                console.log('newApiKey', newApiKey)
                 settings.apiKeys.push(newApiKey)
             }
             if (values.signer_name !== undefined) {
@@ -92,30 +87,21 @@ const action = async (
                     active: true,
                     privateKey: values.signer_pk.signerPk.value
                 }
-                console.log('newSigner', newSigner)
                 settings.signers.push(newSigner)
             }
             // Check if user has settings in DB
             const getDbUserSettings = await fauna.queryTermByFaunaIndexes(
                 actionObject.faunaDbToken,
-                'settings_by_slackUserId',
+                'settings_by_slackTeamUserId',
                 parsedBody.user.id
             )
-            console.log('getDbUserSettings', getDbUserSettings)
             if (JSON.parse(getDbUserSettings.body).length === 0) {
-                console.log('create new settings')
                 await fauna.createFaunaDocument(actionObject.faunaDbToken, 'settings', {
                     slackUserId: parsedBody.user.id,
+                    slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id,
                     settings
                 })
             } else {
-                console.log(
-                    'getDbUserSettings',
-                    getDbUserSettings,
-                    getDbUserSettings.body,
-                    JSON.parse(getDbUserSettings.body).length
-                )
-                console.log('update settings', JSON.parse(getDbUserSettings.body)[0])
                 if (JSON.parse(getDbUserSettings.body)[0].data.settings.networks)
                     settings.networks = [
                         ...settings.networks,
@@ -136,29 +122,27 @@ const action = async (
                         ...settings.signers,
                         ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
                     ]
-                console.log('settings', settings)
                 await fauna.updateFaunaDocument(
                     actionObject.faunaDbToken,
                     'settings',
                     JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
                     {
                         slackUserId: parsedBody.user.id,
+                        slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id,
                         settings
                     }
                 )
             }
         } else if (actionObject.value !== undefined) {
             await slackUtils.slackDeleteMessage(actionObject.slackToken, parsedBody.channel.id, parsedBody.message.ts)
-            console.log('actionObject.value', actionObject.value)
             if (actionObject.value) {
                 const { subAction, value, originalMessage } = JSON.parse(actionObject.value)
 
                 const getDbUserSettings = await fauna.queryTermByFaunaIndexes(
                     actionObject.faunaDbToken,
-                    'settings_by_slackUserId',
-                    parsedBody.user.id
+                    'settings_by_slackTeamUserId',
+                    parsedBody.team.id + '_' + parsedBody.user.id
                 )
-                console.log('getDbUserSettings', getDbUserSettings)
                 if (JSON.parse(getDbUserSettings.body).length > 0) {
                     const newSettings = JSON.parse(getDbUserSettings.body)[0].data.settings
                     if (subAction === 'delete_network')

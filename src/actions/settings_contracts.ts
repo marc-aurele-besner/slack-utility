@@ -13,7 +13,11 @@ const action = async (
     try {
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active contracts:`))
 
-        const userSettings = await retrieveUserSettings(actionObject.faunaDbToken, parsedBody.user.id)
+        const userSettings = await retrieveUserSettings(
+            actionObject.faunaDbToken,
+            parsedBody.user.id,
+            parsedBody.team.id
+        )
         let contractList = ''
         if (userSettings && userSettings.contracts) {
             const { contracts } = userSettings

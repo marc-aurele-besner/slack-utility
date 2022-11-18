@@ -33,12 +33,24 @@ const action = async (
                     JSON.parse(actionObject.value).functionSignature.includes(',')
                 )
                     functionArgumentsCount =
-                        JSON.parse(actionObject.value).functionSignature.split('(')[2].split(',').length + 1
+                        JSON.parse(actionObject.value).functionSignature.split('(')[1].split(',').length + 1
                 else if (JSON.parse(actionObject.value).functionSignature.split('(')[1] !== ')')
                     functionArgumentsCount = 1
                 const abiFunctions = contractAbi.filter(
                     (abi: any) => abi.type === 'function' && abi.name === functionName
+                    // Improve to include overloaded functions
                 )
+                const abiFunctionsStateMutability = abiFunctions[0].stateMutability
+                if (
+                    (abiFunctionsStateMutability === 'view' || abiFunctionsStateMutability === 'pure') &&
+                    functionArgumentsCount === 0
+                ) {
+                    const callValue = await contractInstance[functionName]()
+                    inputArguments.push(
+                        slackBuilder.buildSimpleSectionMsg(functionName, `: ${JSON.stringify(callValue)}`)
+                    )
+                }
+
                 if (abiFunctions !== undefined) {
                     if (abiFunctions.length > 1) {
                         abiFunctions.forEach((abiFunction: any) => {
@@ -98,12 +110,17 @@ const action = async (
                         actionObject.slackToken,
                         slackBuilder.buildSlackModal(
                             'Call ' + functionName,
-                            'build_call_from_abi:call',
+                            'send_call_from_abi',
                             inputArguments,
                             'Static Call',
                             'Close',
                             {
+                                selectedEnvironment,
+                                selectedContract,
+                                chainId,
+                                chainName,
                                 contractAddress,
+                                channel_id: parsedBody.channel.id,
                                 functionName,
                                 functionSignature: JSON.parse(actionObject.value).functionSignature,
                                 abiFunctions

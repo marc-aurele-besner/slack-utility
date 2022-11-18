@@ -12,7 +12,11 @@ const action = async (
     console.log('settings', actionObject)
     try {
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`User Settings:`))
-        const userSettings = await retrieveUserSettings(actionObject.faunaDbToken, parsedBody.user.id)
+        const userSettings = await retrieveUserSettings(
+            actionObject.faunaDbToken,
+            parsedBody.user.id,
+            parsedBody.team.id
+        )
         let contractList = ''
         let networkList = ''
         let abiList = ''

@@ -68,46 +68,85 @@ const action = async (
                     endBlock = await provider.getBlockNumber()
                     // start block = end block - 30d in blocks
                     startBlock = endBlock - 172800
+                } else if (parsedBody.view.state.values.actions1.select_.selected_option.value === '90d') {
+                    // current block number = end block
+                    endBlock = await provider.getBlockNumber()
+                    // start block = end block - 90d in blocks
+                    startBlock = endBlock - 518400
+                } else if (parsedBody.view.state.values.actions1.select_.selected_option.value === '180d') {
+                    // current block number = end block
+                    endBlock = await provider.getBlockNumber()
+                    // start block = end block - 180d in blocks
+                    startBlock = endBlock - 1036800
+                } else if (parsedBody.view.state.values.actions1.select_.selected_option.value === '365d') {
+                    // current block number = end block
+                    endBlock = await provider.getBlockNumber()
+                    // start block = end block - 365d in blocks
+                    startBlock = endBlock - 2073600
                 }
+                try {
+                    const events: any = []
+                    const eventsOption: {
+                        name: string
+                        value: string
+                    }[] = []
+                    const filterEvents = await contractInstance.filters[
+                        JSON.parse(parsedBody.view.private_metadata).eventName
+                    ]()
+                    const allEvents =
+                        startBlock && endBlock
+                            ? await contractInstance.queryFilter(filterEvents, startBlock, endBlock)
+                            : await contractInstance.queryFilter(filterEvents, startBlock)
+                    for (const txn of allEvents) {
+                        if (txn.args) {
+                            events.push(txn.args)
+                            eventsOption.push({
+                                name: txn.blockHash,
+                                value: JSON.stringify({
+                                    blockHash: txn.blockHash,
+                                    args: txn.args
+                                })
+                            })
+                        }
+                    }
 
-                const events: any = []
-                const filterEvents = await contractInstance.filters[
-                    JSON.parse(parsedBody.view.private_metadata).eventName
-                ]()
-                const allEvents =
-                    startBlock && endBlock
-                        ? await contractInstance.queryFilter(filterEvents, startBlock, endBlock)
-                        : await contractInstance.queryFilter(filterEvents, startBlock)
-                for (const txn of allEvents) {
-                    if (txn.args) events.push(txn.args)
-                }
-                messageBlocks.push(
-                    slackBuilder.buildSimpleSectionMsg(
-                        'Quantity of events found for this time frame:',
-                        `${events.length} ${
-                            JSON.parse(parsedBody.view.private_metadata).eventName
-                        } events in the contract`
-                    )
-                )
-                if (events.length > 75) {
                     messageBlocks.push(
-                        slackBuilder.buildSimpleSectionMsg('', `We only show the first 75 events in this section`)
+                        slackBuilder.buildSimpleSectionMsg(
+                            'Quantity of events found for this time frame:',
+                            `${events.length} ${
+                                JSON.parse(parsedBody.view.private_metadata).eventName
+                            } events in the contract`
+                        )
                     )
-                    events.splice(0, events.length - 75)
+                    if (eventsOption.length > 75) {
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg('', `We only show the first 75 events in this section`)
+                        )
+                        eventsOption.splice(0, eventsOption.length - 75)
+                    }
+                    if (eventsOption.length > 0) {
+                        buttons.push(
+                            slackBuilder.buildSimpleSlackSelection(
+                                eventsOption,
+                                'select_event',
+                                'Select a event to get details'
+                            ),
+                            slackBuilder.buildSimpleSlackButton(
+                                'See details',
+                                {
+                                    selectedEnvironment,
+                                    selectedContract,
+                                    chainId,
+                                    chainName
+                                },
+                                'query_event_details'
+                            )
+                        )
+                    }
+                } catch (error) {
+                    console.log(error)
+                    messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `:x: Error: Error fetching the events`))
                 }
-                buttons.push(
-                    slackBuilder.buildSimpleSlackSelection(events, 'select_pool', 'Select a pool'),
-                    slackBuilder.buildSimpleSlackButton(
-                        'See details',
-                        {
-                            selectedEnvironment,
-                            selectedContract,
-                            chainId,
-                            chainName
-                        },
-                        'query_event_details'
-                    )
-                )
             }
         } else {
             const { environmentFound, selectedEnvironment, selectedContract } = await slackUtils.retrieveEnvironment(
@@ -142,6 +181,18 @@ const action = async (
                                         {
                                             name: 'Last 30 days',
                                             value: '30d'
+                                        },
+                                        {
+                                            name: 'Last 3 months',
+                                            value: '90d'
+                                        },
+                                        {
+                                            name: 'Last 6 months',
+                                            value: '180d'
+                                        },
+                                        {
+                                            name: 'Last 1 year',
+                                            value: '365d'
                                         }
                                     ],
                                     'select_',

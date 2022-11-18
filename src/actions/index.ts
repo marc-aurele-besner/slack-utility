@@ -6,6 +6,8 @@ import query_all_events from './query_all_events'
 import query_contract_calls from './query_contract_calls'
 import query_contract_events from './query_contract_events'
 import query_contract_for_env from './query_contract_for_env'
+import query_event_details from './query_event_details'
+import send_call_from_abi from './send_call_from_abi'
 import settings from './settings'
 import settings_abis from './settings_abis'
 import settings_abis_add from './settings_abis_add'
@@ -33,6 +35,8 @@ const actions = {
     query_contract_calls,
     query_contract_events,
     query_contract_for_env,
+    query_event_details,
+    send_call_from_abi,
     settings_abis,
     settings_abis_add,
     settings_apiKeys,
