@@ -1,4 +1,4 @@
-import fauna from 'faunadb-utility/src'
+import fauna from 'faunadb-utility'
 
 import slackBuilder from '../slackBuilder'
 import slackUtils from '../slackUtils'

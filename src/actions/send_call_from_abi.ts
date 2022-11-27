@@ -1,5 +1,5 @@
 import { utils } from 'ethers'
-import fauna from 'faunadb-utility/src'
+import fauna from 'faunadb-utility'
 import { nanoid } from 'nanoid'
 
 import slackBuilder from '../slackBuilder'
