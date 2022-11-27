@@ -66,6 +66,17 @@ const action = async (
                 `*Networks:*\n\`\`\`\n${networkList}\`\`\`\n*Contracts:*\n\`\`\`\n${contractList}\`\`\`\n*Abis:*\n\`\`\`\n${abiList}\`\`\`\n*ApiKeys:*\n\`\`\`\n${apiKeyList}\`\`\`\n*Signers:*\n\`\`\`\n${signerList}\n\`\`\``
             )
         )
+        if (actionObject.dappUrl !== undefined && actionObject.dappUrl !== '')
+            buttons.push(
+                slackBuilder.buildLinkSlackButton(
+                    'Link to DAPP :link:',
+                    undefined,
+                    'settings_link_to_dapp',
+                    'primary',
+                    actionObject.dappUrl + '/slackLink/' + parsedBody.team.id + '_' + parsedBody.user.id
+                )
+            )
+
         buttons.push(
             slackBuilder.buildSimpleSlackButton(
                 'Edit Networks :pencil:',
