@@ -68,12 +68,11 @@ const action = async (
         )
         if (actionObject.dappUrl !== undefined && actionObject.dappUrl !== '')
             buttons.push(
-                slackBuilder.buildLinkSlackButton(
+                slackBuilder.buildSimpleSlackButton(
                     'Link to DAPP :link:',
-                    undefined,
+                    { action: 'settings_link_to_dapp' },
                     'settings_link_to_dapp',
-                    'primary',
-                    actionObject.dappUrl + '/slackLink/' + parsedBody.team.id + '_' + parsedBody.user.id
+                    'primary'
                 )
             )
 

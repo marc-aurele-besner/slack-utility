@@ -50,6 +50,7 @@ const actionsLoop = async (
                     [...buttons]
                 )
             )
+            console.log('messageBlocks', messageBlocks)
             if (action.waitMessageTs)
                 await slackUpdateMessage(
                     token,

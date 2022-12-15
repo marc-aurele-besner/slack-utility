@@ -20,6 +20,7 @@ import settings_commands from './settings_commands'
 import settings_commands_add from './settings_commands_add'
 import settings_contracts from './settings_contracts'
 import settings_contracts_add from './settings_contracts_add'
+import settings_link_to_dapp from './settings_link_to_dapp'
 import settings_networks from './settings_networks'
 import settings_networks_add from './settings_networks_add'
 import settings_save from './settings_save'
@@ -50,6 +51,7 @@ const actions = {
     settings_commands_add,
     settings_contracts,
     settings_contracts_add,
+    settings_link_to_dapp,
     settings_networks,
     settings_networks_add,
     settings_signers,

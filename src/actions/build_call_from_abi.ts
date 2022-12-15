@@ -5,6 +5,7 @@ import retrieveEnvironment from '../slackUtils/retrieveEnvironment'
 import setupContractNetworkAndSigner from '../slackUtils/setupContractNetworkAndSigner'
 import slackOpenView from '../slackUtils/slackOpenView'
 import { TBlockElements, TBlocks, TReturnValue } from '../types'
+import { buildRawSignatureFromFunction } from '../utils'
 
 const action = async (
     actionObject: any,
@@ -37,8 +38,8 @@ const action = async (
                 else if (JSON.parse(actionObject.value).functionSignature.split('(')[1] !== ')')
                     functionArgumentsCount = 1
                 const abiFunctions = contractAbi.filter(
-                    (abi: any) => abi.type === 'function' && abi.name === functionName
-                    // Improve to include overloaded functions
+                    (abi: any) =>
+                        buildRawSignatureFromFunction(abi) === JSON.parse(actionObject.value).functionSignature
                 )
                 const abiFunctionsStateMutability = abiFunctions[0].stateMutability
                 if (
@@ -63,7 +64,7 @@ const action = async (
                         inputArguments.push(
                             slackBuilder.buildSimpleSectionMsg(
                                 '',
-                                `: ${JSON.stringify(BigNumber.isBigNumber(value) ? value.toString() : value)}`
+                                `${BigNumber.isBigNumber(value) ? value.toString() : value}`
                             )
                         )
                     )
@@ -130,7 +131,7 @@ const action = async (
                             'Call ' + functionName,
                             'send_call_from_abi',
                             inputArguments,
-                            'Static Call',
+                            'Call',
                             'Close',
                             {
                                 selectedEnvironment,
