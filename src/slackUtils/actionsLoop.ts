@@ -40,7 +40,6 @@ const actionsLoop = async (
         }
         console.log('replyTo', replyTo)
         if (messageBlocks.length > 0 && returnValue.body && replyTo) {
-            console.log('messageBlocks', messageBlocks)
             messageBlocks.push(
                 slackBuilder.buildSlackActionMsg(
                     {
