@@ -10,18 +10,33 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('query_contract_events')
+    console.log('query_contract_queryEvents')
     try {
         const { environmentFound, selectedEnvironment, selectedContract } = await retrieveEnvironment(parsedBody)
         if (environmentFound) {
-            const { chainId, chainName, contractAbi } = await setupContractAndNetwork(
+            const { chainId, chainName, chainEmoji, contractAbi } = await setupContractAndNetwork(
                 actionObject.env,
                 actionObject.abis,
                 selectedEnvironment,
                 selectedContract
             )
+            messageBlocks.push(
+                slackBuilder.buildSimpleSlackHeaderMsg(
+                    `${selectedContract} Info - ${chainEmoji} ${chainName.charAt(0).toUpperCase() + chainName.slice(1)}`
+                )
+            )
             const contractEvents = contractAbi.filter((abi: any) => abi.type === 'event')
             if (contractEvents.length > 0) {
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('Select a event to query the logs', ''))
+                buttons.push(
+                    slackBuilder.buildLinkSlackButton(
+                        '-> DAPP',
+                        undefined,
+                        'buttonGo2Dapp',
+                        'primary',
+                        actionObject.dappUrl + 'contract/' + selectedContract + '/queryEvents'
+                    )
+                )
                 contractEvents.map((event: any) => {
                     buttons.push(
                         slackBuilder.buildSimpleSlackButton(
@@ -38,7 +53,6 @@ const action = async (
                         )
                     )
                 })
-                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('Select a event to query the logs', ''))
             } else
                 messageBlocks.push(
                     slackBuilder.buildSimpleSectionMsg('No events found', '\nThis contract has no events')

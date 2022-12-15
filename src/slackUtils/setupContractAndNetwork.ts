@@ -14,10 +14,8 @@ const setupContractAndNetwork = async (
     network: string,
     contract: string
 ) => {
-    const { networkFound, chainId, chainName, chainEmoji, rpcUrl, provider, signingType } = await setupNetwork(
-        env,
-        network
-    )
+    const { networkFound, chainId, chainName, chainEmoji, rpcUrl, provider, signingType, explorer } =
+        await setupNetwork(env, network)
     // list objects in abis
     const contractsAbis = typeof abis === 'object' ? Object.keys(abis) : []
     let contractFound = false
@@ -49,6 +47,7 @@ const setupContractAndNetwork = async (
         rpcUrl,
         provider,
         signingType,
+        explorer,
         // Local to setupContractAndNetwork()
         contractFound,
         contractAddress,

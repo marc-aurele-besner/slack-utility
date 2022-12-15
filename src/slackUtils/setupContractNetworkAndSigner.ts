@@ -24,6 +24,7 @@ const setupContractNetworkAndSigner = async (
         rpcUrl,
         provider,
         signingType,
+        explorer,
         contractFound,
         contractAddress,
         contractAbi
@@ -41,16 +42,16 @@ const setupContractNetworkAndSigner = async (
         } catch (e) {}
         if (contractInstance) {
             try {
-                contractName = await contractInstance.name()
+                contractName = contractInstance.name !== undefined ? await contractInstance.name() : ''
             } catch (e) {}
             try {
-                contractVersion = await contractInstance.version()
+                contractVersion = contractInstance.version !== undefined ? await contractInstance.version() : ''
             } catch (e) {}
             try {
-                contractSymbol = await contractInstance.symbol()
+                contractSymbol = contractInstance.symbol !== undefined ? await contractInstance.symbol() : ''
             } catch (e) {}
             try {
-                contractDecimals = await contractInstance.decimals()
+                contractDecimals = contractInstance.decimals !== undefined ? await contractInstance.decimals() : ''
             } catch (e) {}
         }
     }
@@ -63,6 +64,7 @@ const setupContractNetworkAndSigner = async (
         rpcUrl,
         provider,
         signingType,
+        explorer,
         // From setupContractAndNetwork()
         contractFound,
         contractAddress,

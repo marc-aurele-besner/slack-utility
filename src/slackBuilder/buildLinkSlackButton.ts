@@ -36,10 +36,9 @@ export const buildEtherscanLinkSlackButton = (
             text: '-> ' + label
         },
         action_id: actionId,
-        // url: 'https://google.ca'
-        url: `https://${domain}/${contractAddress !== '' ? 'address/' + contractAddress : ''}${
-            txHash !== '' ? 'tx/' + txHash : ''
-        }${blockNumber !== '' ? 'block/' + blockNumber : ''}`
+        url: `https://${domain}/${contractAddress ? 'address/' + contractAddress : ''}${txHash ? 'tx/' + txHash : ''}${
+            blockNumber ? 'block/' + blockNumber : ''
+        }`
     }
 }
 

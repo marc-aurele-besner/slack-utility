@@ -2,6 +2,7 @@ import slackBuilder from '../slackBuilder'
 import retrieveEnvironment from '../slackUtils/retrieveEnvironment'
 import setupContractNetworkAndSigner from '../slackUtils/setupContractNetworkAndSigner'
 import { TBlockElements, TBlocks, TReturnValue } from '../types'
+import { buildRawSignatureFromFunction } from '../utils'
 
 const action = async (
     actionObject: any,
@@ -10,21 +11,44 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('query_contract_calls')
+    console.log('query_contract_writeCall')
     try {
         const { environmentFound, selectedEnvironment, selectedContract } = await retrieveEnvironment(parsedBody)
         if (environmentFound) {
-            const { chainId, chainName, contractAddress, contractInstance } = await setupContractNetworkAndSigner(
-                actionObject.env,
-                actionObject.abis,
-                selectedEnvironment,
-                selectedContract
-            )
-            if (contractInstance !== undefined) {
-                const allFunctions = Object.keys(contractInstance.callStatic).slice(
-                    0,
-                    Object.keys(contractInstance.callStatic).length / 2
+            const { chainId, chainName, chainEmoji, contractAbi, contractAddress, contractInstance } =
+                await setupContractNetworkAndSigner(
+                    actionObject.env,
+                    actionObject.abis,
+                    selectedEnvironment,
+                    selectedContract
                 )
+            if (contractInstance !== undefined) {
+                messageBlocks.push(
+                    slackBuilder.buildSimpleSlackHeaderMsg(
+                        `${selectedContract} Info - ${chainEmoji} ${
+                            chainName.charAt(0).toUpperCase() + chainName.slice(1)
+                        }`
+                    )
+                )
+                // eslint-disable-next-line
+                const contractFunctionsWrite = contractAbi.filter(
+                    (abi: any) =>
+                        abi.type === 'function' && abi.stateMutability !== 'view' && abi.stateMutability !== 'pure'
+                )
+                if (contractFunctionsWrite.length === 0)
+                    messageBlocks.push(slackBuilder.buildSimpleSectionMsg('No write calls', ''))
+                else {
+                    messageBlocks.push(slackBuilder.buildSimpleSectionMsg('Select a write calls', ''))
+                    buttons.push(
+                        slackBuilder.buildLinkSlackButton(
+                            '-> DAPP',
+                            undefined,
+                            'buttonGo2Dapp',
+                            'primary',
+                            actionObject.dappUrl + 'contract/' + selectedContract + '/writeCall'
+                        )
+                    )
+                }
                 const { functionsPadding } = JSON.parse(actionObject.value)
 
                 const functionStart = functionsPadding > 0 ? functionsPadding : 0
@@ -32,7 +56,7 @@ const action = async (
                 for (let i = functionStart; i < functionEnd; i++) {
                     buttons.push(
                         slackBuilder.buildSimpleSlackButton(
-                            allFunctions[i],
+                            buildRawSignatureFromFunction(contractFunctionsWrite[i]),
                             {
                                 selectedEnvironment,
                                 selectedContract,
@@ -40,15 +64,15 @@ const action = async (
                                 chainName,
                                 contractAddress,
                                 contractName: selectedContract,
-                                functionSignature: allFunctions[i],
+                                functionSignature: buildRawSignatureFromFunction(contractFunctionsWrite[i]),
                                 functionCount: i
                             },
-                            'build_call_from_abi:' + allFunctions[i]
+                            'build_call_from_abi:' + buildRawSignatureFromFunction(contractFunctionsWrite[i])
                         )
                     )
                 }
 
-                if (allFunctions.length > functionEnd)
+                if (contractFunctionsWrite.length > functionEnd)
                     buttons.push(
                         slackBuilder.buildSimpleSlackButton(
                             'Show more',
@@ -64,7 +88,6 @@ const action = async (
                             'query_contract_calls:more'
                         )
                     )
-                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('Select a function to call', ''))
             } else messageBlocks.push(slackBuilder.buildSimpleSectionMsg('No contract found', ''))
         } else messageBlocks.push(slackBuilder.buildSimpleSectionMsg('No environment found', ''))
     } catch (error) {

@@ -1,13 +1,10 @@
 import actions from '../actions'
-import slackBuilder from '../slackBuilder'
-import { TBlockElements, TBlocks, TEnv, TReturnValue } from '../types'
+import { TEnv } from '../types'
 
 import actionsLoop from './actionsLoop'
 import commandsLoop from './commandsLoop'
 import retrieveTeamSettings from './retrieveTeamSettings'
 import retrieveUserSettings from './retrieveUserSettings'
-import slackPostMessage from './slackPostMessage'
-import slackUpdateMessage from './slackUpdateMessage'
 
 const slackEndpoint = async (
     event: any,
@@ -16,8 +13,9 @@ const slackEndpoint = async (
     faunaDbToken: string,
     slackDefaultConversationId: string,
     dappUrl: string,
+    localActions: any,
     rpcEthereumUrl: string,
-    abis: any[]
+    abis: any
 ) => {
     let parsedBody: any
     let bodyIsParsed = false
@@ -141,7 +139,10 @@ const slackEndpoint = async (
                         await parsedBody.actions.map(async (actionObject: any) => {
                             ;[, returnValue, messageBlocks, buttons] = await actionsLoop(
                                 slackToken,
-                                actions,
+                                {
+                                    ...actions,
+                                    ...localActions
+                                },
                                 {
                                     ...actionObject,
                                     rpcEthereum: rpcEthereumUrl,

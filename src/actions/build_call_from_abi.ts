@@ -1,3 +1,5 @@
+import { BigNumber } from 'ethers'
+
 import slackBuilder from '../slackBuilder'
 import retrieveEnvironment from '../slackUtils/retrieveEnvironment'
 import setupContractNetworkAndSigner from '../slackUtils/setupContractNetworkAndSigner'
@@ -13,8 +15,6 @@ const action = async (
 ) => {
     console.log('build_call_from_abi')
     try {
-        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:mag: Building call from ABI...`))
-
         const { environmentFound, selectedEnvironment, selectedContract } = await retrieveEnvironment(parsedBody)
         if (environmentFound) {
             const inputArguments = [{ type: 'divider' }]
@@ -45,9 +45,27 @@ const action = async (
                     (abiFunctionsStateMutability === 'view' || abiFunctionsStateMutability === 'pure') &&
                     functionArgumentsCount === 0
                 ) {
-                    const callValue = await contractInstance[functionName]()
-                    inputArguments.push(
-                        slackBuilder.buildSimpleSectionMsg(functionName, `: ${JSON.stringify(callValue)}`)
+                    let callValue = ''
+                    try {
+                        callValue = await contractInstance[functionName]()
+                    } catch (error) {
+                        callValue = JSON.stringify(error)
+                    }
+                    const valueArray =
+                        callValue !== null &&
+                        callValue !== '' &&
+                        typeof callValue === 'string' &&
+                        callValue.includes(',')
+                            ? callValue.split(',')
+                            : [callValue]
+                    inputArguments.push(slackBuilder.buildSimpleSectionMsg(functionName, ''))
+                    valueArray.forEach((value: any) =>
+                        inputArguments.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                '',
+                                `: ${JSON.stringify(BigNumber.isBigNumber(value) ? value.toString() : value)}`
+                            )
+                        )
                     )
                 }
 

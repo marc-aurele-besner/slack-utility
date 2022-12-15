@@ -3,9 +3,11 @@ import build_call_from_abi from './build_call_from_abi'
 import delete_msg from './delete_msg'
 import error from './error'
 import query_all_events from './query_all_events'
-import query_contract_calls from './query_contract_calls'
-import query_contract_events from './query_contract_events'
 import query_contract_for_env from './query_contract_for_env'
+import query_contract_queryEvents from './query_contract_queryEvents'
+import query_contract_readCall from './query_contract_readCall'
+import query_contract_staticCall from './query_contract_staticCall'
+import query_contract_writeCall from './query_contract_writeCall'
 import query_event_details from './query_event_details'
 import send_call_from_abi from './send_call_from_abi'
 import settings from './settings'
@@ -32,9 +34,11 @@ const actions = {
     delete_msg,
     error,
     query_all_events,
-    query_contract_calls,
-    query_contract_events,
     query_contract_for_env,
+    query_contract_queryEvents,
+    query_contract_readCall,
+    query_contract_staticCall,
+    query_contract_writeCall,
     query_event_details,
     send_call_from_abi,
     settings_abis,

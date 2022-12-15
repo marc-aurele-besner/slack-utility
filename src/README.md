@@ -17,7 +17,7 @@
 ## Directories
  - [actions/](./actions/) - [slackBuilder/](./slackBuilder/) - [slackUtils/](./slackUtils/)
 
- - [index.ts](./index.ts) - [README.md](./README.md) - [types.ts](./types.ts)
+ - [index.ts](./index.ts) - [README.md](./README.md) - [types.ts](./types.ts) - [utils.ts](./utils.ts)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
@@ -25,6 +25,7 @@ src/
    │   index.ts
    │   README.md
    │   types.ts
+   │   utils.ts
    └─── actions/
    └─── slackBuilder/
    └─── slackUtils/

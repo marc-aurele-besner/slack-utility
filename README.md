@@ -152,6 +152,7 @@ slack-utility/
    │   index.ts
    │   README.md
    │   types.ts
+   │   utils.ts
    └─── actions/
    └─── slackBuilder/
    └─── slackUtils/

@@ -88,6 +88,7 @@ export type TNetwork = {
     emoji: string
     active: boolean
     signingType: TSigningType
+    explorer?: string
     networkClient?: TNetworkClient
     blockTimeInSec?: number
 }

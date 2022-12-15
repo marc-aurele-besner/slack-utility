@@ -40,11 +40,12 @@ const actionsLoop = async (
         }
         console.log('replyTo', replyTo)
         if (messageBlocks.length > 0 && returnValue.body && replyTo) {
+            console.log('messageBlocks', messageBlocks)
             messageBlocks.push(
                 slackBuilder.buildSlackActionMsg(
                     {
-                        networks: action.env.networks || [],
-                        contracts: action.env.contracts || []
+                        networks: action.env ? (action.env.networks ? action.env.networks : []) : [],
+                        contracts: action.env ? (action.env.contracts ? action.env.contracts : []) : []
                     },
                     undefined,
                     [...buttons]
