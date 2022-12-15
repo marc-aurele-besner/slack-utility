@@ -18,7 +18,97 @@ yarn add slack-utility
 \`\`\`
 `,
     root_body: `
+## This package export 3 main objects
+- \`actions\` : A collection of general purpose actions to be trigger by slash commands, interactivity, events or input actions.
+- \`slackBuilder\` : A collection of helper functions to build different components of slack blocks messages.
+- \`slackUtils\` : A collection of function to perform a call to the slack API with this package context or retrieving context information from a slack request.
+
 ## Usage
+\`\`\`ts
+import  { slackUtils, slackBuilder, actions } from 'slack-utility'
+\`\`\`
+
+\`\`\`js
+const { slackUtils, slackBuilder, actions } = require('slack-utility');
+\`\`\`
+
+### Actions
+
+- \`app_home_opened\` : Trigger when a user open the app home. (if enable in slack app configuration)
+- \`build_call_from_abi\` : 
+- \`delete_msg\` : 
+- \`error\` : 
+- \`query_all_events\` : 
+- \`query_contract_calls\` : 
+- \`query_contract_events\` : 
+- \`query_contract_for_env\` : 
+- \`query_event_details\` : 
+- \`send_call_from_abi\` : 
+- \`settings_abis\` : 
+- \`settings_abis_add\` : 
+- \`settings_apiKeys\` : 
+- \`settings_apiKeys_add\` : 
+- \`settings_app\` : 
+- \`settings_command\` : 
+- \`settings_commands_add\` : 
+- \`settings_contracts\` : 
+- \`settings_contracts_add\` : 
+- \`settings_networks\` : 
+- \`settings_networks_add\` : 
+- \`settings_signers\` : 
+- \`settings_signers_add\` : 
+- \`settings_save\` : 
+- \`settings_validate\` : 
+- \`settings\` : 
+- \`update_msg\` : 
+
+### SlackBuilder
+
+- \`addDeleteButton\` : 
+- \`addRefreshButton\` : 
+- \`addSettingButton\` : 
+- \`buildLinkSlackButton\` : 
+- \`uildEtherscanLinkSlackButton\` : 
+- \`buildSimpleSlackButton\` : 
+- \`buildSimpleSlackHeaderMsg\` : 
+- \`buildSimpleSlackOptions\` : 
+- \`buildSimpleSlackOption\` : 
+- \`buildSimpleSectionMsg\` : 
+- \`buildSimpleSlackSelection\` : 
+- \`buildSlackActionMsg\` : 
+- \`buildSlackContractSelection\` : 
+- \`buildSlackNetworkSelection\` : 
+- \`buildSlackNumberInput\` : 
+- \`buildSlackPlainTextInput\` : 
+- \`buildSlackDatePicker\` : 
+- \`buildSlackDateTimePicker\` : 
+- \`buildSlackInput\` : 
+- \`buildSlackModal\` : 
+- \`buildSlackMultilineInput\` : 
+- \`buildSlackTimePicker\` : 
+- \`buildSlackUrlInput\` : 
+
+### SlackUtils
+
+- \`actionsLoop\` : 
+- \`callerSettings\` : 
+- \`commandsLoop\` : 
+- \`retrieveEnvironment\` : 
+- \`retrieveTeamSettings\` : 
+- \`retrieveUserSettings\` : 
+- \`setupContractAndNetwork\` : 
+- \`setupContractNetworkAndSigner\` : 
+- \`setupNetwork\` : 
+
+- \`slackDeleteMessage\` : 
+- \`slackOpenView\` : 
+- \`slackPostEphemeralMessage\` : 
+- \`slackPostMessage\` : 
+- \`slackPostWaitMessage\` : 
+- \`slackPublishView\` : 
+- \`slackPushView\` : 
+- \`slackUpdateMessage\` : 
+- \`slackUpdateView\` : 
   `,
     root_footer: `## Don't hesitate to contribute to this project.`,
     ignore_gitFiles: true,
