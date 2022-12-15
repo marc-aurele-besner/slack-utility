@@ -52,7 +52,7 @@ const action = async (
                 const { functionsPadding } = JSON.parse(actionObject.value)
 
                 const functionStart = functionsPadding > 0 ? functionsPadding : 0
-                const functionEnd = functionsPadding > 0 ? functionsPadding + 16 : 16
+                const functionEnd = functionsPadding > 0 ? functionsPadding + 12 : 12
                 for (let i = functionStart; i < functionEnd; i++) {
                     if (contractFunctionsWrite[i] !== undefined)
                         buttons.push(
