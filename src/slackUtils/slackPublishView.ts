@@ -9,10 +9,7 @@ const slackPublishView = async (token: string, userId: string, view: any): Promi
     }
     const web = new WebClient(token)
     try {
-        const viewResult = await web.views.publish({
-            user_id: userId,
-            view
-        })
+        const viewResult = await web.views.publish({ user_id: userId, view })
         console.log('\x1b[34m%s\x1b[0m', 'View Published: ', viewResult, viewResult.ok)
         result.ok = viewResult.ok
         // if (viewResult.ok && viewResult.view !== undefined) result.view = viewResult.view

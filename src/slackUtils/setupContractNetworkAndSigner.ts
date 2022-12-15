@@ -1,12 +1,13 @@
 import { Contract, Wallet } from 'ethers'
 
-import { TContract, TEnv, TNetwork } from '../types'
+import { TCommand, TContract, TEnv, TNetwork } from '../types'
 
 import setupContractAndNetwork from './setupContractAndNetwork'
 
-const defaultValues = {
+const defaultValues: TEnv = {
     networks: undefined as TNetwork[] | undefined,
-    contracts: undefined as TContract[] | undefined
+    contracts: undefined as TContract[] | undefined,
+    commands: undefined as TCommand[] | undefined
 }
 
 const setupContractNetworkAndSigner = async (
@@ -23,6 +24,7 @@ const setupContractNetworkAndSigner = async (
         rpcUrl,
         provider,
         signingType,
+        explorer,
         contractFound,
         contractAddress,
         contractAbi
@@ -40,16 +42,16 @@ const setupContractNetworkAndSigner = async (
         } catch (e) {}
         if (contractInstance) {
             try {
-                contractName = await contractInstance.name()
+                contractName = contractInstance.name !== undefined ? await contractInstance.name() : ''
             } catch (e) {}
             try {
-                contractVersion = await contractInstance.version()
+                contractVersion = contractInstance.version !== undefined ? await contractInstance.version() : ''
             } catch (e) {}
             try {
-                contractSymbol = await contractInstance.symbol()
+                contractSymbol = contractInstance.symbol !== undefined ? await contractInstance.symbol() : ''
             } catch (e) {}
             try {
-                contractDecimals = await contractInstance.decimals()
+                contractDecimals = contractInstance.decimals !== undefined ? await contractInstance.decimals() : ''
             } catch (e) {}
         }
     }
@@ -62,6 +64,7 @@ const setupContractNetworkAndSigner = async (
         rpcUrl,
         provider,
         signingType,
+        explorer,
         // From setupContractAndNetwork()
         contractFound,
         contractAddress,

@@ -1,6 +1,6 @@
 import slackBuilder from '../slackBuilder'
 import retrieveUserSettings from '../slackUtils/retrieveUserSettings'
-import { TBlockElements, TBlocks, TContract, TReturnValue } from '../types'
+import { TAbi, TBlockElements, TBlocks, TReturnValue } from '../types'
 
 const action = async (
     actionObject: any,
@@ -9,35 +9,33 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_contracts')
+    console.log('settings_abis')
     try {
-        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active contracts:`))
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active abis:`))
 
         const userSettings = await retrieveUserSettings(
             actionObject.faunaDbToken,
             parsedBody.user.id,
             parsedBody.team.id
         )
-        let contractList = ''
-        if (userSettings && userSettings.contracts) {
-            const { contracts } = userSettings
-            if (contracts.length > 0)
-                contracts
-                    .filter((contract: TContract) => contract.active)
-                    .map((contract: TContract) => (contractList += `- ${contract.name}\n`))
+        let abiList = ''
+        if (userSettings && userSettings.abis) {
+            const { abis } = userSettings
+            if (abis.length > 0)
+                abis.filter((abi: TAbi) => abi.active).map((abi: TAbi) => (abiList += `- ${abi.name}\n`))
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', contractList),
+            slackBuilder.buildSimpleSectionMsg('', abiList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
-                'You can change the contracts settings to add, remove, or modify contracts from the list.\nThis will be save as your personal settings.'
+                'You can change the abis settings to add, remove, or modify abis from the list.\nThis will be save as your personal settings.'
             )
         )
         buttons.push(
             slackBuilder.buildSimpleSlackButton(
-                'Add contract :heavy_plus_sign:',
+                'Add abi :heavy_plus_sign:',
                 {
-                    action: 'settings_contracts_add',
+                    action: 'settings_abis_add',
                     team_settings:
                         actionObject.value === undefined
                             ? false
@@ -45,23 +43,23 @@ const action = async (
                             ? JSON.parse(actionObject.value).team_settings
                             : false
                 },
-                'settings_contracts_add',
+                'settings_abis_add',
                 'primary'
             )
         )
-        if (userSettings && userSettings.contracts) {
-            const { contracts } = userSettings
-            if (contracts.length > 1)
+        if (userSettings && userSettings.abis) {
+            const { abis } = userSettings
+            if (abis.length > 1)
                 buttons.push(
                     slackBuilder.buildSimpleSlackSelection(
-                        contracts.map((contract: TContract) => {
+                        abis.map((abi: TAbi) => {
                             return {
-                                name: contract.name,
-                                value: contract.name
+                                name: abi.name,
+                                value: abi.name
                             }
                         }),
-                        'select_setting_contract',
-                        'Select contract to remove'
+                        'select_setting_abi',
+                        'Select abi to remove'
                     ),
                     slackBuilder.buildSimpleSlackButton(
                         'Remove :x:',

@@ -1,5 +1,6 @@
 import slackBuilder from '../slackBuilder'
-import { TBlockElements, TBlocks, TReturnValue } from '../types'
+import retrieveUserSettings from '../slackUtils/retrieveUserSettings'
+import { TBlockElements, TBlocks, TReturnValue, TSigner } from '../types'
 
 const action = async (
     actionObject: any,
@@ -9,44 +10,77 @@ const action = async (
     returnValue: TReturnValue
 ) => {
     console.log('settings_signers')
-    messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Signers settings:`))
-    if (actionObject.env) {
-        // const { contracts } = actionObject.env
+    try {
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active signers:`))
 
+        const userSettings = await retrieveUserSettings(
+            actionObject.faunaDbToken,
+            parsedBody.user.id,
+            parsedBody.team.id
+        )
+        let signerList = ''
+        if (userSettings && userSettings.signers) {
+            const { signers } = userSettings
+            if (signers.length > 0)
+                signers
+                    .filter((signer: TSigner) => signer.active)
+                    .map((signer: TSigner) => (signerList += `- ${signer.name}\n`))
+        }
         messageBlocks.push(
+            slackBuilder.buildSimpleSectionMsg('', signerList),
             slackBuilder.buildSimpleSectionMsg(
-                ``,
-                'Set 5 signers private keys to use for tests purposes. You can use the same private key for all signers or different ones.\n'
-            ),
-            slackBuilder.buildSlackInput(
-                'Signers to use',
-                'settings_save_input',
-                slackBuilder.buildSlackMultilineInput(
-                    'Signers to use',
-                    'signers_input',
-                    JSON.stringify({
-                        Signer1: '',
-                        Signer2: '',
-                        Signer3: '',
-                        Signer4: '',
-                        Signer5: ''
-                    }),
-                    true
-                )
+                '',
+                'You can change the signers settings to add, remove, or modify signers from the list.\nThis will be save as your personal settings.'
             )
         )
         buttons.push(
             slackBuilder.buildSimpleSlackButton(
-                'Save :floppy_disk:',
+                'Add signer :heavy_plus_sign:',
                 {
-                    action: 'settings_save',
-                    section: 'signers',
-                    settings: actionObject.env || {}
+                    action: 'settings_signers_add',
+                    team_settings:
+                        actionObject.value === undefined
+                            ? false
+                            : JSON.parse(actionObject.value).team_settings !== undefined
+                            ? JSON.parse(actionObject.value).team_settings
+                            : false
                 },
-                'settings_save'
-            ),
-            slackBuilder.buildSimpleSlackButton('Cancel :x:', { action: 'settings' }, 'settings')
+                'settings_signers_add',
+                'primary'
+            )
         )
+        if (userSettings && userSettings.signers) {
+            const { signers } = userSettings
+            if (signers.length > 1)
+                buttons.push(
+                    slackBuilder.buildSimpleSlackSelection(
+                        signers.map((signer: TSigner) => {
+                            return {
+                                name: signer.name,
+                                value: signer.name
+                            }
+                        }),
+                        'select_setting_signer',
+                        'Select signer to remove'
+                    ),
+                    slackBuilder.buildSimpleSlackButton(
+                        'Remove :x:',
+                        {
+                            action: 'settings_validate',
+                            team_settings:
+                                actionObject.value === undefined
+                                    ? false
+                                    : JSON.parse(actionObject.value).team_settings !== undefined
+                                    ? JSON.parse(actionObject.value).team_settings
+                                    : false
+                        },
+                        'settings_validate'
+                    )
+                )
+        }
+    } catch (error) {
+        console.log('error', error)
+        messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))
     }
 
     return [actionObject, returnValue, messageBlocks, buttons]

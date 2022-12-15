@@ -34,7 +34,7 @@ export type TBlockElement = {
     action_id?: string
     placeholder?: TPlaceholder
     options?: any
-    text?: TBlockLabel
+    text?: TBlockLabel | string
     value?: string
     url?: string
     style?: string | undefined
@@ -71,6 +71,8 @@ export type TSigningAppKeys = 'appKeys'
 
 export type TSigningType = TSigningWeb3 | TSigningAppKeys
 
+export type TNetworkClient = 'ethers' | 'web3' | 'tronWeb'
+
 export type TAddressPerNetwork = {
     network: string
     address: string
@@ -86,6 +88,9 @@ export type TNetwork = {
     emoji: string
     active: boolean
     signingType: TSigningType
+    explorer?: string
+    networkClient?: TNetworkClient
+    blockTimeInSec?: number
 }
 export type TNetworks = TNetwork[]
 
@@ -97,9 +102,48 @@ export type TContract = {
 }
 export type TContracts = TContract[]
 
+export type TAbi = {
+    name: string
+    active: boolean
+    abi: any
+    byteCode: string
+}
+export type TAbis = TAbi[]
+
+export type TApiKey = {
+    name: string
+    active: boolean
+    value: string
+}
+export type TApiKeys = TApiKey[]
+
+export type TSigner = {
+    name: string
+    active: boolean
+    type?: TSigningType
+    providerType?: TNetworkClient
+    address?: string
+    privateKey?: string
+    mnemonic?: string
+    derivationPath?: string
+    rpcUrl?: string
+    chainId?: number | string
+}
+export type TSigners = TSigner[]
+
+export type TCommand = {
+    command: string
+    description: string
+    active: boolean
+    actionId?: string
+    actionValue?: any
+}
+export type TCommands = TCommand[]
+
 export type TEnv = {
     networks: TNetwork[] | undefined
     contracts: TContract[] | undefined
+    commands: TCommand[] | undefined
     signerPrivateKey?: string | undefined
 }
 
@@ -108,6 +152,28 @@ export type TSettings = {
     contracts: string
     networks: string
     signers: string
+}
+
+export type TUserSettings = {
+    slackAppId: string
+    slackUserId: string
+    slackTeamId: string
+    networks: TNetwork[]
+    contracts: TContract[]
+    abis: TAbi[]
+    apiKeys: TApiKey[]
+    signers: TSigner[]
+}
+
+export type TTeamSettings = {
+    slackAppId: string
+    slackTeamId: string
+    networks: TNetwork[]
+    contracts: TContract[]
+    abis: any[]
+    apiKeys: any[]
+    signers: any[]
+    commands: TCommand[]
 }
 
 export type TSlackMessageResponse = {
