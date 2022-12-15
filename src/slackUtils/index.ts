@@ -8,6 +8,7 @@ import setupContractAndNetwork from './setupContractAndNetwork'
 import setupContractNetworkAndSigner from './setupContractNetworkAndSigner'
 import setupNetwork from './setupNetwork'
 import slackDeleteMessage from './slackDeleteMessage'
+import slackEndpoint from './slackEndpoint'
 import slackOpenView from './slackOpenView'
 import slackPostEphemeralMessage from './slackPostEphemeralMessage'
 import slackPostMessage from './slackPostMessage'
@@ -27,6 +28,7 @@ const slackUtils = {
     setupContractAndNetwork,
     setupContractNetworkAndSigner,
     setupNetwork,
+    slackEndpoint,
 
     slackDeleteMessage,
     slackOpenView,
