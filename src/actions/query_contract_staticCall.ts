@@ -47,7 +47,7 @@ const action = async (
                             undefined,
                             'buttonGo2Dapp',
                             'primary',
-                            actionObject.dappUrl + 'contract/' + selectedContract + '/readCall'
+                            actionObject.dappUrl + 'contract/' + selectedContract + '/staticCall'
                         )
                     )
                 }

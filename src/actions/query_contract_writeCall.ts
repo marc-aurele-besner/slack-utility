@@ -54,22 +54,23 @@ const action = async (
                 const functionStart = functionsPadding > 0 ? functionsPadding : 0
                 const functionEnd = functionsPadding > 0 ? functionsPadding + 16 : 16
                 for (let i = functionStart; i < functionEnd; i++) {
-                    buttons.push(
-                        slackBuilder.buildSimpleSlackButton(
-                            buildRawSignatureFromFunction(contractFunctionsWrite[i]),
-                            {
-                                selectedEnvironment,
-                                selectedContract,
-                                chainId,
-                                chainName,
-                                contractAddress,
-                                contractName: selectedContract,
-                                functionSignature: buildRawSignatureFromFunction(contractFunctionsWrite[i]),
-                                functionCount: i
-                            },
-                            'build_call_from_abi:' + buildRawSignatureFromFunction(contractFunctionsWrite[i])
+                    if (contractFunctionsWrite[i] !== undefined)
+                        buttons.push(
+                            slackBuilder.buildSimpleSlackButton(
+                                buildRawSignatureFromFunction(contractFunctionsWrite[i]),
+                                {
+                                    selectedEnvironment,
+                                    selectedContract,
+                                    chainId,
+                                    chainName,
+                                    contractAddress,
+                                    contractName: selectedContract,
+                                    functionSignature: buildRawSignatureFromFunction(contractFunctionsWrite[i]),
+                                    functionCount: i
+                                },
+                                'build_call_from_abi:' + buildRawSignatureFromFunction(contractFunctionsWrite[i])
+                            )
                         )
-                    )
                 }
 
                 if (contractFunctionsWrite.length > functionEnd)
