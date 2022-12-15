@@ -15,7 +15,7 @@
 ```
 
 
- - [actionsLoop.ts](./actionsLoop.ts) - [callerSettings.ts](./callerSettings.ts) - [commandsLoop.ts](./commandsLoop.ts) - [index.ts](./index.ts) - [README.md](./README.md) - [retrieveEnvironment.ts](./retrieveEnvironment.ts) - [retrieveTeamSettings.ts](./retrieveTeamSettings.ts) - [retrieveUserSettings.ts](./retrieveUserSettings.ts) - [setupContractAndNetwork.ts](./setupContractAndNetwork.ts) - [setupContractNetworkAndSigner.ts](./setupContractNetworkAndSigner.ts) - [setupNetwork.ts](./setupNetwork.ts) - [slackDeleteMessage.ts](./slackDeleteMessage.ts) - [slackOpenView.ts](./slackOpenView.ts) - [slackPostEphemeralMessage.ts](./slackPostEphemeralMessage.ts) - [slackPostMessage.ts](./slackPostMessage.ts) - [slackPostWaitMessage.ts](./slackPostWaitMessage.ts) - [slackPublishView.ts](./slackPublishView.ts) - [slackPushView.ts](./slackPushView.ts) - [slackUpdateMessage.ts](./slackUpdateMessage.ts) - [slackUpdateView.ts](./slackUpdateView.ts)
+ - [actionsLoop.ts](./actionsLoop.ts) - [callerSettings.ts](./callerSettings.ts) - [commandsLoop.ts](./commandsLoop.ts) - [index.ts](./index.ts) - [README.md](./README.md) - [retrieveEnvironment.ts](./retrieveEnvironment.ts) - [retrieveTeamSettings.ts](./retrieveTeamSettings.ts) - [retrieveUserSettings.ts](./retrieveUserSettings.ts) - [setupContractAndNetwork.ts](./setupContractAndNetwork.ts) - [setupContractNetworkAndSigner.ts](./setupContractNetworkAndSigner.ts) - [setupNetwork.ts](./setupNetwork.ts) - [slackDeleteMessage.ts](./slackDeleteMessage.ts) - [slackEndpoint.ts](./slackEndpoint.ts) - [slackOpenView.ts](./slackOpenView.ts) - [slackPostEphemeralMessage.ts](./slackPostEphemeralMessage.ts) - [slackPostMessage.ts](./slackPostMessage.ts) - [slackPostWaitMessage.ts](./slackPostWaitMessage.ts) - [slackPublishView.ts](./slackPublishView.ts) - [slackPushView.ts](./slackPushView.ts) - [slackUpdateMessage.ts](./slackUpdateMessage.ts) - [slackUpdateView.ts](./slackUpdateView.ts)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
@@ -32,6 +32,7 @@ slackUtils/
    │   setupContractNetworkAndSigner.ts
    │   setupNetwork.ts
    │   slackDeleteMessage.ts
+   │   slackEndpoint.ts
    │   slackOpenView.ts
    │   slackPostEphemeralMessage.ts
    │   slackPostMessage.ts
