@@ -115,6 +115,21 @@ const action = async (
                             } events in the contract`
                         )
                     )
+                    buttons.push(
+                        slackBuilder.buildLinkSlackButton(
+                            '-> DAPP',
+                            undefined,
+                            'buttonGo2Dapp',
+                            'primary',
+                            actionObject.dappUrl +
+                                'events/' +
+                                selectedContract +
+                                '/' +
+                                JSON.parse(parsedBody.view.private_metadata).eventName +
+                                '/' +
+                                parsedBody.view.state.values.actions1.select_.selected_option.value
+                        )
+                    )
                     if (eventsOption.length > 75) {
                         messageBlocks.push(
                             slackBuilder.buildSimpleSectionMsg('', `We only show the first 75 events in this section`)

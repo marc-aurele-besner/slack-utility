@@ -1,4 +1,4 @@
-import { utils } from 'ethers'
+import { BigNumber, utils } from 'ethers'
 import fauna from 'faunadb-utility'
 import { nanoid } from 'nanoid'
 
@@ -62,27 +62,517 @@ const action = async (
                 messageBlocks = wait.blocks
             }
             const abiFunctions = JSON.parse(parsedBody.view.private_metadata).abiFunctions
-            if (abiFunctions !== undefined && abiFunctions.length === 1) {
+            if (abiFunctions !== undefined && abiFunctions.length >= 1) {
                 const abiFunctionsStateMutability = abiFunctions[0].stateMutability
-                console.log('abiFunctionsStateMutability', abiFunctionsStateMutability)
-                if (abiFunctionsStateMutability === 'view' || abiFunctionsStateMutability === 'pure') {
-                    const callValue = await contractInstance
-                        [abiFunctions[0].name]
-                        // pass arguments here
-                        ()
-                    console.log('callValue', callValue)
-                    messageBlocks.push(
-                        slackBuilder.buildSimpleSectionMsg(
-                            JSON.parse(parsedBody.view.private_metadata).functionName,
-                            `:white_check_mark: Success:`
-                        )
+                messageBlocks.pop()
+                messageBlocks.push(
+                    slackBuilder.buildSimpleSectionMsg(
+                        `${JSON.parse(parsedBody.view.private_metadata).functionName}`,
+                        ``
                     )
-                    buttons.push(
-                        slackBuilder.buildSimpleSlackButton(
-                            'Get all ABI functions',
-                            { action: 'query_contract_calls' },
-                            'query_contract_calls',
-                            'primary'
+                )
+                let params: string[] = []
+                switch (abiFunctions[0].inputs.length) {
+                    case 0:
+                        params = []
+                        break
+                    case 1:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 2:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 3:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 4:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[3].name][abiFunctions[0].inputs[3].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[3].name][
+                                        abiFunctions[0].inputs[3].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 5:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[3].name][abiFunctions[0].inputs[3].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[4].name][abiFunctions[0].inputs[4].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[3].name][
+                                        abiFunctions[0].inputs[3].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[4].name][
+                                        abiFunctions[0].inputs[4].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 6:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[3].name][abiFunctions[0].inputs[3].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[4].name][abiFunctions[0].inputs[4].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[5].name][abiFunctions[0].inputs[5].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[3].name][
+                                        abiFunctions[0].inputs[3].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[4].name][
+                                        abiFunctions[0].inputs[4].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[5].name][
+                                        abiFunctions[0].inputs[5].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 7:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[3].name][abiFunctions[0].inputs[3].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[4].name][abiFunctions[0].inputs[4].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[5].name][abiFunctions[0].inputs[5].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[6].name][abiFunctions[0].inputs[6].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[3].name][
+                                        abiFunctions[0].inputs[3].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[4].name][
+                                        abiFunctions[0].inputs[4].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[5].name][
+                                        abiFunctions[0].inputs[5].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[6].name][
+                                        abiFunctions[0].inputs[6].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 8:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[3].name][abiFunctions[0].inputs[3].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[4].name][abiFunctions[0].inputs[4].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[5].name][abiFunctions[0].inputs[5].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[6].name][abiFunctions[0].inputs[6].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[7].name][abiFunctions[0].inputs[7].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[3].name][
+                                        abiFunctions[0].inputs[3].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[4].name][
+                                        abiFunctions[0].inputs[4].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[5].name][
+                                        abiFunctions[0].inputs[5].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[6].name][
+                                        abiFunctions[0].inputs[6].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[7].name][
+                                        abiFunctions[0].inputs[7].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 9:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[3].name][abiFunctions[0].inputs[3].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[4].name][abiFunctions[0].inputs[4].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[5].name][abiFunctions[0].inputs[5].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[6].name][abiFunctions[0].inputs[6].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[7].name][abiFunctions[0].inputs[7].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[8].name][abiFunctions[0].inputs[8].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[3].name][
+                                        abiFunctions[0].inputs[3].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[4].name][
+                                        abiFunctions[0].inputs[4].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[5].name][
+                                        abiFunctions[0].inputs[5].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[6].name][
+                                        abiFunctions[0].inputs[6].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[7].name][
+                                        abiFunctions[0].inputs[7].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[8].name][
+                                        abiFunctions[0].inputs[8].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                    case 10:
+                        params = [
+                            parsedBody.view.state.values[abiFunctions[0].inputs[0].name][abiFunctions[0].inputs[0].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[1].name][abiFunctions[0].inputs[1].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[2].name][abiFunctions[0].inputs[2].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[3].name][abiFunctions[0].inputs[3].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[4].name][abiFunctions[0].inputs[4].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[5].name][abiFunctions[0].inputs[5].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[6].name][abiFunctions[0].inputs[6].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[7].name][abiFunctions[0].inputs[7].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[8].name][abiFunctions[0].inputs[8].name]
+                                .value,
+                            parsedBody.view.state.values[abiFunctions[0].inputs[9].name][abiFunctions[0].inputs[9].name]
+                                .value
+                        ]
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                `${abiFunctions[0].inputs[0].name}`,
+                                `${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[0].name][
+                                        abiFunctions[0].inputs[0].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[1].name][
+                                        abiFunctions[0].inputs[1].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[2].name][
+                                        abiFunctions[0].inputs[2].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[3].name][
+                                        abiFunctions[0].inputs[3].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[4].name][
+                                        abiFunctions[0].inputs[4].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[5].name][
+                                        abiFunctions[0].inputs[5].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[6].name][
+                                        abiFunctions[0].inputs[6].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[7].name][
+                                        abiFunctions[0].inputs[7].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[8].name][
+                                        abiFunctions[0].inputs[8].name
+                                    ].value
+                                }
+                                \n${
+                                    parsedBody.view.state.values[abiFunctions[0].inputs[9].name][
+                                        abiFunctions[0].inputs[9].name
+                                    ].value
+                                }`
+                            )
+                        )
+                        break
+                }
+                if (abiFunctionsStateMutability === 'view' || abiFunctionsStateMutability === 'pure') {
+                    let callValue = ''
+                    try {
+                        callValue = await contractInstance[abiFunctions[0].name](...params)
+                    } catch (e) {
+                        console.log('e', e)
+                    }
+                    const valueArray =
+                        callValue !== null &&
+                        callValue !== '' &&
+                        typeof callValue === 'string' &&
+                        callValue.includes(',')
+                            ? callValue.split(',')
+                            : [callValue]
+                    messageBlocks.push(slackBuilder.buildSimpleSectionMsg(`Return values:`, ``))
+                    valueArray.forEach((value: any) =>
+                        messageBlocks.push(
+                            slackBuilder.buildSimpleSectionMsg(
+                                '',
+                                `${BigNumber.isBigNumber(value) ? value.toString() : value}`
+                            )
                         )
                     )
                 } else {
@@ -93,7 +583,10 @@ const action = async (
                             txId,
                             txStatus: 'pending-signing',
                             slackUserId: parsedBody.user.id,
-                            slackChannelId: parsedBody.channel.id,
+                            slackChannelId:
+                                parsedBody.channel !== undefined
+                                    ? parsedBody.channel.id
+                                    : actionObject.slackDefaultConversationId,
                             slackTeamId: parsedBody.team.id,
                             selectedEnvironment,
                             selectedContract,
@@ -103,52 +596,44 @@ const action = async (
                             contractName,
                             contractAddress,
                             method: JSON.parse(parsedBody.view.private_metadata).functionSignature,
-                            params: [
-                                // pass arguments here
-                                //     valueParsed.poolInfo.interestRate.toString(),
-                                //     valueParsed.poolInfo.tenor.toString(),
-                                //     valueParsed.poolInfo.openingDate.toString(),
-                                //     valueParsed.poolInfo.closingDate.toString(),
-                                //     valueParsed.poolInfo.startingDate.toString(),
-                                //     valueParsed.poolInfo.minimumRaise.toString(),
-                                //     valueParsed.poolInfo.maximumRaise.toString()
-                            ],
+                            params,
                             value: '0x00',
                             gasLimit: utils.hexlify(5000000)
                         })
                         if (tx !== undefined) {
                             messageBlocks.push(
-                                slackBuilder.buildSimpleSlackHeaderMsg(
-                                    `:fox_face: Sign the transaction with your wallet at ${actionObject.dappUrl}/tx/${chainId}_${txId}`
-                                )
-                            )
-                            buttons.push(
-                                slackBuilder.buildLinkSlackButton(
-                                    'Sign transaction',
-                                    undefined,
-                                    'sign_web3_tx',
-                                    'primary',
-                                    `${actionObject.dappUrl}/tx/${chainId}_${txId}`
+                                slackBuilder.buildSimpleSectionMsg(
+                                    `:fox_face:`,
+                                    ` Sign the transaction with your wallet at ${actionObject.dappUrl}tx/${chainId}_${txId}`
+                                ),
+                                slackBuilder.buildSlackActionMsg(
+                                    {},
+                                    'actions1',
+                                    [
+                                        slackBuilder.buildLinkSlackButton(
+                                            ':fox_face: Sign transaction',
+                                            undefined,
+                                            'sign_web3_tx',
+                                            'primary',
+                                            `${actionObject.dappUrl}tx/${chainId}_${txId}`
+                                        )
+                                    ],
+                                    false
                                 )
                             )
                         }
                     } else {
                         tx = await contractInstance[JSON.parse(parsedBody.view.private_metadata).functionSignature](
-                            //   valueParsed.poolInfo.openingDate,
-                            //   valueParsed.poolInfo.closingDate,
-                            //   valueParsed.poolInfo.startingDate,
-                            //   valueParsed.poolInfo.interestRate,
-                            //   valueParsed.poolInfo.tenor,
-                            //   valueParsed.poolInfo.minimumRaise,
-                            //   valueParsed.poolInfo.maximumRaise,
+                            ...params,
                             {
                                 gasLimit: 5000000
                             }
                         )
                         if (tx !== undefined) {
                             messageBlocks.push(
-                                slackBuilder.buildSimpleSlackHeaderMsg(
-                                    `:white_check_mark: Transaction Hash: ${tx.hash}`
+                                slackBuilder.buildSimpleSectionMsg(
+                                    `:white_check_mark: Transaction Hash: ${tx.hash}`,
+                                    ``
                                 )
                             )
                             buttons.push(
@@ -164,6 +649,15 @@ const action = async (
                         }
                     }
                 }
+                await slackUtils.slackUpdateMessage(
+                    actionObject.slackToken,
+                    JSON.parse(parsedBody.view.private_metadata).channel_id,
+                    returnValue.body,
+                    actionObject.waitMessageTs,
+                    messageBlocks
+                )
+                messageBlocks = []
+                buttons = []
             } else {
                 messageBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
@@ -172,107 +666,6 @@ const action = async (
                     )
                 )
             }
-            // const inputArguments = [{ type: 'divider' }]
-            // const { chainId, chainName, contractAddress, contractInstance, contractAbi } =
-            //     await setupContractNetworkAndSigner(
-            //         actionObject.env,
-            //         actionObject.abis,
-            //         selectedEnvironment,
-            //         selectedContract
-            //     )
-            // if (contractInstance !== undefined) {
-            //     const functionName = JSON.parse(actionObject.value).functionSignature.split('(')[0]
-            //     let functionArgumentsCount: number = 0
-            //     if (
-            //         JSON.parse(actionObject.value).functionSignature.includes('(') &&
-            //         JSON.parse(actionObject.value).functionSignature.includes(',')
-            //     )
-            //         functionArgumentsCount =
-            //             JSON.parse(actionObject.value).functionSignature.split('(')[2].split(',').length + 1
-            //     else if (JSON.parse(actionObject.value).functionSignature.split('(')[1] !== ')')
-            //         functionArgumentsCount = 1
-            //     const abiFunctions = contractAbi.filter(
-            //         (abi: any) => abi.type === 'function' && abi.name === functionName
-            //     )
-            //     if (abiFunctions !== undefined) {
-            //         if (abiFunctions.length > 1) {
-            //             abiFunctions.forEach((abiFunction: any) => {
-            //                 if (abiFunction.inputs.length > 0)
-            //                     inputArguments.push(
-            //                         slackBuilder.buildSimpleSectionMsg(
-            //                             '',
-            //                             'Fill the different arguments of the function'
-            //                         )
-            //                     )
-            //                 if (abiFunction.inputs.length > 0) {
-            //                     abiFunction.inputs
-            //                         .filter(
-            //                             (functionInput: any) =>
-            //                                 functionInput !== undefined && functionInput === functionArgumentsCount
-            //                         )
-            //                         .forEach((input: any) => {
-            //                             inputArguments.push(
-            //                                 slackBuilder.buildSlackInput(
-            //                                     input.name,
-            //                                     input.name,
-            //                                     slackBuilder.buildSlackPlainTextInput(
-            //                                         input.name + ' (' + input.type + ')',
-            //                                         input.name
-            //                                     )
-            //                                 )
-            //                             )
-            //                         })
-            //                 }
-            //             })
-            //         } else {
-            //             abiFunctions.forEach((abiFunction: any) => {
-            //                 if (abiFunction.inputs.length > 0)
-            //                     inputArguments.push(
-            //                         slackBuilder.buildSimpleSectionMsg(
-            //                             '',
-            //                             'Fill the different arguments of the function'
-            //                         )
-            //                     )
-            //                 if (abiFunction.inputs.length > 0) {
-            //                     abiFunction.inputs.forEach((input: any) => {
-            //                         inputArguments.push(
-            //                             slackBuilder.buildSlackInput(
-            //                                 input.name,
-            //                                 input.name,
-            //                                 slackBuilder.buildSlackPlainTextInput(
-            //                                     input.name + ' (' + input.type + ')',
-            //                                     input.name
-            //                                 )
-            //                             )
-            //                         )
-            //                     })
-            //                 }
-            //             })
-            //         }
-            //         await slackOpenView(
-            //             actionObject.slackToken,
-            //             slackBuilder.buildSlackModal(
-            //                 'Call ' + functionName,
-            //                 'build_call_from_abi:call',
-            //                 inputArguments,
-            //                 'Static Call',
-            //                 'Close',
-            //                 {
-            //                     contractAddress,
-            //                     functionName,
-            //                     functionSignature: JSON.parse(actionObject.value).functionSignature,
-            //                     abiFunctions
-            //                 }
-            //             ),
-            //             parsedBody.trigger_id
-            //         )
-            //     } else
-            //         messageBlocks.push(
-            //             slackBuilder.buildSimpleSlackHeaderMsg(
-            //                 `:x: Error: No function found with the name ${functionName}`
-            //             )
-            //         )
-            // } else messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Contract not found`))
         } else messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Environment not found`))
     } catch (error) {
         console.log('error', error)
