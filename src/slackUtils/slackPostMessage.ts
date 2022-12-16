@@ -79,7 +79,10 @@ const slackPostMessage = async (
                     channel,
                     text,
                     result.resultPostMessage.ts,
-                    blocks
+                    blocks,
+                    addDeleteBtn,
+                    addSettings,
+                    addRefresh
                 )
             }
         }

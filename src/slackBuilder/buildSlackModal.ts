@@ -4,9 +4,9 @@ const buildSlackModal = (
     text = 'Modal' as string,
     callbackId = 'modal-callBack1' as string,
     blocks: any,
-    submit = 'Submit' as string | undefined,
-    close = 'Close' as string,
-    privateMetaData = '' as string | number | { [key: string]: any }
+    submit?: string | undefined,
+    close = 'Close' as string | undefined,
+    privateMetaData?: string | number | { [key: string]: any } | undefined
 ) => {
     let privateMetaDataFormatted: string
     if (typeof privateMetaData === 'number') privateMetaDataFormatted = privateMetaData.toString()

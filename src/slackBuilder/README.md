@@ -15,7 +15,7 @@
 ```
 
 
- - [addDeleteButton.ts](./addDeleteButton.ts) - [addRefreshButton.ts](./addRefreshButton.ts) - [addSettingButton.ts](./addSettingButton.ts) - [buildLinkSlackButton.ts](./buildLinkSlackButton.ts) - [buildSimpleSlackButton.ts](./buildSimpleSlackButton.ts) - [buildSimpleSlackHeaderMsg.ts](./buildSimpleSlackHeaderMsg.ts) - [buildSimpleSlackOptions.ts](./buildSimpleSlackOptions.ts) - [buildSimpleSlackSectionMsg.ts](./buildSimpleSlackSectionMsg.ts) - [buildSimpleSlackSelection.ts](./buildSimpleSlackSelection.ts) - [buildSlackActionMsg.ts](./buildSlackActionMsg.ts) - [buildSlackContractSelection.ts](./buildSlackContractSelection.ts) - [buildSlackDatePicker.ts](./buildSlackDatePicker.ts) - [buildSlackDateTimePicker.ts](./buildSlackDateTimePicker.ts) - [buildSlackInput.ts](./buildSlackInput.ts) - [buildSlackModal.ts](./buildSlackModal.ts) - [buildSlackMultilineInput.ts](./buildSlackMultilineInput.ts) - [buildSlackNetworkSelection.ts](./buildSlackNetworkSelection.ts) - [buildSlackNumberInput.ts](./buildSlackNumberInput.ts) - [buildSlackPlainTextInput.ts](./buildSlackPlainTextInput.ts) - [buildSlackTimePicker.ts](./buildSlackTimePicker.ts) - [buildSlackUrlInput.ts](./buildSlackUrlInput.ts) - [index.ts](./index.ts) - [README.md](./README.md)
+ - [addDeleteButton.ts](./addDeleteButton.ts) - [addRefreshButton.ts](./addRefreshButton.ts) - [addSettingButton.ts](./addSettingButton.ts) - [buildLinkSlackButton.ts](./buildLinkSlackButton.ts) - [buildSimpleSlackButton.ts](./buildSimpleSlackButton.ts) - [buildSimpleSlackHeaderMsg.ts](./buildSimpleSlackHeaderMsg.ts) - [buildSimpleSlackOptions.ts](./buildSimpleSlackOptions.ts) - [buildSimpleSlackSectionMsg.ts](./buildSimpleSlackSectionMsg.ts) - [buildSimpleSlackSelection.ts](./buildSimpleSlackSelection.ts) - [buildSlackActionMsg.ts](./buildSlackActionMsg.ts) - [buildSlackContractAndModuleSelection.ts](./buildSlackContractAndModuleSelection.ts) - [buildSlackContractSelection.ts](./buildSlackContractSelection.ts) - [buildSlackDatePicker.ts](./buildSlackDatePicker.ts) - [buildSlackDateTimePicker.ts](./buildSlackDateTimePicker.ts) - [buildSlackInput.ts](./buildSlackInput.ts) - [buildSlackModal.ts](./buildSlackModal.ts) - [buildSlackMultilineInput.ts](./buildSlackMultilineInput.ts) - [buildSlackNetworkSelection.ts](./buildSlackNetworkSelection.ts) - [buildSlackNumberInput.ts](./buildSlackNumberInput.ts) - [buildSlackPlainTextInput.ts](./buildSlackPlainTextInput.ts) - [buildSlackTimePicker.ts](./buildSlackTimePicker.ts) - [buildSlackUrlInput.ts](./buildSlackUrlInput.ts) - [index.ts](./index.ts) - [README.md](./README.md)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
@@ -30,6 +30,7 @@ slackBuilder/
    │   buildSimpleSlackSectionMsg.ts
    │   buildSimpleSlackSelection.ts
    │   buildSlackActionMsg.ts
+   │   buildSlackContractAndModuleSelection.ts
    │   buildSlackContractSelection.ts
    │   buildSlackDatePicker.ts
    │   buildSlackDateTimePicker.ts

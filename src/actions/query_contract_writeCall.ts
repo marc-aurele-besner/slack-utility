@@ -54,10 +54,10 @@ const action = async (
                 const functionStart = functionsPadding > 0 ? functionsPadding : 0
                 const functionEnd = functionsPadding > 0 ? functionsPadding + 12 : 12
                 for (let i = functionStart; i < functionEnd; i++) {
-                    if (contractFunctionsWrite[i] !== undefined)
+                    if (contractFunctionsWrite[i] !== undefined) {
                         buttons.push(
                             slackBuilder.buildSimpleSlackButton(
-                                buildRawSignatureFromFunction(contractFunctionsWrite[i]),
+                                buildRawSignatureFromFunction(contractFunctionsWrite[i]).substring(0, 70),
                                 {
                                     selectedEnvironment,
                                     selectedContract,
@@ -71,6 +71,7 @@ const action = async (
                                 'build_call_from_abi:' + buildRawSignatureFromFunction(contractFunctionsWrite[i])
                             )
                         )
+                    }
                 }
 
                 if (contractFunctionsWrite.length > functionEnd)

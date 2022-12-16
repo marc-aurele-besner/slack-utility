@@ -18,3 +18,18 @@ export const buildRawSignatureFromFunction = (functionObject: { name: string; in
     })
     return signature + ')'
 }
+
+export const formatTimestamp = (timestamp: number) => {
+    const startingDateInMs = new Date(timestamp * 1000)
+    const day = startingDateInMs.getFullYear()
+    const month = startingDateInMs.getMonth() + 1
+    const year = startingDateInMs.getDate()
+    const hours = startingDateInMs.getHours()
+    const minutes = startingDateInMs.getMinutes()
+    const seconds = startingDateInMs.getSeconds()
+    return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds
+}
+
+export const dateAbdTimeToTimestamp = (date: string, time: string) => {
+    return Date.parse(date + ' ' + time) / 1000
+}
