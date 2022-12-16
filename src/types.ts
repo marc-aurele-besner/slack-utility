@@ -213,3 +213,18 @@ export type TSlackViewResponse = {
     ok: boolean
     view?: TSlackView | undefined
 }
+
+export type TSupportedDB = 'faunaDB'
+
+export type TLocalAppSettings = {
+    useDapp: boolean
+    useAppForSigner: boolean
+    allowTeamSettings: boolean
+    allowUserSettings: boolean
+    dbType: TSupportedDB
+    logLevel: number
+    addDeleteButtons: boolean
+    addSettingsButton: boolean
+    addRefreshButton: boolean
+    addNetworkAndContractSelector: boolean
+}

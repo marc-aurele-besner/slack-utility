@@ -58,7 +58,7 @@ const action = async (
                     if (contractFunctionsView[i] !== undefined)
                         buttons.push(
                             slackBuilder.buildSimpleSlackButton(
-                                buildRawSignatureFromFunction(contractFunctionsView[i]),
+                                buildRawSignatureFromFunction(contractFunctionsView[i]).substring(0, 70),
                                 {
                                     selectedEnvironment,
                                     selectedContract,

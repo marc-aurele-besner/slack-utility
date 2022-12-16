@@ -38,7 +38,7 @@ const actionsLoop = async (
         } else if (parsedBody && parsedBody.user && parsedBody.user.id) {
             replyTo = parsedBody.user.id
         }
-        console.log('replyTo', replyTo)
+        if (action.localSettings && action.localSettings.logLevel > 0) console.log('replyTo', replyTo)
         if (messageBlocks.length > 0 && returnValue.body && replyTo) {
             messageBlocks.push(
                 slackBuilder.buildSlackActionMsg(
@@ -47,10 +47,11 @@ const actionsLoop = async (
                         contracts: action.env ? (action.env.contracts ? action.env.contracts : []) : []
                     },
                     undefined,
-                    [...buttons]
+                    [...buttons],
+                    action.localSettings && action.localSettings.addNetworkAndContractSelector ? true : false
                 )
             )
-            console.log('messageBlocks', messageBlocks)
+            if (action.localSettings && action.localSettings.logLevel > 1) console.log('messageBlocks', messageBlocks)
             if (action.waitMessageTs)
                 await slackUpdateMessage(
                     token,
@@ -60,12 +61,28 @@ const actionsLoop = async (
                     messageBlocks
                 )
             else if (!action.closeView)
-                await slackPostMessage(token, replyTo, returnValue.body, messageBlocks, true, false, false)
+                await slackPostMessage(
+                    token,
+                    replyTo,
+                    returnValue.body,
+                    messageBlocks,
+                    action.localSettings && action.localSettings.addDeleteButtons ? true : false,
+                    action.localSettings && action.localSettings.addSettingsButton ? true : false,
+                    action.localSettings && action.localSettings.addRefreshButton ? true : false
+                )
         }
     } catch (error) {
-        console.log('error', error)
+        if (action.localSettings && action.localSettings.logLevel > 0) console.log('error', error)
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))
-        await slackPostMessage(token, parsedBody.channel_id, returnValue.body, messageBlocks, true, false, false)
+        await slackPostMessage(
+            token,
+            parsedBody.channel_id,
+            returnValue.body,
+            messageBlocks,
+            action.localSettings && action.localSettings.addDeleteButtons ? true : false,
+            action.localSettings && action.localSettings.addSettingsButton ? true : false,
+            action.localSettings && action.localSettings.addRefreshButton ? true : false
+        )
     }
 
     return [action, returnValue, messageBlocks, buttons]

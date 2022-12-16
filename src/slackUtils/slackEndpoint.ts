@@ -1,10 +1,23 @@
 import actions from '../actions'
-import { TEnv } from '../types'
+import { TEnv, TLocalAppSettings, TSupportedDB } from '../types'
 
 import actionsLoop from './actionsLoop'
 import commandsLoop from './commandsLoop'
 import retrieveTeamSettings from './retrieveTeamSettings'
 import retrieveUserSettings from './retrieveUserSettings'
+
+const defaultLocalSettings: TLocalAppSettings = {
+    useDapp: true,
+    useAppForSigner: true,
+    allowTeamSettings: true,
+    allowUserSettings: true,
+    dbType: 'faunaDB',
+    logLevel: 1,
+    addDeleteButtons: true,
+    addSettingsButton: true,
+    addRefreshButton: true,
+    addNetworkAndContractSelector: true
+}
 
 const slackEndpoint = async (
     event: any,
@@ -15,7 +28,8 @@ const slackEndpoint = async (
     dappUrl: string,
     localActions: any,
     rpcEthereumUrl: string,
-    abis: any
+    abis: any,
+    localSettings = defaultLocalSettings as TLocalAppSettings
 ) => {
     let parsedBody: any
     let bodyIsParsed = false
@@ -64,7 +78,7 @@ const slackEndpoint = async (
         }
         if (bodyIsParsed) {
             // ACTIONS
-            console.log('parsedBody', parsedBody)
+            if (localSettings.logLevel > 0) console.log('parsedBody', parsedBody)
             const basicSettings = {
                 contracts: env.contracts,
                 networks: env.networks,
@@ -74,8 +88,13 @@ const slackEndpoint = async (
                 commands: env.commands
             }
             try {
-                if (parsedBody.team !== undefined && parsedBody.team.id !== undefined) {
+                if (
+                    localSettings.allowTeamSettings &&
+                    parsedBody.team !== undefined &&
+                    parsedBody.team.id !== undefined
+                ) {
                     const teamSettings = await retrieveTeamSettings(faunaDbToken, parsedBody.team.id)
+                    if (localSettings.logLevel > 1) console.log('teamSettings', teamSettings)
                     if (teamSettings !== null) {
                         if (basicSettings.contracts === undefined) basicSettings.contracts = teamSettings.contracts
                         else basicSettings.contracts = [...basicSettings.contracts, ...teamSettings.contracts]
@@ -89,13 +108,17 @@ const slackEndpoint = async (
                         else basicSettings.signers = [...basicSettings.signers, ...teamSettings.signers]
                     }
                 }
-                if (parsedBody.user !== undefined && parsedBody.user.id !== undefined) {
-                    console.log('parsedBody.user.id', parsedBody.user.id)
+                if (
+                    localSettings.allowUserSettings &&
+                    parsedBody.user !== undefined &&
+                    parsedBody.user.id !== undefined
+                ) {
                     const userSettings = await retrieveUserSettings(
                         faunaDbToken,
                         parsedBody.user.id,
                         parsedBody.team.id
                     )
+                    if (localSettings.logLevel > 1) console.log('userSettings', userSettings)
                     if (userSettings !== null) {
                         if (basicSettings.contracts === undefined) basicSettings.contracts = userSettings.contracts
                         else basicSettings.contracts = [...basicSettings.contracts, ...userSettings.contracts]
@@ -110,7 +133,7 @@ const slackEndpoint = async (
                     }
                 }
                 if (!parsedBody.actions && parsedBody.callback_id) {
-                    console.log('parsedBody.callback_id', parsedBody.callback_id)
+                    if (localSettings.logLevel > 0) console.log('parsedBody.callback_id', parsedBody.callback_id)
                     // Handle the callback_id (mainly use by Slack Shortcuts and Workflows)
                     // Slack can't handle multiple shortcuts with the same callback_id so we create multiple paths for each shortcut
                     if (parsedBody.callback_id.startsWith('sc-gn-'))
@@ -156,7 +179,8 @@ const slackEndpoint = async (
                                     },
                                     abis,
                                     selectedNetwork: '',
-                                    selectedContract: ''
+                                    selectedContract: '',
+                                    localSettings
                                 },
                                 parsedBody,
                                 messageBlocks,
@@ -167,11 +191,11 @@ const slackEndpoint = async (
                         })
                 }
             } catch (error) {
-                console.log('error', error)
+                if (localSettings.logLevel > 0) console.log('error', error)
             }
-        } else console.log('error parsing body', event.body)
+        } else if (localSettings.logLevel > 0) console.log('error parsing body', event.body)
     } catch (error) {
-        console.log('error', error)
+        if (localSettings.logLevel > 0) console.log('error', error)
     }
     return {
         statusCode: 200,
