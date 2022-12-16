@@ -1,7 +1,9 @@
+import addressBook from './addressBook'
 import app_home_opened from './app_home_opened'
 import build_call_from_abi from './build_call_from_abi'
 import delete_msg from './delete_msg'
 import error from './error'
+import explorer from './explorer'
 import query_all_events from './query_all_events'
 import query_contract_for_env from './query_contract_for_env'
 import query_contract_queryEvents from './query_contract_queryEvents'
@@ -30,10 +32,12 @@ import settings_validate from './settings_validate'
 import update_msg from './update_msg'
 
 const actions = {
+    addressBook,
     app_home_opened,
     build_call_from_abi,
     delete_msg,
     error,
+    explorer,
     query_all_events,
     query_contract_for_env,
     query_contract_queryEvents,
