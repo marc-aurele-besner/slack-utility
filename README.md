@@ -56,10 +56,12 @@ const { slackUtils, slackBuilder, actions } = require('slack-utility');
 
 ### Actions
 
+- `addressBook` : Show all the contract available on the selected network
 - `app_home_opened` : Trigger when a user open the app home. (if enable in slack app configuration)
 - `build_call_from_abi` : 
 - `delete_msg` : Action triggered when a user click on the delete button. 
 - `error` : Trigger when an error occur. (can be trigger by any action)
+- `explorer` : Show information on the blockchain selected
 - `query_all_events` : 
 - `query_contract_calls` : 
 - `query_contract_events` : 
@@ -112,25 +114,26 @@ const { slackUtils, slackBuilder, actions } = require('slack-utility');
 
 ### SlackUtils
 
-- `actionsLoop` : 
-- `callerSettings` : 
-- `commandsLoop` : 
-- `retrieveEnvironment` : 
-- `retrieveTeamSettings` : 
-- `retrieveUserSettings` : 
-- `setupContractAndNetwork` : 
-- `setupContractNetworkAndSigner` : 
-- `setupNetwork` : 
-- `slackEndpoint` :
+- `actionsLoop` : Parse the action to run and then post a slack message or update a message is messageBlock has some object
+- `callerSettings` : Retrieve and build settings with env settings, team settings and user settings
+- `commandsLoop` : Parse the slack slash command and trigger the right action with extra context possible to inject
+- `retrieveEnvironment` : Retrieve the network and contract selected in the dropdown or pass on from previous interaction
+- `retrieveModule` : Parse extra modules that can be added in the contract selection dropdown
+- `retrieveTeamSettings` : Retrieve team settings if any is save on the db and this module is enable
+- `retrieveUserSettings` : Retrieve user settings if any is save on the db and this module is enable
+- `setupContractAndNetwork` : Return contract, abi, network and other object to use in your actions
+- `setupContractNetworkAndSigner` : Return contract instance, signer, contract, abi, network and other object to use in your actions
+- `setupNetwork` : Return provider, explorer, chainName and other object to use in your actions
+- `slackEndpoint` : Main endpoint to import to run a Slack App
 
-- `slackDeleteMessage` : 
+- `slackDeleteMessage` : Delete a message send by this slack app
 - `slackOpenView` : 
-- `slackPostEphemeralMessage` : 
-- `slackPostMessage` : 
-- `slackPostWaitMessage` : 
+- `slackPostEphemeralMessage` : Post a private message to the slack api and append the action block (or create one) with delete, settings and refresh buttons (if enable)
+- `slackPostMessage` : Post a message to the slack api and append the action block (or create one) with delete, settings and refresh buttons (if enable)
+- `slackPostWaitMessage` : Post a waiting message, to be updated later on in your action with the result of a long async call
 - `slackPublishView` : 
 - `slackPushView` : 
-- `slackUpdateMessage` : 
+- `slackUpdateMessage` : Update a message to the slack api and append the action block (or create one) with delete, settings and refresh buttons (if enable)
 - `slackUpdateView` : 
   
 ## Directory Tree
