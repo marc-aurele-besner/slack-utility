@@ -218,6 +218,7 @@ export type TSupportedDB = 'faunaDB'
 
 export type TLocalAppSettings = {
     useDapp: boolean
+    useModules: boolean
     useAppForSigner: boolean
     allowTeamSettings: boolean
     allowUserSettings: boolean
@@ -227,4 +228,6 @@ export type TLocalAppSettings = {
     addSettingsButton: boolean
     addRefreshButton: boolean
     addNetworkAndContractSelector: boolean
+    useExplorerModule: boolean
+    useAddressBookModule: boolean
 }

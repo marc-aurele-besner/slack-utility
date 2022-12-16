@@ -1,6 +1,7 @@
 import slackBuilder from '../slackBuilder'
 import { TBlockElements, TBlocks, TReturnValue } from '../types'
 
+import retrieveModule from './retrieveModule'
 import slackPostMessage from './slackPostMessage'
 import slackUpdateMessage from './slackUpdateMessage'
 
@@ -14,10 +15,11 @@ const actionsLoop = async (
     returnValue: TReturnValue
 ) => {
     try {
-        if (action.action_id.includes(':')) {
-            const _actionId = action.action_id.split(':')
-            action.action_id = _actionId[0]
-        }
+        if (action.localSettings && action.localSettings.useModules && retrieveModule(parsedBody) !== null)
+            action.action_id = retrieveModule(parsedBody)
+        if (action.localSettings && action.localSettings.logLevel > 1)
+            console.log('retrieveModule: ', retrieveModule(parsedBody))
+        if (action.action_id.includes(':')) action.action_id = action.action_id.split(':')[0]
         if (action !== undefined && action.action_id !== undefined && actionsList[action.action_id] !== undefined)
             [action, returnValue, messageBlocks, buttons] = await actionsList[action.action_id](
                 action,
@@ -26,18 +28,13 @@ const actionsLoop = async (
                 [],
                 returnValue
             )
-
         returnValue.body = 'Message to action_id: ' + action.action_id + ' sent'
         let replyTo = action.slackDefaultConversationId as string
-        if (parsedBody && parsedBody.container && parsedBody.container.channel_id) {
+        if (parsedBody && parsedBody.container && parsedBody.container.channel_id)
             replyTo = parsedBody.container.channel_id
-        } else if (parsedBody && parsedBody.channel_id) {
-            replyTo = parsedBody.channel_id
-        } else if (parsedBody && parsedBody.channel && parsedBody.channel.id) {
-            replyTo = parsedBody.channel.id
-        } else if (parsedBody && parsedBody.user && parsedBody.user.id) {
-            replyTo = parsedBody.user.id
-        }
+        else if (parsedBody && parsedBody.channel_id) replyTo = parsedBody.channel_id
+        else if (parsedBody && parsedBody.channel && parsedBody.channel.id) replyTo = parsedBody.channel.id
+        else if (parsedBody && parsedBody.user && parsedBody.user.id) replyTo = parsedBody.user.id
         if (action.localSettings && action.localSettings.logLevel > 0) console.log('replyTo', replyTo)
         if (messageBlocks.length > 0 && returnValue.body && replyTo) {
             messageBlocks.push(
@@ -48,7 +45,9 @@ const actionsLoop = async (
                     },
                     undefined,
                     [...buttons],
-                    action.localSettings && action.localSettings.addNetworkAndContractSelector ? true : false
+                    action.localSettings && action.localSettings.addNetworkAndContractSelector ? true : false,
+                    action.localSettings && action.localSettings.useExplorerModule ? true : false,
+                    action.localSettings && action.localSettings.useAddressBookModule ? true : false
                 )
             )
             if (action.localSettings && action.localSettings.logLevel > 1) console.log('messageBlocks', messageBlocks)
@@ -58,7 +57,10 @@ const actionsLoop = async (
                     action.waitMessageChannelId || replyTo,
                     returnValue.body,
                     action.waitMessageTs,
-                    messageBlocks
+                    messageBlocks,
+                    action.localSettings && action.localSettings.addDeleteButtons ? true : false,
+                    action.localSettings && action.localSettings.addSettingsButton ? true : false,
+                    action.localSettings && action.localSettings.addRefreshButton ? true : false
                 )
             else if (!action.closeView)
                 await slackPostMessage(
@@ -84,7 +86,6 @@ const actionsLoop = async (
             action.localSettings && action.localSettings.addRefreshButton ? true : false
         )
     }
-
     return [action, returnValue, messageBlocks, buttons]
 }
 

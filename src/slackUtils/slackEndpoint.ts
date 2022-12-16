@@ -1,5 +1,5 @@
 import actions from '../actions'
-import { TEnv, TLocalAppSettings, TSupportedDB } from '../types'
+import { TEnv, TLocalAppSettings } from '../types'
 
 import actionsLoop from './actionsLoop'
 import commandsLoop from './commandsLoop'
@@ -8,6 +8,7 @@ import retrieveUserSettings from './retrieveUserSettings'
 
 const defaultLocalSettings: TLocalAppSettings = {
     useDapp: true,
+    useModules: true,
     useAppForSigner: true,
     allowTeamSettings: true,
     allowUserSettings: true,
@@ -16,7 +17,9 @@ const defaultLocalSettings: TLocalAppSettings = {
     addDeleteButtons: true,
     addSettingsButton: true,
     addRefreshButton: true,
-    addNetworkAndContractSelector: true
+    addNetworkAndContractSelector: true,
+    useExplorerModule: true,
+    useAddressBookModule: true
 }
 
 const slackEndpoint = async (
