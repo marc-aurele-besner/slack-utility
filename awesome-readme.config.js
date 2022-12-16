@@ -96,6 +96,7 @@ const { slackUtils, slackBuilder, actions } = require('slack-utility');
 - \`callerSettings\` : Retrieve and build settings with env settings, team settings and user settings
 - \`commandsLoop\` : Parse the slack slash command and trigger the right action with extra context possible to inject
 - \`retrieveEnvironment\` : Retrieve the network and contract selected in the dropdown or pass on from previous interaction
+- \`retrieveEvent\` : Parse events (txHash) selected from events result dropdown
 - \`retrieveModule\` : Parse extra modules that can be added in the contract selection dropdown
 - \`retrieveTeamSettings\` : Retrieve team settings if any is save on the db and this module is enable
 - \`retrieveUserSettings\` : Retrieve user settings if any is save on the db and this module is enable

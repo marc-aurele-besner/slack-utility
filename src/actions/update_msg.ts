@@ -9,7 +9,7 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('update_msg', actionObject)
+    console.log('update_msg')
     try {
         returnValue.body = JSON.stringify({
             message: 'Message updated ' + actionObject.value

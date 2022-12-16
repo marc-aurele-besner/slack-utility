@@ -2,6 +2,7 @@ import actionsLoop from './actionsLoop'
 import callerSettings from './callerSettings'
 import commandsLoop from './commandsLoop'
 import retrieveEnvironment from './retrieveEnvironment'
+import retrieveEvent from './retrieveEvent'
 import retrieveModule from './retrieveModule'
 import retrieveTeamSettings from './retrieveTeamSettings'
 import retrieveUserSettings from './retrieveUserSettings'
@@ -24,6 +25,7 @@ const slackUtils = {
     callerSettings,
     commandsLoop,
     retrieveEnvironment,
+    retrieveEvent,
     retrieveModule,
     retrieveTeamSettings,
     retrieveUserSettings,

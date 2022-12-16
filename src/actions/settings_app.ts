@@ -9,7 +9,7 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings_app', actionObject)
+    console.log('settings_app')
     try {
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Team Settings:`))
         const teamSettings = await retrieveTeamSettings(actionObject.faunaDbToken, parsedBody.team.id)

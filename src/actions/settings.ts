@@ -9,7 +9,7 @@ const action = async (
     buttons: TBlockElements,
     returnValue: TReturnValue
 ) => {
-    console.log('settings', actionObject)
+    console.log('settings')
     try {
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`User Settings:`))
         const userSettings = await retrieveUserSettings(
