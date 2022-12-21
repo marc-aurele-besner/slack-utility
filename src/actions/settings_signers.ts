@@ -21,13 +21,14 @@ const action = async (
         let signerList = ''
         if (userSettings && userSettings.signers) {
             const { signers } = userSettings
-            if (signers.length > 0)
+            if (signers.length > 0) {
                 signers
                     .filter((signer: TSigner) => signer.active)
                     .map((signer: TSigner) => (signerList += `- ${signer.name}\n`))
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `\n\`\`\`\n${signerList}\`\`\``))
+            }
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', signerList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
                 'You can change the signers settings to add, remove, or modify signers from the list.\nThis will be save as your personal settings.'

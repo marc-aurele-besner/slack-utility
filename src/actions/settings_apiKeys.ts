@@ -21,13 +21,14 @@ const action = async (
         let apiKeyList = ''
         if (userSettings && userSettings.apiKeys) {
             const { apiKeys } = userSettings
-            if (apiKeys.length > 0)
+            if (apiKeys.length > 0) {
                 apiKeys
                     .filter((apiKey: TApiKey) => apiKey.active)
                     .map((apiKey: TApiKey) => (apiKeyList += `- ${apiKey.name}\n`))
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `\n\`\`\`\n${apiKeyList}\`\`\``))
+            }
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', apiKeyList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
                 'You can change the apiKeys settings to add, remove, or modify apiKeys from the list.\nThis will be save as your personal settings.'

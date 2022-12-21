@@ -17,13 +17,14 @@ const action = async (
         let commandList = ''
         if (teamSettings && teamSettings.commands) {
             const { commands } = teamSettings
-            if (commands.length > 0)
+            if (commands.length > 0) {
                 commands
                     .filter((command: TCommand) => command.active)
                     .map((command: TCommand) => (commandList += `- ${command.command}\n`))
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `\n\`\`\`\n${commandList}\`\`\``))
+            }
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', commandList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
                 'You can change the commands settings to add, remove, or modify commands from the list.\nThis will be save as your personal settings.'

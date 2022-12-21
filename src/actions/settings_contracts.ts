@@ -21,13 +21,14 @@ const action = async (
         let contractList = ''
         if (userSettings && userSettings.contracts) {
             const { contracts } = userSettings
-            if (contracts.length > 0)
+            if (contracts.length > 0) {
                 contracts
                     .filter((contract: TContract) => contract.active)
                     .map((contract: TContract) => (contractList += `- ${contract.name}\n`))
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `\n\`\`\`\n${contractList}\`\`\``))
+            }
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', contractList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
                 'You can change the contracts settings to add, remove, or modify contracts from the list.\nThis will be save as your personal settings.'

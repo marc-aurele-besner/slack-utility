@@ -60,7 +60,9 @@ const action = async (
                             ? false
                             : JSON.parse(actionObject.value).team_settings !== undefined
                             ? JSON.parse(actionObject.value).team_settings
-                            : false
+                            : false,
+                    channel_id: parsedBody.channel.id,
+                    originalMessage: parsedBody.container.message_ts
                 }
             ),
             parsedBody.trigger_id
