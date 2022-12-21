@@ -40,7 +40,7 @@ const action = async (
                         'network_rpcUrl',
                         slackBuilder.buildSlackPlainTextInput('Enter network RPC URL', 'networkRpcUrl')
                     ),
-                    slackBuilder.buildSlackActionMsg({}, 'actions1', [
+                    slackBuilder.buildSlackActionMsg({}, 'network_type', [
                         slackBuilder.buildSimpleSlackSelection(
                             [
                                 {
@@ -52,7 +52,7 @@ const action = async (
                                 //     value: 'tronweb'
                                 // }
                             ],
-                            'select_',
+                            'networkType',
                             'Which client/provider should we use?'
                         )
                     ])
@@ -65,7 +65,9 @@ const action = async (
                             ? false
                             : JSON.parse(actionObject.value).team_settings !== undefined
                             ? JSON.parse(actionObject.value).team_settings
-                            : false
+                            : false,
+                    channel_id: parsedBody.channel.id,
+                    originalMessage: parsedBody.container.message_ts
                 }
             ),
             parsedBody.trigger_id

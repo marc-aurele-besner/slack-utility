@@ -21,16 +21,17 @@ const action = async (
         let networkList = ''
         if (userSettings && userSettings.networks) {
             const { networks } = userSettings
-            if (networks.length > 0)
+            if (networks.length > 0) {
                 networks
                     .filter((network: TNetwork) => network.active)
                     .map(
                         (network: TNetwork) =>
                             (networkList += `- ${network.name} (chainId: ${network.chainId}, rpcUrl: ${network.defaultRpc})\n`)
                     )
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `\n\`\`\`\n${networkList}\`\`\``))
+            }
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', networkList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
                 'You can change the networks settings to add, remove, or modify networks from the list.\nThis will be save as your personal settings.'

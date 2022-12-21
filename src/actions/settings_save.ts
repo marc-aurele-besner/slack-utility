@@ -93,7 +93,7 @@ const action = async (
             const getDbUserSettings = await fauna.queryTermByFaunaIndexes(
                 actionObject.faunaDbToken,
                 'settings_by_slackTeamUserId',
-                parsedBody.user.id
+                parsedBody.team.id + '_' + parsedBody.user.id
             )
             if (JSON.parse(getDbUserSettings.body).length === 0) {
                 await fauna.createFaunaDocument(actionObject.faunaDbToken, 'settings', {
@@ -102,6 +102,8 @@ const action = async (
                     settings
                 })
             } else {
+                if (JSON.parse(getDbUserSettings.body)[0].data.settings.abis)
+                    settings.abis = [...settings.abis, ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis]
                 if (JSON.parse(getDbUserSettings.body)[0].data.settings.networks)
                     settings.networks = [
                         ...settings.networks,
@@ -169,6 +171,8 @@ const action = async (
                 await slackUtils.slackDeleteMessage(actionObject.slackToken, parsedBody.channel.id, originalMessage)
             }
         }
+        parsedBody.channel_id = JSON.parse(parsedBody.view.private_metadata).channel_id
+        actionObject.waitMessageTs = JSON.parse(parsedBody.view.private_metadata).originalMessage
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Settings saved!`))
     } catch (error) {
         console.log('error', error)

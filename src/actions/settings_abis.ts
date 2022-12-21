@@ -21,11 +21,12 @@ const action = async (
         let abiList = ''
         if (userSettings && userSettings.abis) {
             const { abis } = userSettings
-            if (abis.length > 0)
+            if (abis.length > 0) {
                 abis.filter((abi: TAbi) => abi.active).map((abi: TAbi) => (abiList += `- ${abi.name}\n`))
+                messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `\n\`\`\`\n${abiList}\`\`\``))
+            }
         }
         messageBlocks.push(
-            slackBuilder.buildSimpleSectionMsg('', abiList),
             slackBuilder.buildSimpleSectionMsg(
                 '',
                 'You can change the abis settings to add, remove, or modify abis from the list.\nThis will be save as your personal settings.'

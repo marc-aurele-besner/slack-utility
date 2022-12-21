@@ -24,26 +24,26 @@ const action = async (
             )
                 viewBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Name',
+                        'Network name: ',
                         parsedBody.view.state.values.network_name.networkName.value
                     ),
                     slackBuilder.buildSimpleSectionMsg(
-                        'Chain Id',
+                        'Chain Id: ',
                         parsedBody.view.state.values.network_chainId.networkChainId.value
                     ),
                     slackBuilder.buildSimpleSectionMsg(
-                        'RPC URL',
+                        'RPC URL: ',
                         parsedBody.view.state.values.network_rpcUrl.networkRpcUrl.value
                     ),
                     slackBuilder.buildSimpleSectionMsg(
-                        'Provider type',
+                        'Provider type: ',
                         parsedBody.view.state.values.network_type.networkType.selected_option.value
                     )
                 )
             if (parsedBody.view.state.values.contract_name !== undefined)
                 viewBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Name',
+                        'Contract name: ',
                         parsedBody.view.state.values.contract_name.contractName.value
                     )
                     // To-Do: Add address per network
@@ -51,30 +51,30 @@ const action = async (
             if (parsedBody.view.state.values.abis_name !== undefined)
                 viewBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'ABI Name',
+                        'ABI Name: ',
                         parsedBody.view.state.values.abis_name.abisName.value
                     ),
                     slackBuilder.buildSimpleSectionMsg('ABI', parsedBody.view.state.values.abis_abi.abisABI.value),
                     slackBuilder.buildSimpleSectionMsg(
-                        'Byte Code',
+                        'Byte Code: ',
                         parsedBody.view.state.values.abis_byteCode.abisByteCode.value
                     )
                 )
             if (parsedBody.view.state.values.apiKey_name !== undefined)
                 viewBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'API Key Name',
+                        'API Key Name: ',
                         parsedBody.view.state.values.apiKey_name.apiKeyName.value
                     ),
                     slackBuilder.buildSimpleSectionMsg(
-                        'API Key Value',
+                        'API Key Value: ',
                         parsedBody.view.state.values.apiKey_value.apiKeyValue.value
                     )
                 )
             if (parsedBody.view.state.values.command_name !== undefined)
                 viewBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Command',
+                        'Command: ',
                         parsedBody.view.state.values.command_name.commandName.value
                     )
                 )
@@ -84,11 +84,11 @@ const action = async (
             )
                 viewBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Signer name',
+                        'Signer name: ',
                         parsedBody.view.state.values.signer_name.signerName.value
                     ),
                     slackBuilder.buildSimpleSectionMsg(
-                        'Signer pk',
+                        'Signer pk: ',
                         parsedBody.view.state.values.signer_pk.signerPk.value
                     )
                 )
@@ -96,14 +96,10 @@ const action = async (
             if (viewBlocks.length > 0)
                 await slackUtils.slackOpenView(
                     actionObject.slackToken,
-                    slackBuilder.buildSlackModal(
-                        'Add network',
-                        'settings_save',
-                        viewBlocks,
-                        'Submit',
-                        'Close',
-                        parsedBody.view.state.values
-                    ),
+                    slackBuilder.buildSlackModal('Add network', 'settings_save', viewBlocks, 'Submit', 'Close', {
+                        ...parsedBody.view.state.values,
+                        ...JSON.parse(parsedBody.view.private_metadata)
+                    }),
                     parsedBody.trigger_id
                 )
         } else if (parsedBody.state !== undefined && parsedBody.state.values !== undefined) {
@@ -116,7 +112,7 @@ const action = async (
             ) {
                 messageBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Network:',
+                        'Network: ',
                         parsedBody.state.values.actions1.select_setting_network.selected_option.value
                     )
                 )
@@ -141,7 +137,7 @@ const action = async (
             ) {
                 messageBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Contract:',
+                        'Contract: ',
                         parsedBody.state.values.actions1.select_setting_contract.selected_option.value
                     )
                 )
@@ -166,7 +162,7 @@ const action = async (
             ) {
                 messageBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Contract:',
+                        'Contract: ',
                         parsedBody.state.values.actions1.select_setting_abi.selected_option.value
                     )
                 )
@@ -191,7 +187,7 @@ const action = async (
             ) {
                 messageBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Contract:',
+                        'Contract: ',
                         parsedBody.state.values.actions1.select_setting_abi.selected_option.value
                     )
                 )
@@ -216,7 +212,7 @@ const action = async (
             ) {
                 messageBlocks.push(
                     slackBuilder.buildSimpleSectionMsg(
-                        'Contract:',
+                        'Contract: ',
                         parsedBody.state.values.actions1.select_setting_signer.selected_option.value
                     )
                 )
