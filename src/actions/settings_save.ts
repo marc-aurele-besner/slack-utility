@@ -25,10 +25,12 @@ const action = async (
 ) => {
     try {
         console.log('settings_save')
+
         if (parsedBody.view !== undefined && parsedBody.view.private_metadata !== undefined) {
             actionObject.closeView = true
 
             const values = JSON.parse(parsedBody.view.private_metadata)
+            const isTeam = values.team_settings
             const userSettings: TUserSettings = {
                 slackAppId: parsedBody.api_app_id,
                 slackUserId: parsedBody.user.id,
@@ -65,9 +67,7 @@ const action = async (
                     signingType: 'web3',
                     networkClient: values.network_type.networkType.selected_option.value
                 }
-                JSON.parse(actionObject.value).team_settings
-                    ? teamSettings.networks.push(newNetwork)
-                    : userSettings.networks.push(newNetwork)
+                isTeam ? teamSettings.networks.push(newNetwork) : userSettings.networks.push(newNetwork)
             }
             if (values.contract_name !== undefined) {
                 const newContract: TContract = {
@@ -76,9 +76,7 @@ const action = async (
                     active: true,
                     addressPerNetwork: []
                 }
-                JSON.parse(actionObject.value).team_settings
-                    ? teamSettings.contracts.push(newContract)
-                    : userSettings.contracts.push(newContract)
+                isTeam ? teamSettings.contracts.push(newContract) : userSettings.contracts.push(newContract)
             }
             if (values.abis_name !== undefined) {
                 const newAbi: TAbi = {
@@ -87,9 +85,7 @@ const action = async (
                     abi: values.abis_abi.abisABI.value,
                     byteCode: values.abis_byteCode.abisByteCode.value
                 }
-                JSON.parse(actionObject.value).team_settings
-                    ? teamSettings.abis.push(newAbi)
-                    : userSettings.abis.push(newAbi)
+                isTeam ? teamSettings.abis.push(newAbi) : userSettings.abis.push(newAbi)
             }
             if (values.apiKey_name !== undefined) {
                 const newApiKey: TApiKey = {
@@ -97,9 +93,7 @@ const action = async (
                     active: true,
                     value: values.apiKey_value.apiKeyValue.value
                 }
-                JSON.parse(actionObject.value).team_settings
-                    ? teamSettings.apiKeys.push(newApiKey)
-                    : userSettings.apiKeys.push(newApiKey)
+                isTeam ? teamSettings.apiKeys.push(newApiKey) : userSettings.apiKeys.push(newApiKey)
             }
             if (values.signer_name !== undefined) {
                 const newSigner: TSigner = {
@@ -107,11 +101,9 @@ const action = async (
                     active: true,
                     privateKey: values.signer_pk.signerPk.value
                 }
-                JSON.parse(actionObject.value).team_settings
-                    ? teamSettings.signers.push(newSigner)
-                    : userSettings.signers.push(newSigner)
+                isTeam ? teamSettings.signers.push(newSigner) : userSettings.signers.push(newSigner)
             }
-            if (values.signer_name !== undefined && JSON.parse(actionObject.value).team_settings) {
+            if (values.signer_name !== undefined && isTeam) {
                 const newCommand: TCommand = {
                     command: values.command_name.commandName.value,
                     description: values.command_description.commandDescription.value,
@@ -123,29 +115,31 @@ const action = async (
             const getDbUserSettings = await fauna.queryTermByFaunaIndexes(
                 actionObject.faunaDbToken,
                 'settings_by_slackTeamUserId',
-                JSON.parse(actionObject.value).team_settings
-                    ? parsedBody.team.id
-                    : parsedBody.team.id + '_' + parsedBody.user.id
+                isTeam ? parsedBody.team.id : parsedBody.team.id + '_' + parsedBody.user.id
             )
             if (JSON.parse(getDbUserSettings.body).length === 0) {
-                await fauna.createFaunaDocument(actionObject.faunaDbToken, 'settings', {
-                    slackUserId: parsedBody.user.id,
-                    slackTeamUserId: JSON.parse(actionObject.value).team_settings
-                        ? teamSettings
-                        : parsedBody.team.id + '_' + parsedBody.user.id,
-                    settings: JSON.parse(actionObject.value).team_settings ? teamSettings : userSettings
-                })
-            } else {
-                if (
-                    JSON.parse(getDbUserSettings.body)[0].data.settings.commands &&
-                    JSON.parse(actionObject.value).team_settings
+                await fauna.createFaunaDocument(
+                    actionObject.faunaDbToken,
+                    'settings',
+                    isTeam
+                        ? {
+                              slackTeamUserId: parsedBody.team.id,
+                              settings: teamSettings
+                          }
+                        : {
+                              slackUserId: parsedBody.user.id,
+                              slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id,
+                              settings: userSettings
+                          }
                 )
+            } else {
+                if (JSON.parse(getDbUserSettings.body)[0].data.settings.commands && isTeam)
                     teamSettings.commands = [
                         ...teamSettings.commands,
                         ...JSON.parse(getDbUserSettings.body)[0].data.settings.commands
                     ]
                 if (JSON.parse(getDbUserSettings.body)[0].data.settings.abis)
-                    JSON.parse(actionObject.value).team_settings
+                    isTeam
                         ? (teamSettings.abis = [
                               ...teamSettings.abis,
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
@@ -155,7 +149,7 @@ const action = async (
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
                           ])
                 if (JSON.parse(getDbUserSettings.body)[0].data.settings.networks)
-                    JSON.parse(actionObject.value).team_settings
+                    isTeam
                         ? (teamSettings.networks = [
                               ...teamSettings.networks,
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
@@ -165,7 +159,7 @@ const action = async (
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
                           ])
                 if (JSON.parse(getDbUserSettings.body)[0].data.settings.contracts)
-                    JSON.parse(actionObject.value).team_settings
+                    isTeam
                         ? (teamSettings.contracts = [
                               ...teamSettings.contracts,
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
@@ -175,7 +169,7 @@ const action = async (
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
                           ])
                 if (JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys)
-                    JSON.parse(actionObject.value).team_settings
+                    isTeam
                         ? (teamSettings.apiKeys = [
                               ...teamSettings.apiKeys,
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
@@ -185,7 +179,7 @@ const action = async (
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
                           ])
                 if (JSON.parse(getDbUserSettings.body)[0].data.settings.signers)
-                    JSON.parse(actionObject.value).team_settings
+                    isTeam
                         ? (teamSettings.signers = [
                               ...teamSettings.signers,
                               ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
@@ -200,10 +194,8 @@ const action = async (
                     JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
                     {
                         slackUserId: parsedBody.user.id,
-                        slackTeamUserId: JSON.parse(actionObject.value).team_settings
-                            ? parsedBody.team.id
-                            : parsedBody.team.id + '_' + parsedBody.user.id,
-                        settings: JSON.parse(actionObject.value).team_settings ? teamSettings : userSettings
+                        slackTeamUserId: isTeam ? parsedBody.team.id : parsedBody.team.id + '_' + parsedBody.user.id,
+                        settings: isTeam ? teamSettings : userSettings
                     }
                 )
             }
