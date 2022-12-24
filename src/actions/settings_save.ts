@@ -30,7 +30,9 @@ const action = async (
             actionObject.closeView = true
 
             const values = JSON.parse(parsedBody.view.private_metadata)
+            console.log('1.values', values)
             const isTeam = values.team_settings
+            if (actionObject.localSettings && actionObject.localSettings.logLevel > 1) console.log('values', values)
             const userSettings: TUserSettings = {
                 slackAppId: parsedBody.api_app_id,
                 slackUserId: parsedBody.user.id,
@@ -117,87 +119,152 @@ const action = async (
                 'settings_by_slackTeamUserId',
                 isTeam ? parsedBody.team.id : parsedBody.team.id + '_' + parsedBody.user.id
             )
-            if (JSON.parse(getDbUserSettings.body).length === 0) {
-                await fauna.createFaunaDocument(
-                    actionObject.faunaDbToken,
-                    'settings',
-                    isTeam
-                        ? {
-                              slackTeamUserId: parsedBody.team.id,
-                              settings: teamSettings
-                          }
-                        : {
-                              slackUserId: parsedBody.user.id,
-                              slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id,
-                              settings: userSettings
-                          }
-                )
-            } else {
-                if (JSON.parse(getDbUserSettings.body)[0].data.settings.commands && isTeam)
-                    teamSettings.commands = [
-                        ...teamSettings.commands,
-                        ...JSON.parse(getDbUserSettings.body)[0].data.settings.commands
-                    ]
-                if (JSON.parse(getDbUserSettings.body)[0].data.settings.abis)
-                    isTeam
-                        ? (teamSettings.abis = [
-                              ...teamSettings.abis,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
-                          ])
-                        : (userSettings.abis = [
-                              ...userSettings.abis,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
-                          ])
-                if (JSON.parse(getDbUserSettings.body)[0].data.settings.networks)
-                    isTeam
-                        ? (teamSettings.networks = [
-                              ...teamSettings.networks,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
-                          ])
-                        : (userSettings.networks = [
-                              ...userSettings.networks,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
-                          ])
-                if (JSON.parse(getDbUserSettings.body)[0].data.settings.contracts)
-                    isTeam
-                        ? (teamSettings.contracts = [
-                              ...teamSettings.contracts,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
-                          ])
-                        : (userSettings.contracts = [
-                              ...userSettings.contracts,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
-                          ])
-                if (JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys)
-                    isTeam
-                        ? (teamSettings.apiKeys = [
-                              ...teamSettings.apiKeys,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
-                          ])
-                        : (userSettings.apiKeys = [
-                              ...userSettings.apiKeys,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
-                          ])
-                if (JSON.parse(getDbUserSettings.body)[0].data.settings.signers)
-                    isTeam
-                        ? (teamSettings.signers = [
-                              ...teamSettings.signers,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
-                          ])
-                        : (userSettings.signers = [
-                              ...userSettings.signers,
-                              ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
-                          ])
-                await fauna.updateFaunaDocument(
-                    actionObject.faunaDbToken,
-                    'settings',
-                    JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
-                    {
-                        slackUserId: parsedBody.user.id,
-                        slackTeamUserId: isTeam ? parsedBody.team.id : parsedBody.team.id + '_' + parsedBody.user.id,
-                        settings: isTeam ? teamSettings : userSettings
+            if (values.actionType !== undefined && values.collection !== undefined && values.actionType === 'delete') {
+                if (JSON.parse(getDbUserSettings.body).length > 0 && values.selected_option.value !== undefined) {
+                    switch (values.collection) {
+                        case 'networks':
+                            isTeam
+                                ? teamSettings.networks.filter(
+                                      (network: TNetwork) => network.value !== values.selected_option.value
+                                  )
+                                : userSettings.networks.filter(
+                                      (network: TNetwork) => network.value !== values.selected_option.value
+                                  )
+                            break
+                        case 'contracts':
+                            isTeam
+                                ? teamSettings.contracts.filter(
+                                      (contract: TContract) => contract.name !== values.selected_option.value
+                                  )
+                                : userSettings.contracts.filter(
+                                      (contract: TContract) => contract.name !== values.selected_option.value
+                                  )
+                            break
+                        case 'abis':
+                            isTeam
+                                ? teamSettings.abis.filter((abi: TAbi) => abi.name !== values.selected_option.value)
+                                : userSettings.abis.filter((abi: TAbi) => abi.name !== values.selected_option.value)
+                            break
+
+                        case 'apiKeys':
+                            isTeam
+                                ? teamSettings.apiKeys.filter(
+                                      (apiKey: TApiKey) => apiKey.name !== values.selected_option.value
+                                  )
+                                : userSettings.apiKeys.filter(
+                                      (apiKey: TApiKey) => apiKey.name !== values.selected_option.value
+                                  )
+                            break
+                        case 'signers':
+                            isTeam
+                                ? teamSettings.signers.filter(
+                                      (signer: TSigner) => signer.name !== values.selected_option.value
+                                  )
+                                : userSettings.signers.filter(
+                                      (signer: TSigner) => signer.name !== values.selected_option.value
+                                  )
+                            break
+                        default:
+                            break
                     }
-                )
+                    await fauna.updateFaunaDocument(
+                        actionObject.faunaDbToken,
+                        'settings',
+                        JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
+                        {
+                            slackUserId: parsedBody.user.id,
+                            slackTeamUserId: isTeam
+                                ? parsedBody.team.id
+                                : parsedBody.team.id + '_' + parsedBody.user.id,
+                            settings: isTeam ? teamSettings : userSettings
+                        }
+                    )
+                } else messageBlocks.push(slackBuilder.buildSimpleSectionMsg('No settings found'))
+            } else {
+                if (JSON.parse(getDbUserSettings.body).length === 0) {
+                    await fauna.createFaunaDocument(
+                        actionObject.faunaDbToken,
+                        'settings',
+                        isTeam
+                            ? {
+                                  slackTeamUserId: parsedBody.team.id,
+                                  settings: teamSettings
+                              }
+                            : {
+                                  slackUserId: parsedBody.user.id,
+                                  slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id,
+                                  settings: userSettings
+                              }
+                    )
+                } else {
+                    if (JSON.parse(getDbUserSettings.body)[0].data.settings.commands && isTeam)
+                        teamSettings.commands = [
+                            ...teamSettings.commands,
+                            ...JSON.parse(getDbUserSettings.body)[0].data.settings.commands
+                        ]
+                    if (JSON.parse(getDbUserSettings.body)[0].data.settings.abis)
+                        isTeam
+                            ? (teamSettings.abis = [
+                                  ...teamSettings.abis,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
+                              ])
+                            : (userSettings.abis = [
+                                  ...userSettings.abis,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
+                              ])
+                    if (JSON.parse(getDbUserSettings.body)[0].data.settings.networks)
+                        isTeam
+                            ? (teamSettings.networks = [
+                                  ...teamSettings.networks,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
+                              ])
+                            : (userSettings.networks = [
+                                  ...userSettings.networks,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
+                              ])
+                    if (JSON.parse(getDbUserSettings.body)[0].data.settings.contracts)
+                        isTeam
+                            ? (teamSettings.contracts = [
+                                  ...teamSettings.contracts,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
+                              ])
+                            : (userSettings.contracts = [
+                                  ...userSettings.contracts,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
+                              ])
+                    if (JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys)
+                        isTeam
+                            ? (teamSettings.apiKeys = [
+                                  ...teamSettings.apiKeys,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
+                              ])
+                            : (userSettings.apiKeys = [
+                                  ...userSettings.apiKeys,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
+                              ])
+                    if (JSON.parse(getDbUserSettings.body)[0].data.settings.signers)
+                        isTeam
+                            ? (teamSettings.signers = [
+                                  ...teamSettings.signers,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
+                              ])
+                            : (userSettings.signers = [
+                                  ...userSettings.signers,
+                                  ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
+                              ])
+                    await fauna.updateFaunaDocument(
+                        actionObject.faunaDbToken,
+                        'settings',
+                        JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
+                        {
+                            slackUserId: parsedBody.user.id,
+                            slackTeamUserId: isTeam
+                                ? parsedBody.team.id
+                                : parsedBody.team.id + '_' + parsedBody.user.id,
+                            settings: isTeam ? teamSettings : userSettings
+                        }
+                    )
+                }
             }
         } else if (actionObject.value !== undefined) {
             await slackUtils.slackDeleteMessage(actionObject.slackToken, parsedBody.channel.id, parsedBody.message.ts)
