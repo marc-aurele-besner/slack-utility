@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",
+    "naumovs.color-highlight",
+    "anseki.vscode-color",
+    "dbaeumer.vscode-eslint",
+    "fauna.fauna",
+    "fauna.faunadb",
+    "eamodio.gitlens",
+    "wix.glean",
+    "esbenp.prettier-vscode",
+    "GitHub.copilot",
+    "DavidAnson.vscode-markdownlint"
+  ]
+}

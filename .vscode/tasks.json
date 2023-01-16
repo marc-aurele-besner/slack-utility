@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "npx awesome-readme && npm run lint:fix && tsc --project tsconfig.json",
+            "problemMatcher": []
+        },
+        {
+            "label": "lint:fix",
+            "type": "shell",
+            "command": "prettier --write src/**/*.{js,ts} && tslint --fix --config tslint.json --project tsconfig.json",
+            "problemMatcher": []
+        },
+        {
+            "label": "lint",
+            "type": "shell",
+            "command": "tslint --config tslint.json --project tsconfig.json",
+            "problemMatcher": []
+        },
+        {
+            "label": "watch",
+            "type": "shell",
+            "command": "tsc -w",
+            "problemMatcher": []
+        }
+    ]
+}
