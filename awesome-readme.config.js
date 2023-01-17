@@ -118,5 +118,5 @@ const { slackUtils, slackBuilder, actions } = require('slack-utility');
     root_footer: `## Don't hesitate to contribute to this project.`,
     ignore_gitFiles: true,
     ignore_gitIgnoreFiles: true,
-    ignore_files: []
+    ignore_files: ['.github', '.vscode']
 }
