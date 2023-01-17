@@ -1,6 +1,6 @@
 import { BigNumber, utils } from 'ethers'
 import fauna from 'faunadb-utility'
-import { nanoid } from 'nanoid'
+import { v4 as uuidv4 } from 'uuid'
 
 import slackBuilder from '../slackBuilder'
 import slackUtils from '../slackUtils'
@@ -578,7 +578,7 @@ const action = async (
                 } else {
                     let tx: any
                     if (signingType === 'web3') {
-                        const txId = nanoid()
+                        const txId = uuidv4()
                         tx = await fauna.createFaunaDocument(actionObject.faunaDbToken, 'transactions', {
                             txId,
                             txStatus: 'pending-signing',
