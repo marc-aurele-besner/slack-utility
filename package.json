@@ -1,6 +1,6 @@
 {
     "name": "slack-utility",
-    "version": "0.0.22",
+    "version": "0.0.23",
     "description": "Set of slack helper functions",
     "main": "dist/index",
     "typings": "dist/index",
@@ -34,7 +34,7 @@
     "dependencies": {
         "@slack/web-api": "^6.8.0",
         "ethers": "^5.7.2",
-        "faunadb-utility": "^0.0.3",
+        "faunadb-utility": "^0.0.4",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
