@@ -1,5 +1,6 @@
 import { BigNumber, utils } from 'ethers'
 import fauna from 'faunadb-utility'
+import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
 
 import slackBuilder from '../slackBuilder'
@@ -579,7 +580,7 @@ const action = async (
                     let tx: any
                     if (signingType === 'web3') {
                         const txId = uuidv4()
-                        tx = await fauna.createFaunaDocument(actionObject.faunaDbToken, 'transactions', {
+                        const dataToAdd = {
                             txId,
                             txStatus: 'pending-signing',
                             slackUserId: parsedBody.user.id,
@@ -599,7 +600,26 @@ const action = async (
                             params,
                             value: '0x00',
                             gasLimit: utils.hexlify(5000000)
-                        })
+                        }
+                        if (actionObject.dBDetails.db === 'fauna') {
+                            try {
+                                tx = await fauna.createFaunaDocument(
+                                    actionObject.faunaDbToken,
+                                    'transactions',
+                                    dataToAdd
+                                )
+                            } catch (e) {
+                                console.log('e', e)
+                            }
+                        }
+                        if (actionObject.dBDetails.db === 'mongo') {
+                            try {
+                                const db = await mongoose.connect(actionObject.dBDetails.token)
+                                await db.connection.collection('transactions').insertOne(dataToAdd)
+                            } catch (e) {
+                                console.log('e', e)
+                            }
+                        }
                         if (tx !== undefined) {
                             messageBlocks.push(
                                 slackBuilder.buildSimpleSectionMsg(

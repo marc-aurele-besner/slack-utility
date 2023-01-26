@@ -1,5 +1,5 @@
 import actions from '../actions'
-import { TEnv, TLocalAppSettings } from '../types'
+import { TDBDetails, TEnv, TLocalAppSettings } from '../types'
 
 import actionsLoop from './actionsLoop'
 import commandsLoop from './commandsLoop'
@@ -26,7 +26,7 @@ const slackEndpoint = async (
     event: any,
     env: TEnv,
     slackToken: string,
-    faunaDbToken: string,
+    dBDetails: TDBDetails,
     slackDefaultConversationId: string,
     dappUrl: string,
     localActions: any,
@@ -96,7 +96,7 @@ const slackEndpoint = async (
                     parsedBody.team !== undefined &&
                     parsedBody.team.id !== undefined
                 ) {
-                    const teamSettings = await retrieveTeamSettings(faunaDbToken, parsedBody.team.id)
+                    const teamSettings = await retrieveTeamSettings(dBDetails, parsedBody.team.id)
                     if (localSettings.logLevel > 1) console.log('teamSettings', teamSettings)
                     if (teamSettings !== null) {
                         if (basicSettings.contracts === undefined) basicSettings.contracts = teamSettings.contracts
@@ -116,11 +116,7 @@ const slackEndpoint = async (
                     parsedBody.user !== undefined &&
                     parsedBody.user.id !== undefined
                 ) {
-                    const userSettings = await retrieveUserSettings(
-                        faunaDbToken,
-                        parsedBody.user.id,
-                        parsedBody.team.id
-                    )
+                    const userSettings = await retrieveUserSettings(dBDetails, parsedBody.user.id, parsedBody.team.id)
                     if (localSettings.logLevel > 1) console.log('userSettings', userSettings)
                     if (userSettings !== null) {
                         if (basicSettings.contracts === undefined) basicSettings.contracts = userSettings.contracts
@@ -174,7 +170,7 @@ const slackEndpoint = async (
                                     rpcEthereum: rpcEthereumUrl,
                                     slackToken,
                                     slackDefaultConversationId,
-                                    faunaDbToken,
+                                    dBDetails,
                                     dappUrl,
                                     env: {
                                         ...basicSettings,
