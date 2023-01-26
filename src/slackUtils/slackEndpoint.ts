@@ -1,5 +1,5 @@
 import actions from '../actions'
-import { TEnv, TLocalAppSettings, TDBDetails } from '../types'
+import { TDBDetails, TEnv, TLocalAppSettings } from '../types'
 
 import actionsLoop from './actionsLoop'
 import commandsLoop from './commandsLoop'

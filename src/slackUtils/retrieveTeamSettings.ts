@@ -1,13 +1,13 @@
 import fauna from 'faunadb-utility'
 import mongoose from 'mongoose'
 
-import { TTeamSettings, TDBDetails } from '../types'
+import { TDBDetails, TTeamSettings } from '../types'
 
 const retrieveTeamSettings = async (
     dBDetails: TDBDetails,
     slackTeamId: string | undefined
 ): Promise<TTeamSettings | null> => {
-    if (dBDetails.db == 'fauna' && slackTeamId) {
+    if (dBDetails.db === 'fauna' && slackTeamId) {
         try {
             const getDbTeamSettings = await fauna.queryTermByFaunaIndexes(
                 dBDetails.token,
@@ -20,7 +20,7 @@ const retrieveTeamSettings = async (
             console.log('error', error)
         }
     }
-    if (dBDetails.db == 'mongo' && slackTeamId) {
+    if (dBDetails.db === 'mongo' && slackTeamId) {
         try {
             const db = await mongoose.connect(dBDetails.token)
             const getDbTeamSettings = await db.connection.collection('settings').findOne({

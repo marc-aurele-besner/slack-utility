@@ -601,7 +601,7 @@ const action = async (
                             value: '0x00',
                             gasLimit: utils.hexlify(5000000)
                         }
-                        if (actionObject.dBDetails.db == 'fauna') {
+                        if (actionObject.dBDetails.db === 'fauna') {
                             try {
                                 tx = await fauna.createFaunaDocument(
                                     actionObject.faunaDbToken,
@@ -612,7 +612,7 @@ const action = async (
                                 console.log('e', e)
                             }
                         }
-                        if (actionObject.dBDetails.db == 'mongo') {
+                        if (actionObject.dBDetails.db === 'mongo') {
                             try {
                                 const db = await mongoose.connect(actionObject.dBDetails.token)
                                 await db.connection.collection('transactions').insertOne(dataToAdd)

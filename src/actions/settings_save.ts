@@ -117,14 +117,14 @@ const action = async (
             // Check if user has settings in DB
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let getDbUserSettings: any = null
-            if (actionObject.dBDetails.db == 'fauna') {
+            if (actionObject.dBDetails.db === 'fauna') {
                 getDbUserSettings = await fauna.queryTermByFaunaIndexes(
                     actionObject.faunaDbToken,
                     'settings_by_slackTeamUserId',
                     isTeam ? parsedBody.team.id : parsedBody.team.id + '_' + parsedBody.user.id
                 )
             }
-            if (actionObject.dBDetails.db == 'mongo') {
+            if (actionObject.dBDetails.db === 'mongo') {
                 const db = await mongoose.connect(actionObject.dBDetails.token)
                 getDbUserSettings = await db.connection.collection('settings').findOne({
                     slackTeamUserId: isTeam ? parsedBody.team.id : parsedBody.team.id + '_' + parsedBody.user.id
@@ -133,8 +133,8 @@ const action = async (
             if (values.actionType !== undefined && values.collection !== undefined && values.actionType === 'delete') {
                 if (
                     getDbUserSettings != null &&
-                    ((actionObject.dBDetails.db == 'fauna' && JSON.parse(getDbUserSettings.body).length > 0) ||
-                        (actionObject.dBDetails.db == 'mongo' && getDbUserSettings != null)) &&
+                    ((actionObject.dBDetails.db === 'fauna' && JSON.parse(getDbUserSettings.body).length > 0) ||
+                        (actionObject.dBDetails.db === 'mongo' && getDbUserSettings != null)) &&
                     values.selected_option.value !== undefined
                 ) {
                     switch (values.collection) {
@@ -183,7 +183,7 @@ const action = async (
                         default:
                             break
                     }
-                    if (actionObject.dBDetails.db == 'fauna') {
+                    if (actionObject.dBDetails.db === 'fauna') {
                         await fauna.updateFaunaDocument(
                             actionObject.faunaDbToken,
                             'settings',
@@ -197,7 +197,7 @@ const action = async (
                             }
                         )
                     }
-                    if (actionObject.dBDetails.db == 'mongo') {
+                    if (actionObject.dBDetails.db === 'mongo') {
                         const db = await mongoose.connect(actionObject.dBDetails.token)
                         getDbUserSettings = await db.connection.collection('settings').findOneAndReplace(
                             {
@@ -218,10 +218,10 @@ const action = async (
             } else {
                 if (
                     getDbUserSettings != null &&
-                    ((actionObject.dBDetails.db == 'fauna' && JSON.parse(getDbUserSettings.body).length === 0) ||
-                        (actionObject.dBDetails.db == 'mongo' && getDbUserSettings == null))
+                    ((actionObject.dBDetails.db === 'fauna' && JSON.parse(getDbUserSettings.body).length === 0) ||
+                        (actionObject.dBDetails.db === 'mongo' && getDbUserSettings == null))
                 ) {
-                    if (actionObject.dBDetails.db == 'fauna') {
+                    if (actionObject.dBDetails.db === 'fauna') {
                         await fauna.createFaunaDocument(
                             actionObject.faunaDbToken,
                             'settings',
@@ -237,7 +237,7 @@ const action = async (
                                   }
                         )
                     }
-                    if (actionObject.dBDetails.db == 'mongo') {
+                    if (actionObject.dBDetails.db === 'mongo') {
                         const db = await mongoose.connect(actionObject.dBDetails.token)
                         await db.connection.collection('settings').insertOne(
                             isTeam
@@ -253,7 +253,7 @@ const action = async (
                         )
                     }
                 } else {
-                    if (getDbUserSettings != null && actionObject.dBDetails.db == 'fauna') {
+                    if (getDbUserSettings != null && actionObject.dBDetails.db === 'fauna') {
                         if (JSON.parse(getDbUserSettings.body)[0].data.settings.commands && isTeam)
                             teamSettings.commands = [
                                 ...teamSettings.commands,
@@ -322,7 +322,7 @@ const action = async (
                             }
                         )
                     }
-                    if (getDbUserSettings != null && actionObject.dBDetails.db == 'mongo') {
+                    if (getDbUserSettings != null && actionObject.dBDetails.db === 'mongo') {
                         if (getDbUserSettings.body.settings.commands && isTeam)
                             teamSettings.commands = [...teamSettings.commands, ...getDbUserSettings.body.commands]
                         if (getDbUserSettings != null && getDbUserSettings.settings.abis)
@@ -394,21 +394,21 @@ const action = async (
                 const { subAction, value, originalMessage } = JSON.parse(actionObject.value)
                 // eslint-disable-next-line no-explicit-any
                 let getDbUserSettings: any = null
-                if (actionObject.dBDetails.db == 'fauna') {
+                if (actionObject.dBDetails.db === 'fauna') {
                     getDbUserSettings = await fauna.queryTermByFaunaIndexes(
                         actionObject.faunaDbToken,
                         'settings_by_slackTeamUserId',
                         parsedBody.team.id + '_' + parsedBody.user.id
                     )
                 }
-                if (actionObject.dBDetails.db == 'mongo') {
+                if (actionObject.dBDetails.db === 'mongo') {
                     const db = await mongoose.connect(actionObject.dBDetails.token)
                     getDbUserSettings = await db.connection.collection('settings').findOne({
                         slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id
                     })
                 }
                 if (
-                    actionObject.dBDetails.db == 'fauna' &&
+                    actionObject.dBDetails.db === 'fauna' &&
                     getDbUserSettings != null &&
                     JSON.parse(getDbUserSettings.body).length > 0
                 ) {
@@ -434,7 +434,7 @@ const action = async (
                         { settings: newSettings }
                     )
                 }
-                if (actionObject.dBDetails.db == 'mongo' && getDbUserSettings != null && getDbUserSettings.settings) {
+                if (actionObject.dBDetails.db === 'mongo' && getDbUserSettings != null && getDbUserSettings.settings) {
                     const newSettings = getDbUserSettings.settings
                     if (subAction === 'delete_network')
                         newSettings.networks = newSettings.networks.filter(
