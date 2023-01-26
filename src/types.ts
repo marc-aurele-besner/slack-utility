@@ -221,7 +221,7 @@ export type TSlackViewResponse = {
     view?: TSlackView | undefined
 }
 
-export type TSupportedDB = 'faunaDB'
+export type TSupportedDB = 'faunaDB' | 'mongoDB'
 
 export type TLocalAppSettings = {
     useDapp: boolean
