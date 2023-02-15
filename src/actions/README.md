@@ -15,11 +15,12 @@
 ```
 
 
- - [addressBook.ts](./addressBook.ts) - [app_home_opened.ts](./app_home_opened.ts) - [build_call_from_abi.ts](./build_call_from_abi.ts) - [delete_msg.ts](./delete_msg.ts) - [error.ts](./error.ts) - [explorer.ts](./explorer.ts) - [index.ts](./index.ts) - [query_all_events.ts](./query_all_events.ts) - [query_contract_for_env.ts](./query_contract_for_env.ts) - [query_contract_queryEvents.ts](./query_contract_queryEvents.ts) - [query_contract_readCall.ts](./query_contract_readCall.ts) - [query_contract_staticCall.ts](./query_contract_staticCall.ts) - [query_contract_writeCall.ts](./query_contract_writeCall.ts) - [query_event_details.ts](./query_event_details.ts) - [README.md](./README.md) - [send_call_from_abi.ts](./send_call_from_abi.ts) - [settings.ts](./settings.ts) - [settings_abis.ts](./settings_abis.ts) - [settings_abis_add.ts](./settings_abis_add.ts) - [settings_apiKeys.ts](./settings_apiKeys.ts) - [settings_apiKeys_add.ts](./settings_apiKeys_add.ts) - [settings_app.ts](./settings_app.ts) - [settings_commands.ts](./settings_commands.ts) - [settings_commands_add.ts](./settings_commands_add.ts) - [settings_contracts.ts](./settings_contracts.ts) - [settings_contracts_add.ts](./settings_contracts_add.ts) - [settings_link_to_dapp.ts](./settings_link_to_dapp.ts) - [settings_networks.ts](./settings_networks.ts) - [settings_networks_add.ts](./settings_networks_add.ts) - [settings_save.ts](./settings_save.ts) - [settings_signers.ts](./settings_signers.ts) - [settings_signers_add.ts](./settings_signers_add.ts) - [settings_validate.ts](./settings_validate.ts) - [update_msg.ts](./update_msg.ts)
+ - [README.md](./README.md) - [addressBook.ts](./addressBook.ts) - [app_home_opened.ts](./app_home_opened.ts) - [build_call_from_abi.ts](./build_call_from_abi.ts) - [delete_msg.ts](./delete_msg.ts) - [error.ts](./error.ts) - [explorer.ts](./explorer.ts) - [index.ts](./index.ts) - [query_all_events.ts](./query_all_events.ts) - [query_contract_for_env.ts](./query_contract_for_env.ts) - [query_contract_queryEvents.ts](./query_contract_queryEvents.ts) - [query_contract_readCall.ts](./query_contract_readCall.ts) - [query_contract_staticCall.ts](./query_contract_staticCall.ts) - [query_contract_writeCall.ts](./query_contract_writeCall.ts) - [query_event_details.ts](./query_event_details.ts) - [send_call_from_abi.ts](./send_call_from_abi.ts) - [settings.ts](./settings.ts) - [settings_abis.ts](./settings_abis.ts) - [settings_abis_add.ts](./settings_abis_add.ts) - [settings_apiKeys.ts](./settings_apiKeys.ts) - [settings_apiKeys_add.ts](./settings_apiKeys_add.ts) - [settings_app.ts](./settings_app.ts) - [settings_commands.ts](./settings_commands.ts) - [settings_commands_add.ts](./settings_commands_add.ts) - [settings_contracts.ts](./settings_contracts.ts) - [settings_contracts_add.ts](./settings_contracts_add.ts) - [settings_link_to_dapp.ts](./settings_link_to_dapp.ts) - [settings_networks.ts](./settings_networks.ts) - [settings_networks_add.ts](./settings_networks_add.ts) - [settings_save.ts](./settings_save.ts) - [settings_signers.ts](./settings_signers.ts) - [settings_signers_add.ts](./settings_signers_add.ts) - [settings_validate.ts](./settings_validate.ts) - [update_msg.ts](./update_msg.ts)
 ## Directory Tree
 [<- Previous](https://github.com/marc-aurele-besner/slack-utility)
 ```
 actions/
+   │   README.md
    │   addressBook.ts
    │   app_home_opened.ts
    │   build_call_from_abi.ts
@@ -34,7 +35,6 @@ actions/
    │   query_contract_staticCall.ts
    │   query_contract_writeCall.ts
    │   query_event_details.ts
-   │   README.md
    │   send_call_from_abi.ts
    │   settings.ts
    │   settings_abis.ts
