@@ -35,11 +35,11 @@
         "@slack/web-api": "^6.8.1",
         "ethers": "^5.7.2",
         "faunadb-utility": "^0.2.0",
-        "mongoose": "^6.9.1",
+        "mongoose": "^6.9.2",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "@types/node": "^18.13.0",
+        "@types/node": "^18.14.0",
         "@types/uuid": "^9.0.0",
         "awesome-readme": "^0.0.8",
         "prettier": "^2.8.4",
