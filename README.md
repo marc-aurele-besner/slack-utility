@@ -30,12 +30,12 @@ yarn add slack-utility
  - [.npmignore](./.npmignore)
  - [.prettierignore](./.prettierignore)
  - [.prettierrc](./.prettierrc)
- - [awesome-readme.config.js](./awesome-readme.config.js)
  - [CONTRIBUTING.md](./CONTRIBUTING.md)
  - [LICENSE](./LICENSE)
+ - [README.md](./README.md)
+ - [awesome-readme.config.js](./awesome-readme.config.js)
  - [package-lock.json](./package-lock.json)
  - [package.json](./package.json)
- - [README.md](./README.md)
  - [tsconfig.json](./tsconfig.json)
  - [tslint.json](./tslint.json)
 
@@ -144,17 +144,17 @@ slack-utility/
 │   .npmignore
 │   .prettierignore
 │   .prettierrc
-│   awesome-readme.config.js
 │   CONTRIBUTING.md
 │   LICENSE
+│   README.md
+│   awesome-readme.config.js
 │   package-lock.json
 │   package.json
-│   README.md
 │   tsconfig.json
 │   tslint.json
 └─── src/
-   │   index.ts
    │   README.md
+   │   index.ts
    │   types.ts
    │   utils.ts
    └─── actions/
