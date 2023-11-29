@@ -12,7 +12,8 @@ const slackPostMessage = async (
     blocks: TBlocks,
     addDeleteBtn = true as boolean,
     addSettings = true as boolean,
-    addRefresh = true as boolean
+    addRefresh = true as boolean,
+    replyToMessageTs?: string
 ): Promise<TSlackPostMessageResponse> => {
     const result: TSlackPostMessageResponse = {
         resultPostMessage: {
@@ -29,7 +30,8 @@ const slackPostMessage = async (
         result.resultPostMessage = await web.chat.postMessage({
             channel,
             text,
-            blocks
+            blocks,
+            thread_ts: replyToMessageTs
         })
         console.log('\x1b[34m%s\x1b[0m', 'Message sent: ', result.resultPostMessage.ts, addDeleteBtn, addSettings)
 
