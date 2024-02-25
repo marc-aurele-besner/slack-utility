@@ -1,6 +1,6 @@
 {
     "name": "slack-utility",
-    "version": "0.1.32",
+    "version": "0.1.33",
     "description": "Set of slack helper functions",
     "main": "dist/index",
     "typings": "dist/index",

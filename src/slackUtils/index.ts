@@ -19,6 +19,9 @@ import slackPublishView from './slackPublishView'
 import slackPushView from './slackPushView'
 import slackUpdateMessage from './slackUpdateMessage'
 import slackUpdateView from './slackUpdateView'
+import slackUploadFile from './slackUploadFile'
+import slackAddPin from './slackAddPin'
+import slackRemovePin from './slackRemovePin'
 
 const slackUtils = {
     actionsLoop,
@@ -42,7 +45,10 @@ const slackUtils = {
     slackPublishView,
     slackPushView,
     slackUpdateMessage,
-    slackUpdateView
+    slackUpdateView,
+    slackUploadFile,
+    slackAddPin,
+    slackRemovePin
 }
 
 export default slackUtils
