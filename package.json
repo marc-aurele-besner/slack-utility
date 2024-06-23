@@ -36,11 +36,11 @@
         "ethers": "^5.7.2",
         "faunadb-utility": "^0.2.1",
         "mongoose": "^8.0.0",
-        "uuid": "^9.0.0"
+        "uuid": "^10.0.0"
     },
     "devDependencies": {
         "@types/node": "^20.0.0",
-        "@types/uuid": "^9.0.1",
+        "@types/uuid": "^10.0.0",
         "awesome-readme": "^0.0.8",
         "prettier": "^2.8.4",
         "ts-node": "^10.9.1",
