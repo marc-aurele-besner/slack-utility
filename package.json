@@ -39,7 +39,7 @@
         "uuid": "^10.0.0"
     },
     "devDependencies": {
-        "@types/node": "^22.0.0",
+        "@types/node": "^24.0.0",
         "@types/uuid": "^10.0.0",
         "awesome-readme": "^0.0.8",
         "prettier": "^2.8.4",
