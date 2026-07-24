@@ -7,8 +7,8 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "npx awesome-readme && npm run lint:fix && node node_modules/typescript/lib/tsc.js --project tsconfig.json",
-        "lint:fix": "prettier --write src/**/*.{js,ts}",
-        "lint": "prettier --check src/**/*.{js,ts}",
+        "lint:fix": "prettier --write --no-error-on-unmatched-pattern \"src/**/*.{js,ts}\"",
+        "lint": "prettier --check --no-error-on-unmatched-pattern \"src/**/*.{js,ts}\"",
         "watch": "node node_modules/typescript/lib/tsc.js -w"
     },
     "files": [
@@ -36,11 +36,10 @@
         "ethers": "^6.0.0",
         "faunadb-utility": "^0.2.1",
         "mongoose": "^9.0.0",
-        "uuid": "^11.0.0"
+        "uuid": "^14.0.0"
     },
     "devDependencies": {
         "@types/node": "^24.0.0",
-        "@types/uuid": "^11.0.0",
         "awesome-readme": "^0.0.8",
         "prettier": "^3.0.0",
         "ts-node": "^10.9.1",
