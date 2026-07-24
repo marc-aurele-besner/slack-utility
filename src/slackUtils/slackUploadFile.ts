@@ -12,8 +12,9 @@ const slackUploadFile = async (
     const web = new WebClient(token)
     try {
         await web.files.uploadV2({
-            channel,
-            thread_ts: replyToMessageTs,
+            ...(replyToMessageTs
+                ? { channels: channel, thread_ts: replyToMessageTs }
+                : { channel_id: channel }),
             title,
             filetype,
             filename,
