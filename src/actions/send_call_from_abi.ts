@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers'
+import { toBeHex } from 'ethers'
 import fauna from 'faunadb-utility'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
@@ -556,7 +556,7 @@ const action = async (
                 if (abiFunctionsStateMutability === 'view' || abiFunctionsStateMutability === 'pure') {
                     let callValue = ''
                     try {
-                        callValue = await contractInstance[abiFunctions[0].name](...params)
+                        callValue = await (contractInstance as any)[abiFunctions[0].name](...params)
                     } catch (e) {
                         console.log('e', e)
                     }
@@ -572,7 +572,7 @@ const action = async (
                         messageBlocks.push(
                             slackBuilder.buildSimpleSectionMsg(
                                 '',
-                                `${BigNumber.isBigNumber(value) ? value.toString() : value}`
+                                `${typeof value === 'bigint' ? value.toString() : value}`
                             )
                         )
                     )
@@ -599,7 +599,7 @@ const action = async (
                             method: JSON.parse(parsedBody.view.private_metadata).functionSignature,
                             params,
                             value: '0x00',
-                            gasLimit: utils.hexlify(5000000)
+                            gasLimit: toBeHex(5000000)
                         }
                         if (actionObject.dBDetails.db === 'fauna') {
                             try {
@@ -643,12 +643,11 @@ const action = async (
                             )
                         }
                     } else {
-                        tx = await contractInstance[JSON.parse(parsedBody.view.private_metadata).functionSignature](
-                            ...params,
-                            {
-                                gasLimit: 5000000
-                            }
-                        )
+                        tx = await (contractInstance as any)[
+                            JSON.parse(parsedBody.view.private_metadata).functionSignature
+                        ](...params, {
+                            gasLimit: 5000000
+                        })
                         if (tx !== undefined) {
                             messageBlocks.push(
                                 slackBuilder.buildSimpleSectionMsg(

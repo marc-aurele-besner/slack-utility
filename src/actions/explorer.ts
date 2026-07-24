@@ -1,5 +1,3 @@
-import { BigNumber } from 'ethers'
-
 import slackBuilder from '../slackBuilder'
 import slackUtils from '../slackUtils'
 import { TBlockElements, TBlocks, TReturnValue } from '../types'
@@ -39,8 +37,11 @@ const action = async (
                 const blockMinus10 = await provider.getBlock(currentBlockNumber - 10)
                 const blockMinus100 = await provider.getBlock(currentBlockNumber - 100)
                 const blockMinus1000 = await provider.getBlock(currentBlockNumber - 1000)
-                lastBlock = BigNumber.from(currentBlockNumber).toString()
-                lastBlockTime = BigNumber.from(currentBlock.timestamp).toString()
+                if (!currentBlock || !blockMinus10 || !blockMinus100 || !blockMinus1000) {
+                    throw new Error('Block not found')
+                }
+                lastBlock = currentBlockNumber.toString()
+                lastBlockTime = currentBlock.timestamp.toString()
                 lastTxCountInBlock = currentBlock.transactions.length.toString()
                 blockTime = {
                     last10: (currentBlock.timestamp - blockMinus10.timestamp) / 10,

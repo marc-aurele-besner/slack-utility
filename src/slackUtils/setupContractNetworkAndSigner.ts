@@ -1,4 +1,4 @@
-import { Contract, Wallet } from 'ethers'
+import { BaseContract, Wallet } from 'ethers'
 
 import { TCommand, TContract, TEnv, TNetwork } from '../types'
 
@@ -30,7 +30,7 @@ const setupContractNetworkAndSigner = async (
         contractAbi
     } = await setupContractAndNetwork(env, abis, network, contract)
     let signer
-    let contractInstance = undefined as Contract | undefined
+    let contractInstance = undefined as BaseContract | undefined
     let contractName = ''
     let contractVersion = ''
     let contractSymbol = ''
@@ -38,20 +38,24 @@ const setupContractNetworkAndSigner = async (
     if (env.signerPrivateKey && provider) signer = new Wallet(env.signerPrivateKey, provider)
     if (networkFound && contractFound) {
         try {
-            contractInstance = await new Contract(contractAddress, contractAbi, signer)
+            contractInstance = new BaseContract(contractAddress, contractAbi, signer)
         } catch (e) {}
         if (contractInstance) {
             try {
-                contractName = contractInstance.name !== undefined ? await contractInstance.name() : ''
+                contractName =
+                    (contractInstance as any).name !== undefined ? await (contractInstance as any).name() : ''
             } catch (e) {}
             try {
-                contractVersion = contractInstance.version !== undefined ? await contractInstance.version() : ''
+                contractVersion =
+                    (contractInstance as any).version !== undefined ? await (contractInstance as any).version() : ''
             } catch (e) {}
             try {
-                contractSymbol = contractInstance.symbol !== undefined ? await contractInstance.symbol() : ''
+                contractSymbol =
+                    (contractInstance as any).symbol !== undefined ? await (contractInstance as any).symbol() : ''
             } catch (e) {}
             try {
-                contractDecimals = contractInstance.decimals !== undefined ? await contractInstance.decimals() : ''
+                contractDecimals =
+                    (contractInstance as any).decimals !== undefined ? await (contractInstance as any).decimals() : ''
             } catch (e) {}
         }
     }

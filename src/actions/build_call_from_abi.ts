@@ -1,5 +1,3 @@
-import { BigNumber } from 'ethers'
-
 import slackBuilder from '../slackBuilder'
 import retrieveEnvironment from '../slackUtils/retrieveEnvironment'
 import setupContractNetworkAndSigner from '../slackUtils/setupContractNetworkAndSigner'
@@ -48,7 +46,7 @@ const action = async (
                 ) {
                     let callValue = ''
                     try {
-                        callValue = await contractInstance[functionName]()
+                        callValue = await (contractInstance as any)[functionName]()
                     } catch (error) {
                         callValue = JSON.stringify(error)
                     }
@@ -64,7 +62,7 @@ const action = async (
                         inputArguments.push(
                             slackBuilder.buildSimpleSectionMsg(
                                 '',
-                                `${BigNumber.isBigNumber(value) ? value.toString() : value}`
+                                `${typeof value === 'bigint' ? value.toString() : value}`
                             )
                         )
                     )
