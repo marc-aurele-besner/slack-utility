@@ -98,7 +98,7 @@ const action = async (
                             ? await contractInstance.queryFilter(filterEvents, startBlock, endBlock)
                             : await contractInstance.queryFilter(filterEvents, startBlock)
                     for (const txn of allEvents) {
-                        if (txn.args) {
+                        if ('args' in txn && txn.args) {
                             events.push(txn.args)
                             eventsOption.push({
                                 name: txn.blockHash,
