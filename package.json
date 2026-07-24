@@ -6,10 +6,10 @@
     "typings": "dist/index",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "npx awesome-readme && npm run lint:fix && tsc --project tsconfig.json",
-        "lint:fix": "prettier --write src/**/*.{js,ts} && tslint --fix --config tslint.json --project tsconfig.json",
-        "lint": "tslint --config tslint.json --project tsconfig.json",
-        "watch": "tsc -w"
+        "build": "npx awesome-readme && npm run lint:fix && node node_modules/typescript/lib/tsc.js --project tsconfig.json",
+        "lint:fix": "prettier --write src/**/*.{js,ts}",
+        "lint": "prettier --check src/**/*.{js,ts}",
+        "watch": "node node_modules/typescript/lib/tsc.js -w"
     },
     "files": [
         "/dist/**/*.{js,ts,map}",
