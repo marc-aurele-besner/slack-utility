@@ -10,13 +10,13 @@
         {
             "label": "lint:fix",
             "type": "shell",
-            "command": "prettier --write src/**/*.{js,ts} && tslint --fix --config tslint.json --project tsconfig.json",
+            "command": "prettier --write --no-error-on-unmatched-pattern src/**/*.{js,ts}",
             "problemMatcher": []
         },
         {
             "label": "lint",
             "type": "shell",
-            "command": "tslint --config tslint.json --project tsconfig.json",
+            "command": "prettier --check --no-error-on-unmatched-pattern src/**/*.{js,ts}",
             "problemMatcher": []
         },
         {
