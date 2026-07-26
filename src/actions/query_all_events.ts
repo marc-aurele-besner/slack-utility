@@ -48,7 +48,7 @@ const action = async (
                     messageBlocks.push(
                         slackBuilder.buildSimpleSectionMsg('', `:x: Error: Contract instance or provider not found`)
                     )
-                    return [action, returnValue, messageBlocks, buttons]
+                    return [actionObject, returnValue, messageBlocks, buttons]
                 }
 
                 let startBlock = 0

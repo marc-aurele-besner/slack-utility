@@ -158,7 +158,7 @@ const action = async (
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))
     }
 
-    return [action, returnValue, messageBlocks, buttons]
+    return [actionObject, returnValue, messageBlocks, buttons]
 }
 
 export default action
