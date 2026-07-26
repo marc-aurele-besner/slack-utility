@@ -13,7 +13,7 @@ const action = async (
     try {
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active commands:`))
 
-        const teamSettings = await retrieveTeamSettings(actionObject.faunaDbToken, parsedBody.team.id)
+        const teamSettings = await retrieveTeamSettings(actionObject.dBDetails, parsedBody.team.id)
         let commandList = ''
         if (teamSettings && teamSettings.commands) {
             const { commands } = teamSettings

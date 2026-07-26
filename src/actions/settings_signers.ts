@@ -14,7 +14,7 @@ const action = async (
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Current active signers:`))
 
         const userSettings = await retrieveUserSettings(
-            actionObject.faunaDbToken,
+            actionObject.dBDetails,
             parsedBody.user.id,
             parsedBody.team.id
         )

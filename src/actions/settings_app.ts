@@ -12,7 +12,7 @@ const action = async (
     console.log('settings_app')
     try {
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`Team Settings:`))
-        const teamSettings = await retrieveTeamSettings(actionObject.faunaDbToken, parsedBody.team.id)
+        const teamSettings = await retrieveTeamSettings(actionObject.dBDetails, parsedBody.team.id)
         let commandList = ''
         let contractList = ''
         let networkList = ''
