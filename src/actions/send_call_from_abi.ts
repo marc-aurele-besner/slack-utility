@@ -35,7 +35,7 @@ const action = async (
 
             if (contractInstance === undefined) {
                 messageBlocks.push(slackBuilder.buildSimpleSectionMsg('', `:x: Error: Contract instance not found`))
-                return [action, returnValue, messageBlocks, buttons]
+                return [actionObject, returnValue, messageBlocks, buttons]
             }
 
             messageBlocks.push(
@@ -691,7 +691,7 @@ const action = async (
         messageBlocks.push(slackBuilder.buildSimpleSlackHeaderMsg(`:x: Error: ${error}`))
     }
 
-    return [action, returnValue, messageBlocks, buttons]
+    return [actionObject, returnValue, messageBlocks, buttons]
 }
 
 export default action
