@@ -1,5 +1,4 @@
 import { toBeHex } from 'ethers'
-import fauna from 'faunadb-utility'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -600,17 +599,6 @@ const action = async (
                             params,
                             value: '0x00',
                             gasLimit: toBeHex(5000000)
-                        }
-                        if (actionObject.dBDetails.db === 'fauna') {
-                            try {
-                                tx = await fauna.createFaunaDocument(
-                                    actionObject.faunaDbToken,
-                                    'transactions',
-                                    dataToAdd
-                                )
-                            } catch (e) {
-                                console.log('e', e)
-                            }
                         }
                         if (actionObject.dBDetails.db === 'mongo') {
                             try {

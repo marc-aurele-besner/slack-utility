@@ -1,4 +1,3 @@
-import fauna from 'faunadb-utility'
 import mongoose from 'mongoose'
 
 import slackBuilder from '../slackBuilder'
@@ -117,13 +116,6 @@ const action = async (
             // Check if user has settings in DB
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let getDbUserSettings: any = null
-            if (actionObject.dBDetails.db === 'fauna') {
-                getDbUserSettings = await fauna.queryTermByFaunaIndexes(
-                    actionObject.faunaDbToken,
-                    'settings_by_slackTeamUserId',
-                    isTeam ? parsedBody.team.id : parsedBody.team.id + '_' + parsedBody.user.id
-                )
-            }
             if (actionObject.dBDetails.db === 'mongo') {
                 const db = await mongoose.connect(actionObject.dBDetails.token)
                 getDbUserSettings = await db.connection.collection('settings').findOne({
@@ -133,69 +125,63 @@ const action = async (
             if (values.actionType !== undefined && values.collection !== undefined && values.actionType === 'delete') {
                 if (
                     getDbUserSettings != null &&
-                    ((actionObject.dBDetails.db === 'fauna' && JSON.parse(getDbUserSettings.body).length > 0) ||
-                        (actionObject.dBDetails.db === 'mongo' && getDbUserSettings != null)) &&
+                    actionObject.dBDetails.db === 'mongo' &&
                     values.selected_option.value !== undefined
                 ) {
                     switch (values.collection) {
                         case 'networks':
-                            isTeam
-                                ? teamSettings.networks.filter(
-                                      (network: TNetwork) => network.value !== values.selected_option.value
-                                  )
-                                : userSettings.networks.filter(
-                                      (network: TNetwork) => network.value !== values.selected_option.value
-                                  )
+                            if (isTeam)
+                                teamSettings.networks = teamSettings.networks.filter(
+                                    (network: TNetwork) => network.value !== values.selected_option.value
+                                )
+                            else
+                                userSettings.networks = userSettings.networks.filter(
+                                    (network: TNetwork) => network.value !== values.selected_option.value
+                                )
                             break
                         case 'contracts':
-                            isTeam
-                                ? teamSettings.contracts.filter(
-                                      (contract: TContract) => contract.name !== values.selected_option.value
-                                  )
-                                : userSettings.contracts.filter(
-                                      (contract: TContract) => contract.name !== values.selected_option.value
-                                  )
+                            if (isTeam)
+                                teamSettings.contracts = teamSettings.contracts.filter(
+                                    (contract: TContract) => contract.name !== values.selected_option.value
+                                )
+                            else
+                                userSettings.contracts = userSettings.contracts.filter(
+                                    (contract: TContract) => contract.name !== values.selected_option.value
+                                )
                             break
                         case 'abis':
-                            isTeam
-                                ? teamSettings.abis.filter((abi: TAbi) => abi.name !== values.selected_option.value)
-                                : userSettings.abis.filter((abi: TAbi) => abi.name !== values.selected_option.value)
+                            if (isTeam)
+                                teamSettings.abis = teamSettings.abis.filter(
+                                    (abi: TAbi) => abi.name !== values.selected_option.value
+                                )
+                            else
+                                userSettings.abis = userSettings.abis.filter(
+                                    (abi: TAbi) => abi.name !== values.selected_option.value
+                                )
                             break
 
                         case 'apiKeys':
-                            isTeam
-                                ? teamSettings.apiKeys.filter(
-                                      (apiKey: TApiKey) => apiKey.name !== values.selected_option.value
-                                  )
-                                : userSettings.apiKeys.filter(
-                                      (apiKey: TApiKey) => apiKey.name !== values.selected_option.value
-                                  )
+                            if (isTeam)
+                                teamSettings.apiKeys = teamSettings.apiKeys.filter(
+                                    (apiKey: TApiKey) => apiKey.name !== values.selected_option.value
+                                )
+                            else
+                                userSettings.apiKeys = userSettings.apiKeys.filter(
+                                    (apiKey: TApiKey) => apiKey.name !== values.selected_option.value
+                                )
                             break
                         case 'signers':
-                            isTeam
-                                ? teamSettings.signers.filter(
-                                      (signer: TSigner) => signer.name !== values.selected_option.value
-                                  )
-                                : userSettings.signers.filter(
-                                      (signer: TSigner) => signer.name !== values.selected_option.value
-                                  )
+                            if (isTeam)
+                                teamSettings.signers = teamSettings.signers.filter(
+                                    (signer: TSigner) => signer.name !== values.selected_option.value
+                                )
+                            else
+                                userSettings.signers = userSettings.signers.filter(
+                                    (signer: TSigner) => signer.name !== values.selected_option.value
+                                )
                             break
                         default:
                             break
-                    }
-                    if (actionObject.dBDetails.db === 'fauna') {
-                        await fauna.updateFaunaDocument(
-                            actionObject.faunaDbToken,
-                            'settings',
-                            JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
-                            {
-                                slackUserId: parsedBody.user.id,
-                                slackTeamUserId: isTeam
-                                    ? parsedBody.team.id
-                                    : parsedBody.team.id + '_' + parsedBody.user.id,
-                                settings: isTeam ? teamSettings : userSettings
-                            }
-                        )
                     }
                     if (actionObject.dBDetails.db === 'mongo') {
                         const db = await mongoose.connect(actionObject.dBDetails.token)
@@ -216,27 +202,7 @@ const action = async (
                     }
                 } else messageBlocks.push(slackBuilder.buildSimpleSectionMsg('No settings found'))
             } else {
-                if (
-                    getDbUserSettings != null &&
-                    ((actionObject.dBDetails.db === 'fauna' && JSON.parse(getDbUserSettings.body).length === 0) ||
-                        (actionObject.dBDetails.db === 'mongo' && getDbUserSettings == null))
-                ) {
-                    if (actionObject.dBDetails.db === 'fauna') {
-                        await fauna.createFaunaDocument(
-                            actionObject.faunaDbToken,
-                            'settings',
-                            isTeam
-                                ? {
-                                      slackTeamUserId: parsedBody.team.id,
-                                      settings: teamSettings
-                                  }
-                                : {
-                                      slackUserId: parsedBody.user.id,
-                                      slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id,
-                                      settings: userSettings
-                                  }
-                        )
-                    }
+                if (getDbUserSettings == null) {
                     if (actionObject.dBDetails.db === 'mongo') {
                         const db = await mongoose.connect(actionObject.dBDetails.token)
                         await db.connection.collection('settings').insertOne(
@@ -253,75 +219,6 @@ const action = async (
                         )
                     }
                 } else {
-                    if (getDbUserSettings != null && actionObject.dBDetails.db === 'fauna') {
-                        if (JSON.parse(getDbUserSettings.body)[0].data.settings.commands && isTeam)
-                            teamSettings.commands = [
-                                ...teamSettings.commands,
-                                ...JSON.parse(getDbUserSettings.body)[0].data.settings.commands
-                            ]
-                        if (JSON.parse(getDbUserSettings.body)[0].data.settings.abis)
-                            isTeam
-                                ? (teamSettings.abis = [
-                                      ...teamSettings.abis,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
-                                  ])
-                                : (userSettings.abis = [
-                                      ...userSettings.abis,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.abis
-                                  ])
-                        if (JSON.parse(getDbUserSettings.body)[0].data.settings.networks)
-                            isTeam
-                                ? (teamSettings.networks = [
-                                      ...teamSettings.networks,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
-                                  ])
-                                : (userSettings.networks = [
-                                      ...userSettings.networks,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.networks
-                                  ])
-                        if (JSON.parse(getDbUserSettings.body)[0].data.settings.contracts)
-                            isTeam
-                                ? (teamSettings.contracts = [
-                                      ...teamSettings.contracts,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
-                                  ])
-                                : (userSettings.contracts = [
-                                      ...userSettings.contracts,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.contracts
-                                  ])
-                        if (JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys)
-                            isTeam
-                                ? (teamSettings.apiKeys = [
-                                      ...teamSettings.apiKeys,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
-                                  ])
-                                : (userSettings.apiKeys = [
-                                      ...userSettings.apiKeys,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.apiKeys
-                                  ])
-                        if (JSON.parse(getDbUserSettings.body)[0].data.settings.signers)
-                            isTeam
-                                ? (teamSettings.signers = [
-                                      ...teamSettings.signers,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
-                                  ])
-                                : (userSettings.signers = [
-                                      ...userSettings.signers,
-                                      ...JSON.parse(getDbUserSettings.body)[0].data.settings.signers
-                                  ])
-                        await fauna.updateFaunaDocument(
-                            actionObject.faunaDbToken,
-                            'settings',
-                            JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
-                            {
-                                slackUserId: parsedBody.user.id,
-                                slackTeamUserId: isTeam
-                                    ? parsedBody.team.id
-                                    : parsedBody.team.id + '_' + parsedBody.user.id,
-                                settings: isTeam ? teamSettings : userSettings
-                            }
-                        )
-                    }
                     if (getDbUserSettings != null && actionObject.dBDetails.db === 'mongo') {
                         if (getDbUserSettings.body.settings.commands && isTeam)
                             teamSettings.commands = [...teamSettings.commands, ...getDbUserSettings.body.commands]
@@ -375,7 +272,7 @@ const action = async (
                                 slackUserId: parsedBody.user.id,
                                 slackTeamUserId: isTeam
                                     ? parsedBody.team.id
-                                    : parsedBody.team.id + '_' + parsedBody.user.id2
+                                    : parsedBody.team.id + '_' + parsedBody.user.id
                             },
                             {
                                 slackUserId: parsedBody.user.id,
@@ -394,45 +291,11 @@ const action = async (
                 const { subAction, value, originalMessage } = JSON.parse(actionObject.value)
                 // eslint-disable-next-line no-explicit-any
                 let getDbUserSettings: any = null
-                if (actionObject.dBDetails.db === 'fauna') {
-                    getDbUserSettings = await fauna.queryTermByFaunaIndexes(
-                        actionObject.faunaDbToken,
-                        'settings_by_slackTeamUserId',
-                        parsedBody.team.id + '_' + parsedBody.user.id
-                    )
-                }
                 if (actionObject.dBDetails.db === 'mongo') {
                     const db = await mongoose.connect(actionObject.dBDetails.token)
                     getDbUserSettings = await db.connection.collection('settings').findOne({
                         slackTeamUserId: parsedBody.team.id + '_' + parsedBody.user.id
                     })
-                }
-                if (
-                    actionObject.dBDetails.db === 'fauna' &&
-                    getDbUserSettings != null &&
-                    JSON.parse(getDbUserSettings.body).length > 0
-                ) {
-                    const newSettings = JSON.parse(getDbUserSettings.body)[0].data.settings
-                    if (subAction === 'delete_network')
-                        newSettings.networks = newSettings.networks.filter(
-                            (network: TNetwork) => network.value !== value
-                        )
-                    if (subAction === 'delete_contract')
-                        newSettings.contracts = newSettings.contracts.filter(
-                            (contract: TContract) => contract.name !== value
-                        )
-                    if (subAction === 'delete_abi')
-                        newSettings.abis = newSettings.abis.filter((contract: TAbi) => contract.name !== value)
-                    if (subAction === 'delete_apiKey')
-                        newSettings.apiKeys = newSettings.apiKeys.filter((contract: TApiKey) => contract.name !== value)
-                    if (subAction === 'delete_signer')
-                        newSettings.signers = newSettings.signers.filter((contract: TSigner) => contract.name !== value)
-                    await fauna.updateFaunaDocument(
-                        actionObject.faunaDbToken,
-                        'settings',
-                        JSON.parse(getDbUserSettings.body)[0].ref['@ref'].id,
-                        { settings: newSettings }
-                    )
                 }
                 if (actionObject.dBDetails.db === 'mongo' && getDbUserSettings != null && getDbUserSettings.settings) {
                     const newSettings = getDbUserSettings.settings

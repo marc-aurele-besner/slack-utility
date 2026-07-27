@@ -12,7 +12,7 @@ const defaultLocalSettings: TLocalAppSettings = {
     useAppForSigner: true,
     allowTeamSettings: true,
     allowUserSettings: true,
-    dbType: 'faunaDB',
+    dbType: 'mongoDB',
     logLevel: 1,
     addDeleteButtons: true,
     addSettingsButton: true,

@@ -11,8 +11,8 @@ const callerSettings = async (
     defaultApiKeys = {} as any,
     defaultSigners = [] as any[]
 ) => {
-    const userSettings: TUserSettings | null = await retrieveUserSettings(user.faunaDbToken, user.id, user.teamId)
-    const teamSettings: TTeamSettings | null = await retrieveTeamSettings(user.faunaDbToken, user.teamId)
+    const userSettings: TUserSettings | null = await retrieveUserSettings(user.dBDetails, user.id, user.teamId)
+    const teamSettings: TTeamSettings | null = await retrieveTeamSettings(user.dBDetails, user.teamId)
     const dbUserSettingFound = userSettings !== null ? true : false
     const dbTeamSettingFound = teamSettings !== null ? true : false
 
