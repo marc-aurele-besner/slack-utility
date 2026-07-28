@@ -1,11 +1,11 @@
 import { toBeHex } from 'ethers'
-import fauna from 'faunadb-utility'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
 
 import slackBuilder from '../slackBuilder'
 import slackUtils from '../slackUtils'
 import retrieveEnvironment from '../slackUtils/retrieveEnvironment'
+import getPool from '../slackUtils/pgPool'
 import { TBlockElements, TBlocks, TReturnValue } from '../types'
 
 const action = async (
@@ -601,21 +601,51 @@ const action = async (
                             value: '0x00',
                             gasLimit: toBeHex(5000000)
                         }
-                        if (actionObject.dBDetails.db === 'fauna') {
-                            try {
-                                tx = await fauna.createFaunaDocument(
-                                    actionObject.faunaDbToken,
-                                    'transactions',
-                                    dataToAdd
-                                )
-                            } catch (e) {
-                                console.log('e', e)
-                            }
-                        }
                         if (actionObject.dBDetails.db === 'mongo') {
                             try {
                                 const db = await mongoose.connect(actionObject.dBDetails.token)
                                 await db.connection.collection('transactions').insertOne(dataToAdd)
+                            } catch (e) {
+                                console.log('e', e)
+                            }
+                        }
+                        if (actionObject.dBDetails.db === 'postgres') {
+                            try {
+                                const pool = getPool(actionObject.dBDetails.token)
+                                await pool.query(
+                                    `INSERT INTO transactions (
+                                        tx_id, chain_id_and_tx_id, tx_status,
+                                        slack_user_id, slack_channel_id, slack_team_id,
+                                        selected_environment, selected_contract, chain_id,
+                                        chain_name, contract_name, contract_address,
+                                        method, params, value, gas_limit
+                                     ) VALUES (
+                                        $1, $2, $3,
+                                        $4, $5, $6,
+                                        $7, $8, $9,
+                                        $10, $11, $12,
+                                        $13, $14::jsonb, $15, $16
+                                     )`,
+                                    [
+                                        dataToAdd.txId,
+                                        dataToAdd.chainIdAndTxId,
+                                        dataToAdd.txStatus,
+                                        dataToAdd.slackUserId,
+                                        dataToAdd.slackChannelId,
+                                        dataToAdd.slackTeamId,
+                                        dataToAdd.selectedEnvironment,
+                                        dataToAdd.selectedContract,
+                                        dataToAdd.chainId,
+                                        dataToAdd.chainName,
+                                        dataToAdd.contractName,
+                                        dataToAdd.contractAddress,
+                                        dataToAdd.method,
+                                        JSON.stringify(dataToAdd.params),
+                                        dataToAdd.value,
+                                        dataToAdd.gasLimit
+                                    ]
+                                )
+                                tx = dataToAdd
                             } catch (e) {
                                 console.log('e', e)
                             }

@@ -1,4 +1,4 @@
-export type TDB = 'fauna' | 'mongo'
+export type TDB = 'mongo' | 'postgres'
 
 export type TDBDetails = {
     db: TDB
@@ -221,7 +221,7 @@ export type TSlackViewResponse = {
     view?: TSlackView | undefined
 }
 
-export type TSupportedDB = 'faunaDB' | 'mongoDB'
+export type TSupportedDB = 'mongoDB' | 'postgresDB'
 
 export type TLocalAppSettings = {
     useDapp: boolean

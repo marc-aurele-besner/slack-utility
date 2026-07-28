@@ -53,6 +53,48 @@ import  { slackUtils, slackBuilder, actions } from 'slack-utility'
 const { slackUtils, slackBuilder, actions } = require('slack-utility');
 ```
 
+### Database backends
+
+Settings and queued transactions are persisted via a `dBDetails` object passed to `slackEndpoint`. Two backends are supported:
+
+- `mongoDB` — MongoDB connection string as `token`, persisted via `mongoose`.
+- `postgresDB` — Postgres connection string (Neon-compatible) as `token`, persisted via `@neondatabase/serverless`.
+
+The `dbType` value in your `localSettings` selects which one to use. Required SQL schema when using `postgresDB`:
+
+```sql
+CREATE TABLE IF NOT EXISTS settings (
+    slack_team_user_id TEXT PRIMARY KEY,
+    slack_user_id      TEXT NULL,
+    slack_team_id      TEXT NOT NULL,
+    settings           JSONB NOT NULL,
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+    id                   BIGSERIAL PRIMARY KEY,
+    tx_id                TEXT NOT NULL,
+    chain_id_and_tx_id   TEXT NOT NULL UNIQUE,
+    tx_status            TEXT NOT NULL DEFAULT 'pending-signing',
+    slack_user_id        TEXT NOT NULL,
+    slack_channel_id     TEXT NOT NULL,
+    slack_team_id        TEXT NOT NULL,
+    selected_environment TEXT,
+    selected_contract    TEXT,
+    chain_id             TEXT NOT NULL,
+    chain_name           TEXT,
+    contract_name        TEXT,
+    contract_address     TEXT,
+    method               TEXT,
+    params               JSONB NOT NULL DEFAULT '[]'::jsonb,
+    value                TEXT,
+    gas_limit            TEXT,
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
 ### Actions
 
 - `addressBook` : Show all the contract available on the selected network

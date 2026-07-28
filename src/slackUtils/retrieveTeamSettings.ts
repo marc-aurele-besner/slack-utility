@@ -1,25 +1,12 @@
-import fauna from 'faunadb-utility'
 import mongoose from 'mongoose'
 
 import { TDBDetails, TTeamSettings } from '../types'
+import getPool from './pgPool'
 
 const retrieveTeamSettings = async (
     dBDetails: TDBDetails,
     slackTeamId: string | undefined
 ): Promise<TTeamSettings | null> => {
-    if (dBDetails.db === 'fauna' && slackTeamId) {
-        try {
-            const getDbTeamSettings = await fauna.queryTermByFaunaIndexes(
-                dBDetails.token,
-                'settings_by_slackTeamUserId',
-                slackTeamId + '_all'
-            )
-            if (JSON.parse(getDbTeamSettings.body).length > 0)
-                return JSON.parse(getDbTeamSettings.body)[0].data.settings
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
     if (dBDetails.db === 'mongo' && slackTeamId) {
         try {
             const db = await mongoose.connect(dBDetails.token)
@@ -27,6 +14,17 @@ const retrieveTeamSettings = async (
                 slackTeamUserId: slackTeamId + '_all'
             })
             if (getDbTeamSettings) return getDbTeamSettings.settings
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+    if (dBDetails.db === 'postgres' && slackTeamId) {
+        try {
+            const pool = getPool(dBDetails.token)
+            const { rows } = await pool.query('SELECT settings FROM settings WHERE slack_team_user_id = $1 LIMIT 1', [
+                `${slackTeamId}_all`
+            ])
+            if (rows.length > 0) return rows[0].settings as TTeamSettings
         } catch (error) {
             console.log('error', error)
         }
